@@ -1,0 +1,247 @@
+﻿  dllmain.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(56,19): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Reseau *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Reseau *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'int List<Reseau *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Reseau *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Reseau *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::List(List<Reseau *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Reseau *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Reseau *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Reseau *>::~List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Input *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Input *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'int List<Input *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Input *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Input *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(List<Input *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
+  GenerationPerso.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Reseau *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Reseau *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'int List<Reseau *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Reseau *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Reseau *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::List(List<Reseau *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Reseau *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Reseau *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Reseau *>::~List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Input *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Input *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'int List<Input *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Input *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Input *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(List<Input *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
+  List.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+  Input.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(58,23): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(88,31): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(88,22): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+  Personnage.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Personnage.cpp(53,24): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Personnage.cpp(54,24): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Personnage.cpp(94,8): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Personnage.cpp(95,8): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Input *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Input *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'int List<Input *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Input *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Input *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(List<Input *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
+  Reseau.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Input *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Input *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'int List<Input *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Input *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Input *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(List<Input *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
+  Hidden_neurone.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(42,23): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+  TestJeuAI.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\TestJeuAI.cpp(83,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\TestJeuAI.cpp(91,9): warning C4101: 'msg' : variable locale non référencée
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\TestJeuAI.cpp(132,9): warning C4101: 'msg' : variable locale non référencée
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\TestJeuAI.cpp(182,61): warning C4244: 'argument' : conversion de 'double' en 'FLOAT', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\TestJeuAI.cpp(182,54): warning C4244: 'argument' : conversion de 'double' en 'FLOAT', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Reseau *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Reseau *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'int List<Reseau *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Reseau *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Reseau *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::List(List<Reseau *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Reseau *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Reseau *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Reseau *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'List<Reseau *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Reseau *>::~List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Input *>::append'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Input *>::remove'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'int List<Input *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Input *>::length'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Input *>::get'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(List<Input *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+          with
+          [
+              T=Input *
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Input *>::List'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
+  utils.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(61,24): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(63,23): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(98,54): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
+  Génération de code en cours
+  13 of 376 functions ( 3.5%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
+  Fin de la génération du code
+  TouhouAiDLLagain.vcxproj -> C:\Users\Timothée\source\repos\Touhou Projects\Release\TouhouAiDLLagain.dll
