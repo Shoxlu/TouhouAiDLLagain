@@ -1,6 +1,6 @@
 ﻿  dllmain.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(70,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(62,19): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
 C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\GenerationPerso.h(6,29): warning C4661: 'void List<Reseau *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
           with
           [
@@ -238,13 +238,13 @@ C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28):
 C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
   utils.cpp
 C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(99,54): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(98,54): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
   Window.cpp
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY' : redéfinition de macro
 C:\Users\Timothée\source\repos\Touhou Projects\packages\glfw.3.3.8\build\native\include\GLFW\glfw3.h(123,1): message : voir la définition précédente de 'APIENTRY'
-  Génération de code en cours
-  4 of 43 functions ( 9.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
-  Fin de la génération du code
-  TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll
+     Création de la bibliothèque C:\Users\Timothée\source\repos\Touhou Projects\x64\Release\TouhouAiDLLagain.lib et de l'objet C:\Users\Timothée\source\repos\Touhou Projects\x64\Release\TouhouAiDLLagain.exp
+Window.obj : error LNK2001: symbole externe non résolu __imp_glEnd
+Window.obj : error LNK2001: symbole externe non résolu __imp_glColor3f
+Window.obj : error LNK2001: symbole externe non résolu __imp_glBegin
+Window.obj : error LNK2001: symbole externe non résolu __imp_glVertex2f
+C:\Users\Timothée\source\repos\Touhou Projects\x64\Release\TouhouAiDLLagain.dll : fatal error LNK1120: 4 externes non résolus

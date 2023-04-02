@@ -13,6 +13,7 @@
 #include <d3d9.h>
 #include <d2d1.h>
 
+
 #include "utils.h"
 #include "TestJeuAI.h"
 #include "GenerationPerso.h"
@@ -20,6 +21,10 @@
 #include "Reseau.h"
 #include "Hidden_neurone.h"
 #include "Input.h"
+#include "dllmain.h"
+#include "Window.h"
+
+#include <GLFW/glfw3.h>
 
 
 #pragma warning(disable : 4996)
@@ -46,49 +51,7 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
     switch (ul_reason_for_call)
     {
     case DLL_PROCESS_ATTACH:{
-        // console
-        AllocConsole();
-        freopen("CONIN$", "r", stdin);
-        freopen("CONOUT$", "w", stdout);
-        SetConsoleTitle(L"Th18 IA");
-        printf("DLL loaded!\n");
-        HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
-        srand(time(0));
-        //init_direct2d();
-        generation = new GenerationJoueur(NbrePerso_generation);
-        joueur = generation->get_joueurs();
- 
-        while (GetKeyState(VK_TAB) == 0) {
-            Sleep(1);
-        }
-
-        printf("Preparing to run........\n");
-        float bullet_x = 0;
-        float bullet_y = 0;
-        float bullet_speed = 0;
-
-        Sleep(1000);
-        printf("Running !\n");
-        press(VK_W, 0);
-        press(VK_SHIFT, 0);
-        int previous_time = global_ptr->time_in_stage;
-        while (GetKeyState(VK_F1) == 0) {
-            //add frame limiter (somehow)
-            player_ptr = *(zPlayer**)0x4CF410;
-            Bullet_PTR = *(zBulletManager**)0x4CF2BC;
-            global_ptr = (zGlobals*)0x4cccc0;
-            
-            if (global_ptr->time_in_stage > previous_time)
-            {
-                previous_time = global_ptr->time_in_stage;
-                if (player_ptr != NULL)
-                {
-                    generation->update();
-                }
-
-            }
-        }
-        printf("end\n");
+        
     }
     case DLL_THREAD_ATTACH:
     case DLL_THREAD_DETACH:
@@ -96,8 +59,65 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
         Release_All_Inputs();
         break;
     }
+    // console
+    AllocConsole();
+    freopen("CONIN$", "r", stdin);
+    freopen("CONOUT$", "w", stdout);
+    SetConsoleTitle(L"Th18 IA");
+
+    printf("DLL loaded!\n");
+    HANDLE std_out = GetStdHandle(STD_OUTPUT_HANDLE);
+    srand(time(0));
+    HMODULE idk = LoadLibraryA("opengl32.dll");
+    std::cout << idk << "\n";
+    if (!glfwInit()) {
+        throw("fail");
+    }
+    Window window = Window();
+
+
+    //generation = new GenerationJoueur(NbrePerso_generation);
+
+
+    while (GetKeyState(VK_TAB) == 0) {
+        Sleep(1);
+    }
+
+    printf("Preparing to run........\n");
+    float bullet_x = 0;
+    float bullet_y = 0;
+    float bullet_speed = 0;
+
+    Sleep(1000);
+    printf("Running !\n");
+    press(VK_W, 0);
+    press(VK_SHIFT, 0);
+    //void (*pdumb_func)() = (void(*)())0x471270;
+    //pdumb_func();
+
+   /* int previous_time = global_ptr->time_in_stage;*/
+    while (GetKeyState(VK_F1) == 0) {
+        //add frame limiter (somehow)
+        /*player_ptr = *(zPlayer**)0x4CF410;
+        Bullet_PTR = *(zBulletManager**)0x4CF2BC;
+        global_ptr = (zGlobals*)0x4cccc0;*/
+
+        //if (global_ptr->time_in_stage > previous_time)
+        //{
+            //previous_time = global_ptr->time_in_stage;
+            /*if (player_ptr != NULL)
+            {*/
+            //generation->update();
+        /*}*/
+        window.draw_triangle(10, 10, 10, Color{ 1, 1, 1 });
+        printf("triangle");
+        window.update();
+
+        //}
+
+    }
+    Release_All_Inputs();
+    printf("end\n");
     return TRUE;
 }
-
-
 

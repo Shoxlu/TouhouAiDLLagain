@@ -78,7 +78,7 @@ HRESULT DLoadBitmapFromFile(
 
 
 // The entry point for any Windows program
-int main()
+int main____()
 {
     srand(time(0));
     // Initialize Direct3D

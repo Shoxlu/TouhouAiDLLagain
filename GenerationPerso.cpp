@@ -11,13 +11,13 @@
 #define VK_C 0x43
 #define VK_X 0x58
 
-extern zGlobals* global_ptr;
+/*extern*/ zGlobals* global_ptr;
 extern zPlayer player_ptr;
 
 GenerationJoueur::GenerationJoueur(const int n_systemes): previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(0), m_best_reward(0), m_n_all_systemes(n_systemes), joueur_actuel(0)
 {
-    commandList = new List<Reseau*>();
-    printf("Command list created");
+    //commandList = new List<Reseau*>();
+    //printf("Command list created");
     first_generation();
 }
 
@@ -60,7 +60,6 @@ void GenerationJoueur::new_generation()
 Joueur** GenerationJoueur::get_joueurs() {
     return m_joueur;
 }
-
 
 void GenerationJoueur::delete_generation()
 {

@@ -82,8 +82,6 @@ Reseau* Joueur::get_reseau()
 	return m_reseau;
 }
 
-
-
 Joueur::~Joueur()
 {
 	//printf("Joueur virtuel mort");
