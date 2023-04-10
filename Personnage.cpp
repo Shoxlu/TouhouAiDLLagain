@@ -24,9 +24,9 @@ void Joueur::Reset_joueur(Reseau* reseau)
 	m_reseau = new Reseau(reseau->get_n_Hidden_layer(), reseau->get_n_inputs(), reseau->get_n_Hidden_neurones(), reseau->get_Hidden_layers(), reseau->get_inputs(), reseau->get_outputs(), this);
 }
 
-void Joueur::move(Dir Direction, bool release)
+void Joueur::move(Dir Direction)
 {
-	press(Direction.dir, release);
+	press(Direction.dir, Direction.released);
 }
 
 

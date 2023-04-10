@@ -1,5 +1,4 @@
 
-#include <d3d9.h>
 #include "List.h"
 class Joueur;
 class Reseau;
@@ -15,8 +14,10 @@ public:
 	void execute_command_list();
 	void delete_generation();
 	void change_n_systemes(int nombre);
+	Reseau* Create_mixed_reseau(Joueur* joueur);
+	void Get_parent_charac();
 	bool joueur_mort();
-
+	GenericNeurone** input_into_layer(Input** inputs, int n_inputs);
 	int get_n_generation();
 	int get_n_systemes();
 	int get_joueur_actuel();

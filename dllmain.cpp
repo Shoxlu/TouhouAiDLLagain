@@ -45,7 +45,7 @@ extern zPlayer* player_ptr;
 extern zBulletManager* Bullet_PTR;
 extern zGlobals* global_ptr;
 GenerationJoueur* generation;
-const int NbrePerso_generation = 10;
+const int NbrePerso_generation = 20;
 int previous_time;
 Window* window;
 void update();
@@ -125,7 +125,7 @@ void update()
         Bullet_PTR = *(zBulletManager**)0x4CF2BC;
         global_ptr = (zGlobals*)0x4cccc0;
         
-        if (global_ptr->time_in_stage > previous_time)
+        if (global_ptr->time_in_stage > previous_time && global_ptr->time_in_stage > 20)
         {
             if (player_ptr != NULL)
             {

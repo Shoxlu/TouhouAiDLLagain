@@ -10,7 +10,7 @@ public:
 	Joueur();
 	~Joueur();
 	void Reset_joueur(Reseau* reseau);
-	void move(Dir direction, bool release);
+	void move(Dir direction);
 	void set_pos(double x, double y);
 	void set_reward(int i);
 

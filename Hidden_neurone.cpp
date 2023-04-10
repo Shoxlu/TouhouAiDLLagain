@@ -37,18 +37,12 @@ GenericNeurone* Hidden_neurone::get_Input(int i) {
 
 void Hidden_neurone::mutation_hidden_neurone()
 {
-	/*if (randint(0, 100) < 10)
-	{
-		m_n_Inputs += 1;
-		m_Inputs[m_n_Inputs - 1] = new Input(random_float() * 100, random_float() * 100, m_joueur);
-	}
-	else if(randint(0, 100) < 2 && m_n_Inputs > 1){
-		delete_Inputs(randint(0, m_n_Inputs - 1));
-	} actually nonsense, idk*/
-	
 	for (int i = 0; i < m_n_Inputs; i++)
 	{
-		m_weights[i] = m_weights[i] + random_float() * 0.4;
+		if (random_float_positive() > 0.5)
+		{
+			m_weights[i] += random_float() * 0.2;
+		}
 	}
 }
 void Hidden_neurone::change_weights(int n_inputs)
@@ -71,7 +65,6 @@ void Hidden_neurone::change_weights(int n_inputs)
 		{
 			weights[i] = 1;
 		}
-		delete[] m_weights;
 		m_weights = weights;
 	}
 }
@@ -100,12 +93,10 @@ void Hidden_neurone::Activation()
 	m_Active = 0;
 	for (int i = 0; i < m_n_Inputs; i++)
 	{
-		m_input = m_input + m_Inputs[i]->get_output() * m_weights[i];
+		auto input = m_Inputs[i]->get_output();
+		m_input = m_input + input * m_weights[i];
 		//printf("Hidden_n input: %f, weight : %f, m_n_Inputs : %i \n", m_input, *m_weights[i], i);
 	}
-	
-	/*if (m_input >= 1.0f)
-	{*/
 	m_output = 1/(1+pow(2.71828, -m_input));
 	if (m_output > 0.5)
 	{

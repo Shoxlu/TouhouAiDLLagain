@@ -223,6 +223,7 @@ struct Output {
 };
 struct Dir {
     int dir;
+    bool released;
 };
 struct zGlobalsInner {
     int stage_num;

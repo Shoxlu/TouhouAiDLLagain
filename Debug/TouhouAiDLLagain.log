@@ -1,5 +1,5 @@
 ﻿  Hidden_neurone.cpp
 C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(13,1): warning C4305: 'initialisation' : troncation de 'double' à 'float'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(51,31): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(127,9): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(44,35): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(118,9): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

@@ -31,8 +31,8 @@ Pos get_player_pos()
     playerPos.x = player_ptr->inner.pos.x;
     playerPos.y = player_ptr->inner.pos.y;
     return playerPos;
-    return Pos{ 0, 0 };
 }
+
 int bulletNear(float x, float y) {
     Bullet_PTR = *(zBulletManager**)0x4CF2BC;
     if (!Bullet_PTR)
@@ -78,15 +78,13 @@ int bulletNear(float x, float y) {
 
 void press(int input, bool release)
 {
-    INPUT inputs[2] = {};
+    INPUT inputs[1] = {};
     ZeroMemory(inputs, sizeof(inputs));
 
     inputs[0].type = INPUT_KEYBOARD;
     inputs[0].ki.wVk = input;
     if (release) {
-        inputs[1].type = INPUT_KEYBOARD;
-        inputs[1].ki.wVk = input;
-        inputs[1].ki.dwFlags = KEYEVENTF_KEYUP;
+        inputs[0].ki.dwFlags = KEYEVENTF_KEYUP;
     }
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 }
@@ -108,15 +106,6 @@ bool random_bool()
         return true;
     }
     return false;
-}
-template<class Interface>
-inline void SafeRelease(Interface** ppInterfaceToRelease)
-{
-    if (*ppInterfaceToRelease != NULL)
-    {
-        (*ppInterfaceToRelease)->Release();
-        (*ppInterfaceToRelease) = NULL;
-    }
 }
 
 void Release_All_Inputs()

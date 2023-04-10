@@ -7,13 +7,8 @@ Input::~Input()
 {
 	//m_sprite->Release();
 }
-Input::Input(double x, double y, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_weight(1), m_isActive(0)
+Input::Input(double x, double y, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_isActive(0), m_pos(Pos{ x, y }), m_input(0), m_output(0), m_type(0)
 {
-	Activation();
-}
-Input::Input(double x, double y, float weight, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_weight(weight), m_isActive(0)
-{
-	Activation();
 }
 
 float Input::get_input() const
@@ -25,10 +20,6 @@ float Input::get_output()
 	return m_output;
 }
 
-float Input::get_weight()
-{
-	return m_weight;
-}
 int Input::get_type() const
 {
 	return m_type;
@@ -42,14 +33,9 @@ Pos Input::get_offset() const
 {
 	return m_offset;
 }
-Pos Input::get_pos_graphics() const
-{
-	return m_pos_graphics;
-}
-
 void Input::mutation_Input()
 {
-	if (randint(0, 100) < 40)
+	if (randint(0, 100) < 10)
 	{
 		mutation_position();
 	}
@@ -57,8 +43,16 @@ void Input::mutation_Input()
 
 void Input::mutation_position()
 {
-	m_offset.x += random_float() * 100;
-	m_offset.y += random_float() * 100;
+	if (random_float() > 0.5)
+	{
+		m_offset.x += random_float() * 50;
+		m_offset.y += random_float() * 50;
+	}
+	else {
+		m_offset.x = random_float() * 100;
+		m_offset.y = random_float() * 100;
+	}
+	
 }
 
 

@@ -55,56 +55,25 @@ Reseau::Reseau(int n_layers, int n_inputs_all, int n_hidden_neurones, Joueur* jo
     }
     Create_hidden_layer(n_inputs, m_layer, m_n_outputs);
     m_outputs = m_layer;
-    moves[0] = Dir{ VK_DOWN };
-    moves[1] = Dir{ VK_UP };
-    moves[2] = Dir{ VK_LEFT };
-    moves[3] = Dir{ VK_RIGHT };
-    moves[4] = Dir{ VK_X };
-    moves[5] = Dir{ VK_SHIFT };
+    moves[0] = Dir{ VK_DOWN , true };
+    moves[1] = Dir{ VK_UP , true };
+    moves[2] = Dir{ VK_LEFT , true };
+    moves[3] = Dir{ VK_RIGHT, true };
+    moves[4] = Dir{ VK_X , true };
+    moves[5] = Dir{ VK_SHIFT , true };
     mutation_reseau();
    
 }
 
-void Reseau::Reset_m_layers()
-{
-    GenericNeurone*** layers = nullptr;
-    if (m_layers != nullptr)
-    {
-         layers = m_layers;
-    }
-    int n_layers = m_n_layers;
-   
-    
-    m_layers = new GenericNeurone * *[n_layers];
-    for (int i = 0; i < n_layers; i++)
-    {
-        m_layers[i] = new GenericNeurone * [m_n_hidden_neurones];
-    }
-    if (layers == nullptr)
-    {
-        return;
-    }
-    for (int j = 0; j < n_layers; j++)
-    {
-        for (int i = 0; i < m_n_hidden_neurones; i++)
-        {
-            if (layers[j][i] != NULL) {
-                m_layers[j][i] = layers[j][i];
-            }
-        }
-    }
-}
-
 Reseau::Reseau(int n_layers, int n_inputs_all ,int n_hidden_neurones, GenericNeurone*** layers, Input** inputs, GenericNeurone** output, Joueur* joueur) :m_n_layers(n_layers), m_n_hidden_neurones(n_hidden_neurones), m_joueur(joueur), m_n_inputs(n_inputs_all), m_outputs(output), m_layers(layers)
 {
-    //printf("New Reseau\n");
     m_n_outputs = 6;
     Reset_m_layers();
     m_inputs = new Input * [n_inputs_all];
     for (int i = 0; i < n_inputs_all; i++)
     {
 
-        m_inputs[i] = new Input(inputs[i]->get_offset().x, inputs[i]->get_offset().y, inputs[i]->get_weight(), m_joueur);
+        m_inputs[i] = inputs[i];
         //printf("%f, %f, %f \n", inputs[i]->get_offset().x, inputs[i]->get_offset().y, inputs[i]->get_weight());
 
     }
@@ -116,31 +85,28 @@ Reseau::Reseau(int n_layers, int n_inputs_all ,int n_hidden_neurones, GenericNeu
         m_layer = new GenericNeurone * [n_hidden_neurones];
         for (int j = 0; j < n_hidden_neurones; j++)
         {
-            m_layer[j] = new Hidden_neurone(n_inputs, layer_input, ((Hidden_neurone*)layers[i][j])->get_weights(), m_joueur);
-            ((Hidden_neurone*)m_layer[j])->mutation_hidden_neurone();
-            m_layers[i][j] = m_layer[j];
+            m_layers[i][j] = layers[i][j];
+            ((Hidden_neurone*)m_layers[i][j])->mutation_hidden_neurone();
         }
         
         n_inputs = n_hidden_neurones;
-        m_layers[i] = m_layer;
-        layer_input = m_layer;
+        layer_input = m_layers[i];
     }
     
-    m_layer = new GenericNeurone * [m_n_outputs];
+    m_outputs = new GenericNeurone * [m_n_outputs];
     for (int j = 0; j < m_n_outputs; j++)
     {
-        m_layer[j] = new Hidden_neurone(n_hidden_neurones, layer_input, ((Hidden_neurone*)output[j])->get_weights(), m_joueur);
-        ((Hidden_neurone*)m_layer[j])->mutation_hidden_neurone();
+        m_outputs[j] = output[j];
+        ((Hidden_neurone*)m_outputs[j])->mutation_hidden_neurone();
     }
-    m_outputs = m_layer;
     m_layer = new GenericNeurone * [m_n_outputs];
     mutation_reseau();
-    moves[0] = Dir{ VK_DOWN };
-    moves[1] = Dir{ VK_UP };
-    moves[2] = Dir{ VK_LEFT };
-    moves[3] = Dir{ VK_RIGHT };
-    moves[4] = Dir{ VK_X };
-    moves[5] = Dir{ VK_SHIFT };
+    moves[0] = Dir{ VK_DOWN , true };
+    moves[1] = Dir{ VK_UP , true };
+    moves[2] = Dir{ VK_LEFT , true };
+    moves[3] = Dir{ VK_RIGHT, true };
+    moves[4] = Dir{ VK_X , true };
+    moves[5] = Dir{ VK_SHIFT , true };
     
 }
 void Reseau::update()
@@ -160,16 +126,50 @@ void Reseau::update()
         m_outputs[i]->Activation();
         if (m_outputs[i]->get_output() >= 1)
         {
-            m_joueur->move(moves[i], false);
+            moves[i].released = false;
+            m_joueur->move(moves[i]);
+            
         }
-        else
+        else if(moves[i].released == false)
         {
-            m_joueur->move(moves[i], true);
+            moves[i].released = true;
+            m_joueur->move(moves[i]);
         }
             
     }
     
     
+}
+
+
+void Reseau::Reset_m_layers()
+{
+    GenericNeurone*** layers = nullptr;
+    if (m_layers != nullptr)
+    {
+        layers = m_layers;
+    }
+    int n_layers = m_n_layers;
+
+
+    m_layers = new GenericNeurone * *[n_layers];
+    for (int i = 0; i < n_layers; i++)
+    {
+        m_layers[i] = new GenericNeurone * [m_n_hidden_neurones];
+    }
+    if (layers == nullptr)
+    {
+        return;
+    }
+    for (int j = 0; j < n_layers; j++)
+    {
+        for (int i = 0; i < m_n_hidden_neurones; i++)
+        {
+            if (layers[j][i] != NULL) {
+                m_layers[j][i] = layers[j][i];
+            }
+        }
+    }
 }
 int Reseau::get_n_inputs()
 {
@@ -237,10 +237,12 @@ void Reseau::mutation_reseau()
     if (randint(0, 100) < 30)
     {
         mutation_inputs();
+        printf("+1 input \n");
     }
-    else if (randint(0, 100) < 30 && m_n_inputs > 1)
+    else if (randint(0, 100) < 5 && m_n_inputs > 1)
     {
        delete_Inputs(randint(0, m_n_inputs-1));
+       printf("-1 input \n");
     }
     for (int i = 0; i < m_n_inputs; i++)
     {
@@ -256,20 +258,22 @@ void Reseau::delete_Inputs(int j)
 {
     m_n_inputs -= 1;
     int n_inputs = m_n_inputs;
-
-    Reset_m_inputs();
-    delete m_inputs[j];
+    //delete m_inputs[j];
     if (j != 0)
     {
         GenericNeurone* temp_personnages = m_inputs[0];
         m_inputs[0] = m_inputs[j];
         m_inputs[j] = (Input*)temp_personnages;
     }
-    for (int k = 0; k < n_inputs - 1; k++)
+    for (int k = 0; k < n_inputs-1; k++)
     {
         m_inputs[k] = m_inputs[k + 1];
     }
-    
+    Input** inputs = m_inputs;
+    m_inputs = new Input * [n_inputs];
+    for (int i = 0; i < n_inputs; i++) {
+        m_inputs[i] = inputs[i];
+    }
     for (int i = 0; i < m_n_hidden_neurones; i++)
     {
         ((Hidden_neurone*)m_layers[0][i])->change_weights(m_n_inputs);
@@ -281,18 +285,6 @@ void Reseau::mutation_inputs()
 {
     m_n_inputs += 1;
 
-    Reset_m_inputs();
-
-    m_inputs[m_n_inputs - 1] = new Input(random_float() * 100, random_float() * 100, m_joueur);
-    for (int i = 0; i < m_n_hidden_neurones; i++)
-    {
-        ((Hidden_neurone*)m_layers[0][i])->change_weights(m_n_inputs);
-        ((Hidden_neurone*)m_layers[0][i])->change_input((GenericNeurone**)m_inputs, m_n_inputs);
-    }
-    mutation_Hidden_layers();
-}
-void Reseau::Reset_m_inputs()
-{
     Input** inputs = m_inputs;
     int n_inputs = m_n_inputs;
     m_inputs = new Input * [n_inputs];
@@ -302,7 +294,15 @@ void Reseau::Reset_m_inputs()
             m_inputs[i] = inputs[i];
         }
     }
+    m_inputs[m_n_inputs - 1] = new Input(random_float() * 100, random_float() * 100, m_joueur);
+    for (int i = 0; i < m_n_hidden_neurones; i++)
+    {
+        ((Hidden_neurone*)m_layers[0][i])->change_weights(m_n_inputs);
+        ((Hidden_neurone*)m_layers[0][i])->change_input((GenericNeurone**)m_inputs, m_n_inputs);
+    }
+    mutation_Hidden_layers();
 }
+
 void Reseau::mutation_Hidden_layers()
 {
     m_n_hidden_neurones += 1;
