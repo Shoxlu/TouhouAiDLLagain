@@ -17,8 +17,9 @@ public:
     Pos get_pos_graphics() const;
     float get_input() const;
     virtual float get_output();
-    virtual float get_weight();
+    float get_weight();
     virtual void Activation();
+    virtual bool isActive();
     void move();
     float check_state();
     virtual void mutation_Input();
@@ -34,6 +35,7 @@ private:
     float m_output;
     float m_input;
     float m_weight;
+    bool m_isActive;
     
 
 };

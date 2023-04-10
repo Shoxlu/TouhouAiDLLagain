@@ -1,7 +1,5 @@
 #pragma once
 #include <Windows.h>
-#include "d2d1.h"
-#include "wincodec.h"
 
 
 struct zBullet;
@@ -233,9 +231,9 @@ struct zGlobalsInner {
 };
 struct zGlobals {
     int stage_num;
-    BYTE gap[1];
+    BYTE gap[36];
     int time_in_stage;
-    BYTE gap1[83];
+    BYTE gap1[44];
     int miss_count;
     //offset 0x88 : Global life count
 };
@@ -250,14 +248,3 @@ bool random_bool();
 Pos get_player_pos();
 int bulletNear(float x, float y);
 void Release_All_Inputs();
-template<class Interface> void SafeRelease(Interface** ppInterfaceToRelease);
-template <typename T> class Any;
-
-
-
-HRESULT DLoadBitmapFromFile(ID2D1RenderTarget* pRenderTarget,
-    IWICImagingFactory* pIWICFactory,
-    PCWSTR uri,
-    UINT destinationWidth,
-    UINT destinationHeight,
-    ID2D1Bitmap** ppBitmap);

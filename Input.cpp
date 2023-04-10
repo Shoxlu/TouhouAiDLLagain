@@ -7,11 +7,11 @@ Input::~Input()
 {
 	//m_sprite->Release();
 }
-Input::Input(double x, double y, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_weight(1.0)
+Input::Input(double x, double y, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_weight(1), m_isActive(0)
 {
 	Activation();
 }
-Input::Input(double x, double y, float weight, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_weight(weight)
+Input::Input(double x, double y, float weight, Joueur* joueur) : m_offset(Pos{ x, y }), m_joueur(joueur), m_weight(weight), m_isActive(0)
 {
 	Activation();
 }
@@ -53,16 +53,12 @@ void Input::mutation_Input()
 	{
 		mutation_position();
 	}
-	if (randint(0, 100) < 20)
-	{
-		m_weight = m_weight + random_float() * 0.2;
-	}
 }
 
 void Input::mutation_position()
 {
-	m_offset.x += random_float() * 20;
-	m_offset.y += random_float() * 20;
+	m_offset.x += random_float() * 100;
+	m_offset.y += random_float() * 100;
 }
 
 
@@ -77,17 +73,23 @@ void Input::Activation()
 
 void Input::move()
 {
-	m_pos.x = m_joueur->get_x() + m_offset.x;
-	m_pos.y = m_joueur->get_y() + m_offset.y;
-	/*m_pos_graphics.x = m_joueur->get_scaledCenter().x + m_offset.x;
-	m_pos_graphics.y = m_joueur->get_scaledCenter().y + m_offset.y;*/
+	Pos player_pos = m_joueur->get_pos();
+	m_pos.x = player_pos.x + m_offset.x;
+	m_pos.y = player_pos.y + m_offset.y;
 }
 
 float Input::check_state()
 {
 	if (bulletNear(m_pos.x, m_pos.y))
 	{
-		return m_weight;
+		m_isActive = 1;
+		return 1;
 	}
+	m_isActive = 0;
 	return 0;
+}
+
+bool Input::isActive()
+{
+	return m_isActive;
 }

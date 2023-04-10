@@ -3,7 +3,6 @@
 #include "List.h"
 class Joueur;
 class Reseau;
-template class List<Reseau*>;
 class GenerationJoueur {
 public:
 	GenerationJoueur(int n_systemes);
@@ -15,11 +14,12 @@ public:
 	void fin_generation();
 	void execute_command_list();
 	void delete_generation();
-	int get_n_systemes();
 	void change_n_systemes(int nombre);
-	int get_n_generation();
-	int joueur_mort();
+	bool joueur_mort();
 
+	int get_n_generation();
+	int get_n_systemes();
+	int get_joueur_actuel();
 private:
 	int m_n_systemes;
 	const int m_n_all_systemes;
@@ -29,6 +29,6 @@ private:
 	int best_joueur_id;
 	Joueur** m_joueur;
 	Joueur* m_best_joueur;
-	List<Reseau*>* commandList;
+	List commandList;
 	int previous_miss_count;
 };

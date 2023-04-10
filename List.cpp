@@ -3,15 +3,9 @@
 #include "Reseau.h"
 #include "Input.h"
 
-template class List<Reseau*>;
-template class List<int>;
-template class List<Input*>;
-template class List<float>;
-
-template <typename T>
-void List<T>::append(T value)
+void List::append(Value value)
 {
-	List* list = this;
+	List* list = tail_head;
 	if (list != nullptr)
 	{
 		
@@ -26,14 +20,14 @@ void List<T>::append(T value)
 
 	}
 	list_length++;
-	list->next = new List<T>(this, list_length, value);
+	list->next = new List(list, list_length, value, tail_head);
 	
 }
 
-template <typename T>
-void List<T>::remove(int index_)
+void List::remove(int index_)
 {
-	for (List* list=this; list->index < list_length-1; list=list->next)
+	List* list_next = tail_head->next;
+	for (List* list=tail_head; list->index < list_length-1; list=list_next)
 	{
 		if (list == nullptr)
 		{
@@ -42,38 +36,36 @@ void List<T>::remove(int index_)
 		}
 		if (list->next->index == index_)
 		{
-			list->next->next->previous = list;
-			list->next = list->next->next;
+			list->next = list;
+			list_next = list->next->next;
 			index_++;
+			break;
 		}
 	}
 }
-template <typename T>
-int List<T>::length()
+int List::length()
 {
 	return list_length;
 }
-template <typename T>
-T List<T>::get(int i)
+Value List::get(int i)
 {
-	List* list = this;
+	List* list = tail_head;
 	for (int j = 0; j < i-1; j++)
 	{
 		list = list->next;
 	}
 	return list->value;
 }
-template <typename T>
-List<T>::List() : next(nullptr), previous(nullptr), value(NULL), list_length(0), index(0)
+List::List() : next(nullptr), previous(nullptr), value(NULL), list_length(0), index(0), tail_head(this)
 {
 
 }
-template <typename T>
-List<T>::List(List* previous_, int list_length_, T value_) : next(nullptr), previous(previous_), value(value_), list_length(list_length_), index(previous_->index+1)
+List::List(List* previous_, int list_length_, Value value_, List* head) : next(nullptr), previous(previous_), value(value_), list_length(list_length_), index(previous_->index+1), tail_head(head)
 {
 
-}template <typename T>
-List<T>::~List() {
+}
+
+List::~List() {
 	if (next != nullptr)
 	{
 		delete next;
