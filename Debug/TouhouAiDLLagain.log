@@ -1,5 +1,11 @@
-﻿  Hidden_neurone.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(13,1): warning C4305: 'initialisation' : troncation de 'double' à 'float'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(44,35): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Hidden_neurone.cpp(118,9): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
+﻿  Input.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(59,35): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(103,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(116,31): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(116,22): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+  utils.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(55,24): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(57,23): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(90,54): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
+  Génération de code en cours...
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

@@ -9,8 +9,6 @@
 #include <wincodec.h>
 #include <Windows.h>
 #include <string>
-#include <d3d9.h>
-#include <d2d1.h>
 
 
 #include "utils.h"
@@ -45,7 +43,7 @@ extern zPlayer* player_ptr;
 extern zBulletManager* Bullet_PTR;
 extern zGlobals* global_ptr;
 GenerationJoueur* generation;
-const int NbrePerso_generation = 20;
+const int NbrePerso_generation = 40;
 int previous_time;
 Window* window;
 void update();
@@ -157,7 +155,7 @@ void render_frame()
         for (int j = 0; j < n_hidden_neurones; j++)
         {
             window->draw_line(Pos{ pos.x * 2, 200 - pos.y * 1.5f }, Pos{ -300.0 + 75 * j, 200.0});
-            float color = 0.2 + 0.8 * hidden_layer[0][j]->get_output();
+            float color = 0.2 + 0.8 * hidden_layer[0][j]->isActive();
             window->draw_circle(Pos{ -300.0 + 75.0 * j, 200.0}, 25, Color{color, color, color});
         }
         
@@ -167,18 +165,18 @@ void render_frame()
         for (int j = 0; j < n_hidden_neurones; j++)
         {
             window->draw_line(Pos{ -300.0 + 75 * (j-1), 200.0 + 75 * (i-1) }, Pos{ -300.0 + 75 * j, 200.0 + 55 * j });
-            float color = 0.2 + 0.8 * hidden_layer[i][j]->get_output();
+            float color = 0.2 + 0.8 * hidden_layer[i][j]->isActive();
             window->draw_circle(Pos{ -300.0 + 75 * j, 200.0 + 75 * i}, 25, Color{color, color, color});
         }
     }
-    auto output = reseau->get_outputs();
+    Dir* moves = reseau->get_moves();
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < n_hidden_neurones; j++)
         {
             window->draw_line(Pos{ -300.0 + 75 * j, 200.0 + 75 * (n_hidden_layer - 1) }, Pos{ -300.0 + 75 * i, 400.0 });
         }
-        float color = 0.2 + 0.8 * output[i]->get_output();
+        float color = 0.2 + 0.8 * !moves[i].released;
         window->draw_circle(Pos{ -300.0 + 75 * i, 400 }, 25, Color{ 0.0, 0.0, color });
     }
     window->update();

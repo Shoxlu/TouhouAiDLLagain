@@ -1,13 +1,9 @@
 
 #include <GLFW/glfw3.h>
+#include "utils.h"
 struct Pos;
 
-struct Color {
-	float r;
-	float g;
-	float b;
-	float a;
-};
+
 class Window {
 public:
 	Window();

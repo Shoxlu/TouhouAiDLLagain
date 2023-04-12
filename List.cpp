@@ -5,7 +5,7 @@
 
 void List::append(Value value)
 {
-	List* list = tail_head;
+	List* list = head;
 	if (list != nullptr)
 	{
 		
@@ -20,14 +20,14 @@ void List::append(Value value)
 
 	}
 	list_length++;
-	list->next = new List(list, list_length, value, tail_head);
+	list->next = new List(list, list_length, value, head, list->next);
 	
 }
 
 void List::remove(int index_)
 {
-	List* list_next = tail_head->next;
-	for (List* list=tail_head; list->index < list_length-1; list=list_next)
+	List* list_next = head->next;
+	for (List* list=head; list->index < list_length-1; list=list_next)
 	{
 		if (list == nullptr)
 		{
@@ -49,18 +49,22 @@ int List::length()
 }
 Value List::get(int i)
 {
-	List* list = tail_head;
+	List* list = head;
 	for (int j = 0; j < i-1; j++)
 	{
 		list = list->next;
 	}
 	return list->value;
 }
-List::List() : next(nullptr), previous(nullptr), value(NULL), list_length(0), index(0), tail_head(this)
+List::List() : next(nullptr), previous(nullptr), value(NULL), list_length(0), index(0), head(this), tail(this)
 {
 
 }
-List::List(List* previous_, int list_length_, Value value_, List* head) : next(nullptr), previous(previous_), value(value_), list_length(list_length_), index(previous_->index+1), tail_head(head)
+List::List(Value value_) : next(nullptr), previous(nullptr), value(NULL), list_length(0), index(0), head(this), tail(this)
+{
+	this->append(value_);
+}
+List::List(List* previous_, int list_length_, Value value_, List* head, List* tail_) : next(nullptr), previous(previous_), value(value_), list_length(list_length_), index(previous_->index+1), head(head), tail(tail_)
 {
 
 }

@@ -21,7 +21,8 @@ void Joueur::Reset_joueur(Reseau* reseau)
 	m_reward = 0;
 	m_previous_reward = 0;
 	m_previous_stage = 0;
-	m_reseau = new Reseau(reseau->get_n_Hidden_layer(), reseau->get_n_inputs(), reseau->get_n_Hidden_neurones(), reseau->get_Hidden_layers(), reseau->get_inputs(), reseau->get_outputs(), this);
+	m_reseau = reseau;
+		//new Reseau(reseau->get_n_Hidden_layer(), reseau->get_n_inputs(), reseau->get_n_Hidden_neurones(), reseau->get_Hidden_layers(), reseau->get_inputs(), reseau->get_outputs(), this);
 }
 
 void Joueur::move(Dir Direction)

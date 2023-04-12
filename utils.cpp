@@ -1,6 +1,5 @@
 
 #include <random>
-#include "List.h"
 #include "utils.h"
 
 
@@ -20,9 +19,7 @@ zGlobals* global_ptr = (zGlobals*)0x4cccc0;
 
 Pos get_player_pos()
 {
-    Pos playerPos;
-    playerPos.x = 0;
-    playerPos.y = 0;
+    Pos playerPos = Pos{ 0, 0 };
     if (player_ptr == NULL)
     {
         printf("Player ptr not initialised !\n");
@@ -122,3 +119,30 @@ void Release_All_Inputs()
     press(VK_SHIFT, 1);
 }
 
+float* create_weights(int n, float value, int n_neurone)
+{
+    float* weights = new float[n];
+    
+    for (int i = 0; i < n; i++)
+    {
+        
+        if (i == n_neurone)
+        {
+            weights[n_neurone] = value;
+        }
+        else {
+            weights[i] = 0.5;
+        }
+        printf("Weights[%d]: %f \n", i, weights[i]);
+    }
+    printf("\n");
+    return weights;
+}
+
+void copy_weights(int n, float** dest, float* source)
+{
+    *dest = new float[n];
+    for (int i = 0; i < n; i++) {
+        (*dest)[i] = source[i];
+    }
+}

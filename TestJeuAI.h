@@ -14,14 +14,4 @@ void draw_reseau2d(Reseau* reseau);
 void draw_Hidden_layer2d(Hidden_layer* Hidden_layer);
 void render_frame2d();
 void init_direct2d();
-void draw_2dsprite(ID2D1Bitmap* sprite, Pos pos);
 void load_Inputs_2dsprites();
-
-HRESULT DLoadBitmapFromFile(
-    ID2D1RenderTarget* pRenderTarget,
-    IWICImagingFactory* pIWICFactory,
-    PCWSTR uri,
-    UINT destinationWidth,
-    UINT destinationHeight,
-    ID2D1Bitmap** ppBitmap
-);

@@ -239,7 +239,12 @@ struct zGlobals {
     //offset 0x88 : Global life count
 };
 
-
+struct Color {
+    float r;
+    float g;
+    float b;
+    float a;
+};
 
 void press(int input, bool release);
 float random_float();
@@ -249,3 +254,6 @@ bool random_bool();
 Pos get_player_pos();
 int bulletNear(float x, float y);
 void Release_All_Inputs();
+void copy_weights(int n, float** dest, float* source);
+float* create_weights(int n, float value, int n_neurone);
+

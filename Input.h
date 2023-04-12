@@ -8,20 +8,23 @@ class Joueur;
 class Input: public GenericNeurone
 {
 public:
-    Input(double x, double y, Joueur* joueur);
+    Input(double x, double y, int n_hidden_neurones_1, Joueur* joueur);
+    Input(double x, double y, int n_hidden_neurones_1,float* weights, Joueur* joueur);
     ~Input();
     int get_type() const;
     Pos get_pos() const;
     Pos get_offset() const;
     float get_input() const;
-    virtual float get_output();
-    virtual void Activation();
+    virtual float get_output(int k, int self_id);
+    void Update();
     virtual bool isActive();
     void move();
+    float* get_weights();
     float check_state();
-    virtual void mutation_Input();
-    void mutation_position();
-    
+    void mutation_Input();
+    virtual void change_weights(int n_inputs);
+    virtual int get_n_outputs();
+    virtual void change_input(GenericNeurone** Inputs, int n_inputs);
 
 private:
     Pos m_pos;
@@ -30,7 +33,7 @@ private:
     Joueur* m_joueur;
     float m_output;
     float m_input;
-    bool m_isActive;
-    
-
+    int m_isActive;
+    float* m_weights;
+    int m_n_outputs;
 };

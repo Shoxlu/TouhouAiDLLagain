@@ -1,7 +1,8 @@
 
-#include "List.h"
 class Joueur;
 class Reseau;
+class Input;
+class GenericNeurone;
 class GenerationJoueur {
 public:
 	GenerationJoueur(int n_systemes);
@@ -15,6 +16,9 @@ public:
 	void delete_generation();
 	void change_n_systemes(int nombre);
 	Reseau* Create_mixed_reseau(Joueur* joueur);
+	void random_network_charac(int* pn_inputs, int* pn_layers, int* pn_hidden_neurone, Reseau* parent);
+	float* take_random_hidden_neurone_weights(int n, Reseau* parent, Reseau* best_joueur, int i, int j);
+	Input* take_random_input(Reseau* parent, Reseau* best_joueur, Input** parent_inputs, Input** best_joueur_inputs,int n_hidden_neurones, Joueur* joueur, int i);
 	void Get_parent_charac();
 	bool joueur_mort();
 	GenericNeurone** input_into_layer(Input** inputs, int n_inputs);
@@ -30,6 +34,5 @@ private:
 	int best_joueur_id;
 	Joueur** m_joueur;
 	Joueur* m_best_joueur;
-	List commandList;
 	int previous_miss_count;
 };
