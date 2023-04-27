@@ -1,11 +1,4 @@
-﻿  Input.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(59,35): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(103,26): warning C4244: '=' : conversion de 'float' en 'int', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(116,31): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Input.cpp(116,22): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-  utils.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(55,24): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(57,23): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(90,54): warning C4244: 'return' : conversion de 'double' en 'float', perte possible de données
-  Génération de code en cours...
+﻿  Layer.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Layer.cpp(45,46): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Layer.cpp(99,67): warning C4244: '-=' : conversion de 'double' en 'float', perte possible de données
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

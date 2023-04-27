@@ -222,7 +222,8 @@ struct Output {
     double angle;
 };
 struct Dir {
-    int dir;
+    int dir[2];
+    int n_dir;
     bool released;
 };
 struct zGlobalsInner {
@@ -231,29 +232,38 @@ struct zGlobalsInner {
     int miss_count;
 };
 struct zGlobals {
+
+    BYTE gap[32];
     int stage_num;
-    BYTE gap[36];
+    BYTE gap2[4];
     int time_in_stage;
     BYTE gap1[44];
     int miss_count;
     //offset 0x88 : Global life count
 };
-
 struct Color {
-    float r;
-    float g;
-    float b;
-    float a;
+    double r;
+    double g;
+    double b;
+    double a;
 };
-
+struct DataPoint {
+    double inputs[2];
+    double expectedOutputs[2];
+};
+void press(Dir input, bool release);
 void press(int input, bool release);
-float random_float();
-float random_float_positive();
+double random_float();
+double random_float_positive();
 int randint(int min, int max);
 bool random_bool();
 Pos get_player_pos();
 int bulletNear(float x, float y);
 void Release_All_Inputs();
-void copy_weights(int n, float** dest, float* source);
-float* create_weights(int n, float value, int n_neurone);
-
+void copy_array(int n, double* dest, double* source);
+void copy_array(int n, float* dest, float* source);
+void copy_array(int n, int* dest, int* source);
+int GetMaximumIndex(double outputs[], int length);
+double ActivationFunction(double weightedInput);
+double ActivationFunctionDerivative(double x);
+void speedUpGame(int speed);

@@ -1,38 +1,6 @@
-﻿  Reseau.cpp
-C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\any(13): warning STL4038: The contents of <any> are available only with C++17 or later.
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::append(T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-          with
-          [
-              T=Input *
-          ]
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(10,7): message : voir la déclaration de 'List<Input *>::append'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'void List<Input *>::remove(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(11,7): message : voir la déclaration de 'List<Input *>::remove'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'int List<Input *>::length(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(12,6): message : voir la déclaration de 'List<Input *>::length'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'T List<T>::get(int)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-          with
-          [
-              T=Input *
-          ]
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(13,4): message : voir la déclaration de 'List<Input *>::get'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(List<Input *> *,int,T)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-          with
-          [
-              T=Input *
-          ]
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(15,2): message : voir la déclaration de 'List<Input *>::List'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(14,2): message : voir la déclaration de 'List<Input *>::List'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Reseau.h(8,28): warning C4661: 'List<Input *>::~List(void)' : aucune définition appropriée pour la demande d'instanciation explicite du modèle
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\List.h(16,3): message : voir la déclaration de 'List<Input *>::~List'
-Defs.def(1): warning LNK4017: instruction IMPORTS non prise en charge dans la plateforme cible ; instruction ignorée
-Defs.def(2): warning LNK4017: instruction init non prise en charge dans la plateforme cible ; instruction ignorée
-Defs.def(2): warning LNK4017: instruction update non prise en charge dans la plateforme cible ; instruction ignorée
-     Création de la bibliothèque C:\Jeux casse\TouhouAiDLLagain.lib et de l'objet C:\Jeux casse\TouhouAiDLLagain.exp
-  Génération de code en cours
-  3 of 391 functions ( 0.8%) were compiled, the rest were copied from previous compilation.
+﻿  Génération de code en cours
+  0 of 56 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    12 functions had inline decision re-evaluated but remain unchanged
+    0 functions had inline decision re-evaluated but remain unchanged
   Fin de la génération du code
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

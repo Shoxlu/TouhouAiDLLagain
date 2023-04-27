@@ -16,6 +16,8 @@
 zPlayer* player_ptr = *(zPlayer**)0x4CF410;
 zBulletManager* Bullet_PTR = *(zBulletManager**)0x4CF2BC;
 zGlobals* global_ptr = (zGlobals*)0x4cccc0;
+BYTE frame_skip = 0;
+
 
 Pos get_player_pos()
 {
@@ -28,6 +30,13 @@ Pos get_player_pos()
     playerPos.x = player_ptr->inner.pos.x;
     playerPos.y = player_ptr->inner.pos.y;
     return playerPos;
+}
+
+void speedUpGame(int speed)
+{
+    BYTE* frameskip = (BYTE*)0x4CD00C;
+    *frameskip = speed;
+    frame_skip = *frameskip;
 }
 
 int bulletNear(float x, float y) {
@@ -50,11 +59,11 @@ int bulletNear(float x, float y) {
 
 
     while (bullet) {
-        float bullet_hitbox = bullet->hitbox_radius;
-        float plHitbox_radius = 10;
-        float distance = pow(x - bullet->pos.x, 2) + pow(y - bullet->pos.y, 2);
+        double bullet_hitbox = bullet->hitbox_radius;
+        double plHitbox_radius = 10;
+        double distance = pow(x - bullet->pos.x, 2) + pow(y - bullet->pos.y, 2);
         if (distance >= ((plHitbox_radius * plHitbox_radius) + bullet_hitbox * bullet_hitbox)) {
-            float v12 = bullet_hitbox / 2.5;
+            double v12 = bullet_hitbox / 2.5;
             if (v12 < 10.0) {
                 v12 = 10.0;
             }
@@ -73,11 +82,24 @@ int bulletNear(float x, float y) {
     return 0;
 }
 
+void press(Dir input, bool release)
+{
+    INPUT* inputs = new INPUT[input.n_dir];
+    ZeroMemory(inputs, sizeof(inputs));
+    for (int i = 0; i < input.n_dir; i++)
+    {
+        inputs[i].type = INPUT_KEYBOARD;
+        inputs[i].ki.wVk = input.dir[i];
+        if (release) {
+            inputs[i].ki.dwFlags = KEYEVENTF_KEYUP;
+        }
+    }
+    SendInput(input.n_dir, inputs, sizeof(INPUT));
+}
 void press(int input, bool release)
 {
     INPUT inputs[1] = {};
     ZeroMemory(inputs, sizeof(inputs));
-
     inputs[0].type = INPUT_KEYBOARD;
     inputs[0].ki.wVk = input;
     if (release) {
@@ -85,12 +107,13 @@ void press(int input, bool release)
     }
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 }
-
-float random_float() {
-    return ((float)(rand()) / (float)(RAND_MAX)-0.5) * 2;
+//actually double
+double random_float() {
+    return ((double)(rand()) / (double)(RAND_MAX)-0.5) * 2;
 }
-float random_float_positive() {
-    return ((float)(rand()) / (float)(RAND_MAX));
+//actually double
+double random_float_positive() {
+    return ((double)(rand()) / (double)(RAND_MAX));
 }
 int randint(int min, int max) {
     return min + rand() % ((max-min)+1);
@@ -119,30 +142,45 @@ void Release_All_Inputs()
     press(VK_SHIFT, 1);
 }
 
-float* create_weights(int n, float value, int n_neurone)
+void copy_weights(int n, float* dest, float* source)
 {
-    float* weights = new float[n];
-    
-    for (int i = 0; i < n; i++)
-    {
-        
-        if (i == n_neurone)
-        {
-            weights[n_neurone] = value;
-        }
-        else {
-            weights[i] = 0.5;
-        }
-        printf("Weights[%d]: %f \n", i, weights[i]);
+    for (int i = 0; i < n; i++) {
+        dest[i] = source[i];
     }
-    printf("\n");
-    return weights;
 }
 
-void copy_weights(int n, float** dest, float* source)
+double ActivationFunction(double weightedInput) {
+    /*printf("%f \n", weightedInput);
+    printf("%f \n", 1.0 / (1.0 + exp(-weightedInput)));*/
+    return 1.0 / (1.0 + exp(-weightedInput));
+}
+double ActivationFunctionDerivative(double x) {
+    x = ActivationFunction(x);
+    return x;
+}
+
+int GetMaximumIndex(double outputs[], int length) {
+    int maximum_index = 0;
+    double maximum = outputs[0];
+    for (int i = 1; i < length; i++) {
+        double output = outputs[i];
+        if (maximum <= outputs[i])
+        {
+            maximum_index = i;
+            maximum = outputs[i];
+        }
+    }
+    return maximum_index;
+}
+void copy_array(int n, double* dest, double* source)
 {
-    *dest = new float[n];
     for (int i = 0; i < n; i++) {
-        (*dest)[i] = source[i];
+        dest[i] = source[i];
+    }
+}
+void copy_array(int n, int* dest, int* source)
+{
+    for (int i = 0; i < n; i++) {
+        dest[i] = source[i];
     }
 }

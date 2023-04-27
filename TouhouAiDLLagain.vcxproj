@@ -129,7 +129,8 @@
       </IgnoreSpecificDefaultLibraries>
       <AdditionalLibraryDirectories>
       </AdditionalLibraryDirectories>
-      <ModuleDefinitionFile>Defs.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>
+      </ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -172,12 +173,11 @@
     <ClInclude Include="dllmain.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GenerationPerso.h" />
-    <ClInclude Include="GenericNeurone.h" />
-    <ClInclude Include="Input.h" />
+    <ClInclude Include="InputHelper.h" />
+    <ClInclude Include="Layer.h" />
+    <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="pch.h" />
-    <ClInclude Include="Personnage.h" />
-    <ClInclude Include="Reseau.h" />
-    <ClInclude Include="Hidden_neurone.h" />
+    <ClInclude Include="Joueur.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="utils.h" />
     <ClInclude Include="Window.h" />
@@ -185,22 +185,20 @@
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="GenerationPerso.cpp" />
-    <ClCompile Include="GenericNeurone.cpp" />
-    <ClCompile Include="Input.cpp" />
+    <ClCompile Include="InputHelper.cpp" />
+    <ClCompile Include="Layer.cpp" />
+    <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="Personnage.cpp" />
-    <ClCompile Include="Reseau.cpp" />
-    <ClCompile Include="Hidden_neurone.cpp" />
+    <ClCompile Include="Joueur.cpp" />
     <ClCompile Include="utils.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Defs.def" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
