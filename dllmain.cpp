@@ -69,11 +69,20 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
             NULL,
             NULL,
             NULL
-        );
-        if (new_thread1 == NULL)
+        ); //Injection rework : delete this
+        if (new_thread1 == NULL)//Injection rework : delete this
         {
-            printf("Fail creating thread \n");
+            printf("Fail creating thread \n");//Injection rework : delete this
         }
+        //Injection rework :
+        //Inject "init" jump, at the beginning of th18 WinMain function
+        //find init address
+        //Create bytes buffer (jmp <init>)
+        // Write memory at the good address (ProcessWriteProcessMem)
+        //Inject "update" jump, in the main loop 
+        //find "update" address
+        //Create bytes buffer (jmp <update>)
+        // Write memory at the good address (ProcessWriteProcessMem)
         printf("End on init \n");
         
     }
@@ -100,7 +109,7 @@ void init()
     pinputHelper = new InputHelper();
     generation = new GenerationJoueur(NbrePerso_generation);
     
-    update();
+    update();//Injection rework: delete this
 }
 
 void update()
@@ -108,25 +117,25 @@ void update()
     previous_time = 0;
     auto joueurs = generation->m_joueurs;
     
-    while(1)
+    while(1)//Injection Rework: delete the loop
     {
         player_ptr = *(zPlayer**)0x4CF410;
         Bullet_PTR = *(zBulletManager**)0x4CF2BC;
         global_ptr = (zGlobals*)0x4cccc0;
         
-        if (global_ptr->time_in_stage > previous_time)
+        if (global_ptr->time_in_stage > previous_time)//Injection Rework, maybe delete this
         {
-            previous_time = global_ptr->time_in_stage;
+            previous_time = global_ptr->time_in_stage;//Injection Rework, maybe delete this
             if (player_ptr != NULL)
             {
                 generation->update();
                 if (GetKeyState(VK_BACK) & 0x00000001)
                 {
-                    speedUpGame(10);
+                    speedUpGame(10);//Injection Rework, maybe that will useless, to be replaced with a function that prevents game's refreshing
                 }
                 else if (GetKeyState(VK_BACK) == 0)
                 {
-                    speedUpGame(0);
+                    speedUpGame(0);//Injection Rework, maybe that will useless, to be replaced with a function that allows game's refreshing
                 }
             }
             
