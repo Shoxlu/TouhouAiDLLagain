@@ -2,16 +2,29 @@
 #include "utils.h"
 #include <stdio.h>
 
+
+Layer::~Layer()
+{
+	for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
+		delete[] weights[nodeIn];
+	}
+	delete[] weights;
+	delete[] biases;
+	delete[] activations;
+	delete[] weightedInputs;
+}
+
 Layer::Layer() : n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr), activations(nullptr), costGradientB(nullptr), costGradientW(nullptr), m_inputs(nullptr), weightedInputs(nullptr)
 {
-
+	
 }
 Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOut)
 {
 	biases = new double[nodesOut];
-	weights = new float* [nodesIn]; // Allocate memory for each row
 	activations = new double[n_nodesOut];
 	weightedInputs = new double[n_nodesOut];
+
+	weights = new float*[nodesIn];//assume this was double
 	for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
 		weights[nodeIn] = new float[nodesOut];
 	}

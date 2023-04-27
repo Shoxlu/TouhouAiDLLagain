@@ -4,6 +4,7 @@ class Layer
 public:
 	Layer(int nodes_In, int nodes_Out);
 	Layer();
+	~Layer();
 	double* CalculateOutputs(double inputs[]);
 	void recreateWeights();
 	void mutation();

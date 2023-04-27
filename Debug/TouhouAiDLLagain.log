@@ -1,1 +1,11 @@
-﻿  TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll
+﻿  Joueur.cpp
+  Layer.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Layer.cpp(58,46): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Layer.cpp(112,67): warning C4244: '-=' : conversion de 'double' en 'float', perte possible de données
+  NeuralNetwork.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\NeuralNetwork.cpp(92,65): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\NeuralNetwork.cpp(107,66): warning C4244: '=' : conversion de 'double' en 'float', perte possible de données
+  dllmain.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(100,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+  Génération de code en cours...
+  TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

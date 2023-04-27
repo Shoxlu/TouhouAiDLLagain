@@ -1,0 +1,6 @@
+
+*.tlog
+*.log
+*.ilk
+*.obj
+*.enc
