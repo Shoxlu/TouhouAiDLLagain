@@ -1,4 +1,1 @@
-﻿  Layer.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Layer.cpp(45,46): warning C4244: '+=' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Layer.cpp(99,67): warning C4244: '-=' : conversion de 'double' en 'float', perte possible de données
-  TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll
+﻿  TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll
