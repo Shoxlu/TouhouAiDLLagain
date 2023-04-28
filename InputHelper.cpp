@@ -23,6 +23,11 @@ double* InputHelper::getInputs(){
 	int a = 0;
 	for (int i = 2; i < 2000*6; i+=6) {
 		if (bullets[i/6-2].state == 0) {
+			inputs[i - a] = -4000;
+			inputs[i + 1 - a] = 0;
+			inputs[i + 2 - a] = 0;
+			inputs[i + 3 - a] = 0;
+			inputs[i + 4 - a] = 0;
 			i += 6;
 			a += 6;
 			continue;

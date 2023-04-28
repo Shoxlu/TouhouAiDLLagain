@@ -15,12 +15,12 @@ public:
 	void DeleteNeurone_weights(int random_number);
 	void AddNeurone_biases(int random_number);
 	void DeleteNeurone_biases(int random_number);
-	double Cost(DataPoint dataPoint);
-	double CostAverage(DataPoint data[], int n_data_points);
-	void UpdateAllGradients(DataPoint dataPoint, int n_datapoints);
-	void Learn(DataPoint data[], int n_data_points, double learnRate);
-	void ApplyAllGradients(double learnRate, int n_datapoints);
-	void ClearAllGradients();
+	//double Cost(DataPoint dataPoint);
+	//double CostAverage(DataPoint data[], int n_data_points);
+	//void UpdateAllGradients(DataPoint dataPoint, int n_datapoints);
+	//void Learn(DataPoint data[], int n_data_points, double learnRate);
+	//void ApplyAllGradients(double learnRate, int n_datapoints);
+	//void ClearAllGradients();
 	void mutation();
 	int layers_length;
 	int* m_layerSizes;

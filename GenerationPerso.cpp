@@ -14,8 +14,10 @@ extern zGlobals* global_ptr;
 extern zPlayer* player_ptr;
 extern int previous_time;
 extern BYTE frame_skip;
+extern HANDLE hprocess;
 GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(1), m_n_all_systemes(n_systemes), joueur_actuel(0), best_joueur_ids(nullptr), n_best_joueurs(n_systemes /2)
 {
+    isPlaying = true;
     m_rewards = new int[n_systemes];
     m_joueurs = new Joueur[n_systemes];
     printf("Joueurs créés\n");
@@ -82,7 +84,6 @@ void GenerationJoueur::kill_joueur(int j)
 }
 
 void GenerationJoueur::update() {
-    
     if (joueurMort())
     {   
         m_rewards[joueur_actuel] = m_joueurs[joueur_actuel].m_reward;
@@ -92,16 +93,27 @@ void GenerationJoueur::update() {
             printf("Fin_generation\n");
             newGeneration();
         }
-        ResetGame();
+        ResetThread = CreateRemoteThread(
+            hprocess,
+            NULL,
+            NULL,
+            (LPTHREAD_START_ROUTINE)ResetGame,
+            NULL,
+            NULL,
+            NULL
+        );
         printf("New actual player id: %d \n", joueur_actuel);
-        global_ptr->time_in_stage = 0;
-        previous_time = 0;
+        isPlaying = false;
+        
     }
-    else {
+    else if (isPlaying == true) {
         m_joueurs[joueur_actuel].update();
     }
+    if (isPlaying == false && global_ptr->time_in_stage == 1) {
+        isPlaying = true;
+    }
 }
-void GenerationJoueur::ResetGame()
+void ResetGame()
 {
     printf("Reset game.\n");
     Release_All_Inputs();
@@ -119,6 +131,8 @@ void GenerationJoueur::ResetGame()
     press(VK_W, 1);
     press(VK_R, 1);
     press(VK_W, 0);
+    global_ptr->time_in_stage = 0;
+    previous_time = 0;
 }
 
 int* GenerationJoueur::getBestJoueurs() {

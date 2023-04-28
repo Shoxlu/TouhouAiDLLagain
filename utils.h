@@ -267,3 +267,7 @@ int GetMaximumIndex(double outputs[], int length);
 double ActivationFunction(double weightedInput);
 double ActivationFunctionDerivative(double x);
 void speedUpGame(int speed);
+void writeMemory(void* dst, void* src, size_t len);
+void writeMemory(DWORD dst, void* src, size_t len);
+void patch_call(void* target, void* func);
+void patch_call(DWORD target, void* func);

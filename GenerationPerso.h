@@ -1,4 +1,5 @@
-
+using namespace std;
+#include <Windows.h>
 class Joueur;
 class GenerationJoueur {
 public:
@@ -9,7 +10,6 @@ public:
 	void kill_joueur(int j);
 	void delete_generation();
 	bool joueurMort();
-	void ResetGame();
 	int* getBestJoueurs();
 	int* getBestRewards();
 	int m_n_systemes;
@@ -22,6 +22,9 @@ public:
 	int n_best_joueurs;
 	int joueur_actuel;
 	Joueur* m_joueurs;
+	bool isPlaying;
+	HANDLE ResetThread;
 private:
 	int previous_miss_count;
 };
+void ResetGame();

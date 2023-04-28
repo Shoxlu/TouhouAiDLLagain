@@ -184,3 +184,24 @@ void copy_array(int n, int* dest, int* source)
         dest[i] = source[i];
     }
 }
+
+void writeMemory(void* dst, void* src, size_t len) {
+    DWORD prot;
+    VirtualProtect(dst, len, PAGE_READWRITE, &prot);
+    memcpy(dst, src, len);
+    VirtualProtect(dst, len, prot, &prot);
+}
+void writeMemory(DWORD dst, void* src, size_t len) {
+    writeMemory((void*)dst, src, len);
+}
+
+void patch_call(void* target, void* func) {
+    BYTE patch[5];
+    patch[0] = 0xE8;
+    *(DWORD*)(patch + 1) = (DWORD)func - (DWORD)target - 5;
+    writeMemory(target, patch, sizeof(patch));
+}
+
+void patch_call(DWORD target, void* func) {
+    patch_call((void*)target, func);
+}
