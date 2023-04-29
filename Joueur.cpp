@@ -34,6 +34,8 @@ Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previ
 }
 
 Joueur::~Joueur() {
+	if (m_reseau)
+		delete[] m_reseau;
 }
 
 void Joueur::Reset(NeuralNetwork* reseau)

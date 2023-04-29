@@ -32,8 +32,8 @@ extern zBulletManager* Bullet_PTR;
 extern zGlobals* global_ptr;
 GenerationJoueur* generation;
 InputHelper* pinputHelper;
-
-const int NbrePerso_generation = 1000;
+bool isRendering;
+const int NbrePerso_generation = 100;
 int previous_time;
 Window* window;
 HANDLE hprocess;
@@ -94,7 +94,10 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         
     }
     case DLL_PROCESS_DETACH:
-        //delete generation;
+        if(pinputHelper)
+            delete pinputHelper;
+        if(generation)
+            delete generation;
         speedUpGame(0);
         Release_All_Inputs();
     }
@@ -112,14 +115,19 @@ void init()
     }
     pinputHelper = new InputHelper();
     generation = new GenerationJoueur(NbrePerso_generation);
-    
+    isRendering = true;
     //update();//Injection rework: delete this
 }
 
 void update()
 {
+
     previous_time = 0;
+    if (!generation->m_joueurs) {
+        init();
+    }
     auto joueurs = generation->m_joueurs;
+    
     player_ptr = *(zPlayer**)0x4CF410;
     Bullet_PTR = *(zBulletManager**)0x4CF2BC;
     global_ptr = (zGlobals*)0x4cccc0;
@@ -139,17 +147,19 @@ void update()
                 speedUpGame(0);//Injection Rework, maybe that will useless, to be replaced with a function that allows game's refreshing
             }
         }
-        //if (GetKeyState(VK_F1) & 0x00000001)
-        //{
-        //    printf("Player not playing !\n");
-        //    Release_All_Inputs();
-        //    generation->isPlaying = false;
-        //}
-        //else {
-        //    //printf("Player is playing, WARNING !\n");
-        //    generation->isPlaying = true;
-        //}
         //render_frame();
+    }
+    if (GetKeyState(VK_F1) & 0x00000001 && isRendering == true)
+    {
+        BYTE patch[] = { 0x90, 0x90, 0x90, 0x90, 0x90 };
+        writeMemory(0x00471C07, patch, sizeof(patch));
+        isRendering = false;
+    }
+    else if (isRendering == false && !(GetKeyState(VK_F1) & 0x00000001)) {
+        //printf("Player is playing, WARNING !\n");
+        BYTE patch[] = { 0xE8, 0x44, 0x0F, 0x00, 0x00 };
+        writeMemory(0x00471C07, patch, sizeof(patch));
+        isRendering = true;
     }
 }
 

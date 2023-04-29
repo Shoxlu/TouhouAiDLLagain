@@ -15,6 +15,7 @@ extern zPlayer* player_ptr;
 extern int previous_time;
 extern BYTE frame_skip;
 extern HANDLE hprocess;
+extern bool isRendering;
 GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(1), m_n_all_systemes(n_systemes), joueur_actuel(0), best_joueur_ids(nullptr), n_best_joueurs(n_systemes /2)
 {
     isPlaying = true;
@@ -26,11 +27,11 @@ GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0
 
 GenerationJoueur::~GenerationJoueur()
 {
-    if(m_joueurs != nullptr)
+    if(m_joueurs)
         delete[] m_joueurs;
-    if (m_rewards != nullptr)
+    if (m_rewards)
         delete[] m_rewards;
-    if (best_joueur_ids != nullptr)
+    if (best_joueur_ids)
         delete[] best_joueur_ids;
 }
 
@@ -102,7 +103,6 @@ void GenerationJoueur::update() {
             NULL,
             NULL
         );
-        printf("New actual player id: %d \n", joueur_actuel);
         isPlaying = false;
         
     }
@@ -110,6 +110,7 @@ void GenerationJoueur::update() {
         m_joueurs[joueur_actuel].update();
     }
     if (isPlaying == false && global_ptr->time_in_stage == 1) {
+        printf("New actual player id: %d \n", joueur_actuel);
         isPlaying = true;
     }
 }
@@ -118,14 +119,14 @@ void ResetGame()
     printf("Reset game.\n");
     Release_All_Inputs();
     press(VK_ESCAPE, 0);
-    Sleep(500 / (frame_skip + 1));
+    Sleep((500 / (frame_skip + 1))*isRendering+100*!isRendering);
     press(VK_ESCAPE, 1);
     press(VK_R, 0);
-    Sleep(1000 / (frame_skip + 1));
+    Sleep((1000 / (frame_skip + 1))* isRendering+100 * !isRendering);
     press(VK_UP, 0);
-    Sleep(300 / (frame_skip + 1));
+    Sleep((300 / (frame_skip + 1))* isRendering+10 * !isRendering);
     press(VK_UP, 1);
-    Sleep(300 / (frame_skip + 1));
+    Sleep((300 / (frame_skip + 1))* isRendering+20 * !isRendering);
     press(VK_W, 0);
     Sleep(30);
     press(VK_W, 1);

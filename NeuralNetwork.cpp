@@ -16,10 +16,10 @@ NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
 }
 NeuralNetwork::~NeuralNetwork()
 {
-	if (layers != nullptr) {
+	if (layers) {
 		delete[] layers;
 	}
-	if (m_layerSizes != nullptr)
+	if (m_layerSizes)
 		delete[] m_layerSizes;
 }
 
@@ -105,8 +105,15 @@ void NeuralNetwork::AddNeurone_weights(int random_number)
 	{
 		new_weights1[(n_nodesOut - 1) * n_nodesOut1 + j] = random_float();//créé un weight dans chaque nodeOut pour ce nodeIn
 	}
-	delete[] actual_weights;
-	delete[] actual_weights1;
+	if (actual_weights)
+		delete[] actual_weights;
+	else
+		printf("There was an error on delete[] actual_weights ? Not initialised? check potential bad allocations.(AddNeurone) \n");
+	if(actual_weights1)
+		delete[] actual_weights1;
+	else
+		printf("There was an error on delete[] actual_weights1 ? Not initialised? check potential bad allocations.(AddNeurone) \n");
+	
 	layers[random_number].weights = new_weights;
 	layers[random_number + 1].weights = new_weights1;
 }
@@ -145,8 +152,15 @@ void NeuralNetwork::DeleteNeurone_weights(int random_number)
 			printf("new_weights1[%d][%d] = %f\n", i, j, actual_weights1[(i + n) * n_nodesOut1 + j]);
 		}
 	}
-	delete[] actual_weights;
-	delete[] actual_weights1;
+	if (actual_weights)
+		delete[] actual_weights;
+	else
+		printf("There was an error on delete[] actual_weights ? Not initialised? check potential bad allocations.(DeleteNeurone) \n");
+	if (actual_weights1)
+		delete[] actual_weights1;
+	else
+		printf("There was an error on delete[] actual_weights1 ? Not initialised? check potential bad allocations.(DeleteNeurone) \n");
+
 	layers[random_number].weights = new_weights;
 	layers[random_number + 1].weights = new_weights1;
 }
@@ -160,7 +174,11 @@ void NeuralNetwork::AddNeurone_biases(int random_number) {
 		new_biases[i] = actual_biases[i];
 	}
 	new_biases[layers[random_number].n_nodesOut] = random_float();
-	delete[] actual_biases;
+
+	if (actual_biases)
+		delete[] actual_biases;
+	else
+		printf("There was an error on delete[] actual_biases ? Not initialised? check potential bad allocations. (AddNeurone)\n");
 	layers[random_number].biases = new_biases;
 }
 void NeuralNetwork::DeleteNeurone_biases(int random_number) {
@@ -176,7 +194,10 @@ void NeuralNetwork::DeleteNeurone_biases(int random_number) {
 		}
 		new_biases[i] = actual_biases[i+n];
 	}
-	delete[] actual_biases;
+	if (actual_biases)
+		delete[] actual_biases;
+	else
+		printf("There was an error on delete[] actual_biases ? Not initialised? check potential bad allocations. (DeleteNeurone)\n");
 	layers[random_number].biases = new_biases;
 }
 

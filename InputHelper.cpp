@@ -8,6 +8,9 @@ InputHelper::InputHelper() : bullets(), playerPos(Pos{ 0, 0 }), numInputs(2 + 20
 
 InputHelper::~InputHelper()
 {
+	if (inputs) {
+		delete[] inputs;
+	}
 }
 
 void InputHelper::updateInputs()
