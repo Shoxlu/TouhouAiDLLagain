@@ -42,6 +42,7 @@ NeuralNetwork* preseau;
 void update();
 void init();
 void render_frame();
+void render();
 void render_frameSub();
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
@@ -80,8 +81,8 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         // Write memory at the good address (ProcessWriteProcessMem)
         patch_call(0x004712D9, init);
         patch_call(0x00471C2A, update);
-        BYTE patch[] = {0x90};
-        BYTE patch1[] = {0x90, 0x90, 0x90};
+        BYTE patch[] = { 0x90 };
+        BYTE patch1[] = { 0x90, 0x90, 0x90 };
         writeMemory(0x4712DE, patch, sizeof(patch));
         writeMemory(0x00471C2A + 0x5, patch1, sizeof(patch1));
         /*WriteProcessMemory(hprocess, "\x00\x47\x12\x70", buffer, sizeof(buffer), NULL);
@@ -100,30 +101,36 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
             delete generation;
         speedUpGame(0);
         Release_All_Inputs();
+        press(VK_W, 1);
     }
     return TRUE;
 }
 
 void init()
 {
+
     LoadLibraryW(L"opengl32.dll");
     srand(time(0));
-    //Sleep(10000);
-    if (window == NULL)
-    {
-        //window = new Window();
-    }
     pinputHelper = new InputHelper();
     generation = new GenerationJoueur(NbrePerso_generation);
     isRendering = true;
-    //update();//Injection rework: delete this
+    auto new_thread1 = CreateRemoteThread(
+        hprocess,
+        NULL,
+        NULL,
+        (LPTHREAD_START_ROUTINE)render,
+        NULL,
+        NULL,
+        NULL
+    );
+    
 }
 
 void update()
 {
 
     previous_time = 0;
-    if (!generation->m_joueurs) {
+    if (!generation) {
         init();
     }
     auto joueurs = generation->m_joueurs;
@@ -132,7 +139,7 @@ void update()
     Bullet_PTR = *(zBulletManager**)0x4CF2BC;
     global_ptr = (zGlobals*)0x4cccc0;
     
-    if (global_ptr->time_in_stage > previous_time)//Injection Rework, maybe delete this
+    if (global_ptr->time_in_stage > previous_time)
     {
         previous_time = global_ptr->time_in_stage;
         if (player_ptr != NULL)
@@ -140,11 +147,11 @@ void update()
             generation->update();
             if (GetKeyState(VK_BACK) & 0x00000001)
             {
-                speedUpGame(10);//Injection Rework, maybe that will useless, to be replaced with a function that prevents game's refreshing
+                speedUpGame(10);
             }
             else if (GetKeyState(VK_BACK) == 0)
             {
-                speedUpGame(0);//Injection Rework, maybe that will useless, to be replaced with a function that allows game's refreshing
+                speedUpGame(0);
             }
         }
         //render_frame();
@@ -163,14 +170,30 @@ void update()
     }
 }
 
+
+void render()
+{
+    if (window == NULL)
+    {
+        glfwInit();
+        window = new Window();
+    }
+    while (1) {
+        if (global_ptr->time_in_stage > previous_time)
+        {
+            render_frame();
+        }
+    }
+}
+
 void render_frame()
 {
     preseau = generation->m_joueurs[generation->joueur_actuel].m_reseau;
     float color = 1;
-    std::thread* threads = new std::thread[preseau->layers_length];
     for (int i = 0; i < preseau->layers_length; i++)
     {
-        threads[i] = std::thread(render_frameSub);
+        global_int = i;
+        render_frameSub();
     }
     for (int i = 0; i < preseau->m_layerSizes[preseau->layers_length]; i++)
     {
@@ -180,10 +203,6 @@ void render_frame()
     }
     
     
-    for (int i = 0; i < preseau->layers_length; i++)
-    {
-        threads[i].join();
-    }
     window->update();
 }
 

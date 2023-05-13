@@ -20,7 +20,7 @@ extern InputHelper* pinputHelper;
 Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previous_stage(0)
 {
 	inputHelper = pinputHelper;
-	int layerSizes[4] = { inputHelper->numInputs, 10, 10, 9};
+	int layerSizes[4] = { 2+2000*6, 10, 10, 9};
 	m_reseau = new NeuralNetwork(layerSizes, 4);
 	moves[0] = Dir{ {VK_UP}, 1, 1 };
 	moves[1] = Dir{ {VK_DOWN}, 1, 1 };
@@ -35,7 +35,7 @@ Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previ
 
 Joueur::~Joueur() {
 	if (m_reseau)
-		delete[] m_reseau;
+		delete m_reseau;
 }
 
 void Joueur::Reset(NeuralNetwork* reseau)
@@ -55,7 +55,7 @@ void Joueur::move(int output)
 	{
 		press(moves[output].dir[i], 0);
 	}
-	press(VK_W, 0);
+	//press(VK_W, 0);
 }
 
 void Joueur::update()
@@ -66,7 +66,62 @@ void Joueur::update()
 		m_previous_reward = global_ptr->time_in_stage;
 		m_previous_stage = global_ptr->stage_num;
 	}
-	int output = m_reseau->Classify(inputHelper->getInputs(), inputHelper->numInputs);
+	double* input = inputHelper->getInputs();
+	//double input2[8] = {};
+	//input2[0] = input[0];
+	//input2[1] = input[1];
+	//for (int i = 0; i < inputHelper->numCurBullets; i++)//
+	//{
+	//	for (int j = 2; j < 6; j++) {
+	//		input2[j] = input[i * 6 + j - 2];
+	//	}
+	int output = m_reseau->Classify(input);
 	move(output);
-	//m_reseau->update();
+	//}
+}
+double normalize(double angle) {
+	while (angle > 2 * 3.141592653) {
+		angle -= 2 * 3.141592653;
+	}
+	while (angle < 0) {
+		angle += 2 * 3.141592653;
+	}
+	return angle;
+}
+double rad(double x) {
+	return  normalize(x * 3.141592653 / 180.0);
+}
+
+double angleToplayer(double x, double y,double y2) {
+	return acos(abs(y2)/hypot(x, y));
+}
+
+void Joueur::update_()
+{
+	Release_All_Inputs();
+	m_pos = get_player_pos();
+	zBullet* bullet = bulletNear(m_pos.x, m_pos.y);
+	if (!bullet)
+		return;
+	double angle_to_go = normalize(bullet->angle + 1.57079633 / 2);
+	
+	int moves_[8][3] = { {VK_DOWN,0,0}, {VK_UP,0,180},{VK_RIGHT,0, 90},{VK_LEFT,0,270},{VK_DOWN, VK_RIGHT,315},{VK_DOWN, VK_LEFT,225},{VK_UP, VK_RIGHT,45}, {VK_UP, VK_LEFT,135}};
+	double angle_to_player = normalize(angleToplayer(bullet->pos.x-m_pos.x, bullet->pos.y-m_pos.y, bullet->pos.y-m_pos.y)+rad(90));
+	for (int i = 0; i < 8; i++)
+	{
+		
+		if (angle_to_player > rad(moves_[i][2]-22.5) && angle_to_player <= rad(moves_[i][2] + 22.5)) {
+			if(abs(bullet->angle - angle_to_player) <= rad(10))
+			{ 
+				press(moves_[i][0], 0);
+				printf("move");
+				if (moves_[i][1] != 0) {
+					press(moves_[i][1], 0);
+					printf("move");
+				}
+			}
+			
+		}
+	}
+	
 }

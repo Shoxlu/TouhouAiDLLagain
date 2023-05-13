@@ -8,8 +8,8 @@ class NeuralNetwork
 public:
 	~NeuralNetwork();
 	NeuralNetwork(int layerSizes[], int layerSizes_length);
-	double* CalculateOutputs(double inputs[], int n_inputs);
-	int Classify(double inputs[], int n_inputs);
+	double* CalculateOutputs(double inputs[]);
+	int Classify(double inputs[]);
 	void mutationHiddenLayer();
 	void AddNeurone_weights(int random_number);
 	void DeleteNeurone_weights(int random_number);

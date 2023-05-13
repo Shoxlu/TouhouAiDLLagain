@@ -114,10 +114,17 @@ void GenerationJoueur::update() {
         isPlaying = true;
     }
 }
+
+
+void GenerationJoueur::update_() {
+    m_joueurs[joueur_actuel].update_();
+}
+
 void ResetGame()
 {
     printf("Reset game.\n");
     Release_All_Inputs();
+    press(VK_W, 1);
     press(VK_ESCAPE, 0);
     Sleep((500 / (frame_skip + 1))*isRendering+100*!isRendering);
     press(VK_ESCAPE, 1);

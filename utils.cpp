@@ -39,7 +39,7 @@ void speedUpGame(int speed)
     frame_skip = *frameskip;
 }
 
-int bulletNear(float x, float y) {
+zBullet* bulletNear(float x, float y) {
     Bullet_PTR = *(zBulletManager**)0x4CF2BC;
     if (!Bullet_PTR)
     {
@@ -61,15 +61,21 @@ int bulletNear(float x, float y) {
     while (bullet) {
         double bullet_hitbox = bullet->hitbox_radius;
         double plHitbox_radius = 10;
-        double distance = pow(x - bullet->pos.x, 2) + pow(y - bullet->pos.y, 2);
-        if (distance >= ((plHitbox_radius * plHitbox_radius) + bullet_hitbox * bullet_hitbox)) {
-            double v12 = bullet_hitbox / 2.5;
-            if (v12 < 10.0) {
-                v12 = 10.0;
+        double distance = sqrt(pow(x - bullet->pos.x, 2) + pow(y - bullet->pos.y, 2));
+        if (distance >= sqrt(((plHitbox_radius * plHitbox_radius) + bullet_hitbox * bullet_hitbox))) {
+            double v12 = bullet_hitbox;
+            if (v12 < 20.0) {
+                v12 = 20.0;
             }
-            if (distance <= ((v12 + plHitbox_radius) * (v12 + plHitbox_radius)) + bullet_hitbox * bullet_hitbox) {
-                return 1;
+            if (distance <= (sqrt(pow((plHitbox_radius),2) + bullet_hitbox * bullet_hitbox))+ v12 ) {
+                return bullet;
             }
+            
+        }
+        else {
+            press(VK_X, 0);
+            Sleep(1);
+            press(VK_X, 1);
         }
         zBulletList* iter_next = (zBulletList*)Bullet_PTR->iter_next;
         Bullet_PTR->iter_current = (int)iter_next;
@@ -130,7 +136,7 @@ bool random_bool()
 
 void Release_All_Inputs()
 {
-    press(VK_W, 1);
+    //press(VK_W, 1);
     press(VK_R, 1);
     press(VK_X, 1);
     press(VK_C, 1);

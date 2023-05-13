@@ -1,7 +1,8 @@
 #include "InputHelper.h"
 #include <corecrt_math.h>
+#include <stdio.h>
 
-InputHelper::InputHelper() : bullets(), playerPos(Pos{ 0, 0 }), numInputs(2 + 2000 * 6)
+InputHelper::InputHelper() : bullets(), playerPos(Pos{ 0, 0 }), numInputs(2 + 2000 * 6), numCurBullets(0)
 {
 	inputs = new double[2 + 2000 * 6];
 }
@@ -24,24 +25,39 @@ double* InputHelper::getInputs(){
 	inputs[0] = playerPos.x;
 	inputs[1] = playerPos.y;
 	int a = 0;
+	numCurBullets = 0;
 	for (int i = 2; i < 2000*6; i+=6) {
-		if (bullets[i/6-2].state == 0) {
-			inputs[i - a] = -4000;
+		//printf("State : %d", bullets[i / 6].state).
+		zBullet bullet = bullets[(i - 2) / 6];
+		if (bullet.state != 1 ) {
+			inputs[i - a] = -10000;
 			inputs[i + 1 - a] = 0;
 			inputs[i + 2 - a] = 0;
 			inputs[i + 3 - a] = 0;
 			inputs[i + 4 - a] = 0;
-			i += 6;
+			inputs[i + 5 - a] = 0;
 			a += 6;
 			continue;
 		}
-		inputs[i-a] = bullets[i/6-2].pos.x;
-		inputs[i+1-a] = bullets[i/6-2].pos.y;
-		inputs[i+2-a] = bullets[i / 6-2].angle;
-		inputs[i+3-a] = bullets[i / 6-2].speed;
-		inputs[i+4-a] = bullets[i / 6-2].hitbox_radius;
-		inputs[i + 5] = sqrt(pow(inputs[i], 2) + pow(inputs[i + 1], 2));
+		inputs[i-a] = bullet.pos.x/1000.0;//todo: add proportionnality
+		inputs[i + 1 - a] = bullet.pos.y /1000.0;
+		/*printf("x=%f ", bullets[i / 6].pos.x);
+		printf("y=%f ", bullets[i / 6].pos.y);
+		printf("z=%f ", bullets[i / 6].pos.z);
+		printf("x_test=%f ", bullets[(i-2) / 6].pos.x);
+		printf("y_test=%f ", bullets[(i-2) / 6].pos.y);
+		printf("z_test=%f ", bullets[(i-2) / 6].pos.z);*/
+		inputs[i+2-a] = bullet.angle / 1000.0;
+		//printf("angle=%f ", bullets[i / 6].angle);
+		inputs[i+3-a] = bullet.speed/1000.0;
+		//printf("speed=%f ", bullets[i / 6].speed);
+		inputs[i+4-a] = bullet.hitbox_radius / 1000.0;
+		//printf("hitbox=%f ", bullets[i / 6].hitbox_radius);
+		inputs[i+5-a] = sqrt(pow(inputs[i-a], 2) + pow(inputs[i+1-a], 2)) / 1000.0;
+		//printf("distance = %f ", inputs[i + 5 - a]);
+		//printf("\n");
 		numInputs += 6;
+		numCurBullets += 1;
 	}
 	return inputs;
 }

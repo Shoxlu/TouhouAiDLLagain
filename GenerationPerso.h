@@ -7,6 +7,7 @@ public:
 	~GenerationJoueur();
 	void newGeneration();
 	void update();
+	void update_();
 	void kill_joueur(int j);
 	void delete_generation();
 	bool joueurMort();

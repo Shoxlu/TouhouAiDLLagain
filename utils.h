@@ -74,7 +74,7 @@ struct zBullet
     zBulletList node_10;
     int flags;
     int ex_invuln__remaining_frames;
-    BYTE gap28[1548];
+    BYTE gap28[1544];
     char __unknown_1588;
     zFloat3 pos;
     zFloat3 velocity;
@@ -104,6 +104,7 @@ struct zBullet
     zTimer __timer_f3c;
     zTimer __timer_f50;
     char __unknown_3940;
+    BYTE bytes[4];
     __declspec(align(4)) __int16 state;
     char __unknown_3946;
     zTimer __timer_f6c;
@@ -258,7 +259,7 @@ double random_float_positive();
 int randint(int min, int max);
 bool random_bool();
 Pos get_player_pos();
-int bulletNear(float x, float y);
+zBullet* bulletNear(float x, float y);
 void Release_All_Inputs();
 void copy_array(int n, double* dest, double* source);
 void copy_array(int n, float* dest, float* source);

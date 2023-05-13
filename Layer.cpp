@@ -1,5 +1,6 @@
 #include "Layer.h"
 #include "utils.h"
+#include "List.h"
 #include <stdio.h>
 
 
@@ -11,8 +12,7 @@ Layer::~Layer()
 		delete[] biases;
 	if(activations)
 		delete[] activations;
-	if(weightedInputs)
-		delete[] weightedInputs;
+
 }
 
 Layer::Layer() : n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr), activations(nullptr),weightedInputs(nullptr)
@@ -22,14 +22,9 @@ Layer::Layer() : n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr),
 Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOut)
 {
 	biases = new double[nodesOut];
-	activations = new double[n_nodesOut];
-	weightedInputs = new double[n_nodesOut];
-
 	weights = new float[nodesIn*nodesOut];//assume this was double
 	for (int nodeOut = 0; nodeOut < nodesOut; nodeOut++) {
 		biases[nodeOut] = 0;
-		weightedInputs[nodeOut] = 0;
-		activations[nodeOut] = 0;
 		for (int nodeIn = 0; nodeIn < nodesIn; nodeIn++) {
 			weights[nodeIn* nodesOut +nodeOut] = 0;
 		}
@@ -38,26 +33,33 @@ Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOu
 }
 
 double* Layer::CalculateOutputs(double inputs[])
-{	
+{
+	//printf("Inputs: ");
+	weightedInputs = new double[n_nodesOut];
+	activations = new double[n_nodesOut];
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			if (inputs[nodeIn] == -4000) {
+			//printf("%f ", inputs[nodeIn]);
+			if (inputs[nodeIn] == -10000) {
+				nodeIn += 6;
 				continue;
 			}
 			weightedInputs[nodeOut] += inputs[nodeIn] * weights[nodeIn * n_nodesOut + nodeOut];
 		}
 		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
 	}
+	delete[] weightedInputs;
+	//printf("\n");
 	return activations;
 }
 void Layer::mutation()
 {
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			weights[nodeIn * n_nodesOut + nodeOut] += random_float()*0.1;
+			weights[nodeIn * n_nodesOut + nodeOut] += random_float()*0.01;
 		}
-		biases[nodeOut] += random_float()*0.1;
+		biases[nodeOut] += random_float()*0.01;
 	}
 }
 

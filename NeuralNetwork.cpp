@@ -1,6 +1,7 @@
 #include "NeuralNetwork.h"
 #include "InputHelper.h"
 #include "utils.h"
+#include "List.h"
 #include <algorithm>
 
 
@@ -24,17 +25,23 @@ NeuralNetwork::~NeuralNetwork()
 }
 
 
-double* NeuralNetwork::CalculateOutputs(double inputs[], int n_inputs)
+double* NeuralNetwork::CalculateOutputs(double inputs[])
 {
 	//layers[0].n_nodesIn = n_inputs;
+	double* inputs_temp = new double[layers[0].n_nodesIn];
+	copy_array(layers[0].n_nodesIn, inputs_temp, inputs);
 	for (int i = 0; i < layers_length; i++) {
-		inputs = layers[i].CalculateOutputs(inputs);
+		inputs = layers[i].CalculateOutputs(inputs_temp);
+		delete[] inputs_temp;
+		inputs_temp = new double[layers[i].n_nodesOut];
+		copy_array(layers[i].n_nodesOut, inputs_temp, inputs);
+		delete[] inputs;
 	}
-	return inputs;
+	return inputs_temp;
 }
 
-int NeuralNetwork::Classify(double inputs[], int n_inputs) {
-	double* outputs = CalculateOutputs(inputs, n_inputs);
+int NeuralNetwork::Classify(double inputs[]) {
+	double* outputs = CalculateOutputs(inputs);
 	int max_i = GetMaximumIndex(outputs, m_layerSizes[layers_length]);
 	return max_i;
 }
@@ -51,13 +58,13 @@ void NeuralNetwork::mutation()
 
 void NeuralNetwork::mutationHiddenLayer()
 {
-	if (randint(0, 100) < 2) {
-		int random_number = randint(1, layers_length-2);//layers_length -> out of range(layers), layers_length-1 -> output layer , 1->inputs
+	if (randint(0, 100) < 2) {//change that to duplicate 1st layer weights from one set of input (one bullet)
+		int random_number = randint(1, layers_length-2);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
 		m_layerSizes[random_number] += 1;
 		AddNeurone_weights(random_number);
 		AddNeurone_biases(random_number);
 	}
-	if (randint(0, 100) < 2) {
+	if (randint(0, 100) < 2) {//change that to duplicate 1st layer weights from one set of input (one bullet)
 		
 		for (int i = 0; i < layers_length + 2 && m_layerSizes[i] <= 1; i++) {
 			if (i == layers_length + 1)
@@ -87,23 +94,23 @@ void NeuralNetwork::AddNeurone_weights(int random_number)
 	float* actual_weights = layers[random_number].weights;
 	float* actual_weights1 = layers[random_number + 1].weights;
 	
-	for (int i = 0; i < layers[random_number].n_nodesIn; i++) {
-		for (int j = 0; j < n_nodesOut - 1; j++)
+	for (int nodeIn = 0; nodeIn < layers[random_number].n_nodesIn; nodeIn++) {
+		for (int nodeOut = 0; nodeOut < n_nodesOut - 1; nodeOut++)
 		{
-			new_weights[i* n_nodesOut +j] = actual_weights[i * n_nodesOut + j];
+			new_weights[nodeIn* n_nodesOut +nodeOut] = actual_weights[nodeIn * n_nodesOut + nodeOut];
 		}
-		new_weights[i * n_nodesOut + n_nodesOut - 1] = random_float();//ajoute un nodeOut pour chaque nodeIn
+		new_weights[nodeIn * n_nodesOut + n_nodesOut - 1] = random_float();//ajoute un nodeOut pour chaque nodeIn
 	}
 	
-	for (int i = 0; i < n_nodesOut1 - 1; i++) {
-		for (int j = 0; j < n_nodesOut1; j++)
+	for (int nodeIn = 0; nodeIn < n_nodesOut - 1; nodeIn++) {
+		for (int nodeOut = 0; nodeOut < n_nodesOut1; nodeOut++)
 		{
-			new_weights1[i * n_nodesOut1 + j] = actual_weights1[i * n_nodesOut1 + j];
+			new_weights1[nodeIn * n_nodesOut1 + nodeOut] = actual_weights1[nodeIn * n_nodesOut1 + nodeOut];
 		}
 	}
-	for (int j = 0; j < n_nodesOut1; j++)
+	for (int nodeOut = 0; nodeOut < n_nodesOut1; nodeOut++)
 	{
-		new_weights1[(n_nodesOut - 1) * n_nodesOut1 + j] = random_float();//créé un weight dans chaque nodeOut pour ce nodeIn
+		new_weights1[(n_nodesOut - 1) * n_nodesOut + nodeOut] = random_float();//créé un weight dans chaque nodeOut pour ce nodeIn
 	}
 	if (actual_weights)
 		delete[] actual_weights;
@@ -131,25 +138,25 @@ void NeuralNetwork::DeleteNeurone_weights(int random_number)
 	int random_number2 = randint(0, m_layerSizes[random_number]-1);
 	
 	int n = 0;
-	for (int i = 0; i < layers[random_number].n_nodesIn; i++) {
-		for (int j = 0; j < n_nodesOut; j++)
+	for (int nodeIn = 0; nodeIn < layers[random_number].n_nodesIn; nodeIn++) {
+		for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++)
 		{
-			if (random_number2 == j) {
+			if (random_number2 == nodeOut) {
 				n = 1;
 			}
-			new_weights[i * n_nodesOut + j] = actual_weights[i * n_nodesOut + j + n];
-			printf("new_weights[%d][%d] = %f\n", i, j, actual_weights[i * n_nodesOut + j + n]);
+			new_weights[nodeIn * n_nodesOut + nodeOut] = actual_weights[nodeIn * n_nodesOut + nodeOut + n];
+			printf("new_weights[%d][%d] = %f\n", nodeIn, nodeOut, actual_weights[nodeIn * n_nodesOut + nodeOut + n]);
 		}
 	}
 	n = 0;
-	for (int i = 0; i < n_nodesOut; i++) {
-		if (random_number2 == i) {
+	for (int nodeIn = 0; nodeIn < n_nodesOut; nodeIn++) {
+		if (random_number2 == nodeIn) {
 			n = 1;
 		}
 		for (int j = 0; j < n_nodesOut1; j++)
 		{
-			new_weights1[i * n_nodesOut1 + j] = actual_weights1[(i + n) * n_nodesOut1 + j];
-			printf("new_weights1[%d][%d] = %f\n", i, j, actual_weights1[(i + n) * n_nodesOut1 + j]);
+			new_weights1[nodeIn * n_nodesOut1 + j] = actual_weights1[(nodeIn + n) * n_nodesOut1 + j];
+			printf("new_weights1[%d][%d] = %f\n", nodeIn, j, actual_weights1[(nodeIn + n) * n_nodesOut1 + j]);
 		}
 	}
 	if (actual_weights)

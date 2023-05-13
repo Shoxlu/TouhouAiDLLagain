@@ -19,6 +19,7 @@ public:
 	Pos playerPos;
 	int numInputs;//maybe it will be useful
 	const int numBullets = 2000;
+	int numCurBullets;
 	//const int numEnemies = 200; idk the number actually
 	//zEnemy enemies; i will implement that later
 private:

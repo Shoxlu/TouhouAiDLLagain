@@ -11,6 +11,7 @@ public:
 	~Joueur();
 	void Reset(NeuralNetwork* reseau);
 	void update();
+	void update_();
 	void move(int output);
 	Pos m_pos;
 	int m_reward;
