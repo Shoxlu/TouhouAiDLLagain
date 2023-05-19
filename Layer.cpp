@@ -15,18 +15,34 @@ Layer::~Layer()
 
 }
 
-Layer::Layer() : n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr), activations(nullptr),weightedInputs(nullptr)
+Layer::Layer() : repeat_factor(0), n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr), activations(nullptr),weightedInputs(nullptr)
 {
 	
 }
-Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOut)
+Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOut), repeat_factor(nodesIn+1)
 {
 	biases = new double[nodesOut];
 	weights = new float[nodesIn*nodesOut];//assume this was double
+	weightedInputs = new double[n_nodesOut];
+	activations = new double[n_nodesOut];
 	for (int nodeOut = 0; nodeOut < nodesOut; nodeOut++) {
 		biases[nodeOut] = 0;
 		for (int nodeIn = 0; nodeIn < nodesIn; nodeIn++) {
-			weights[nodeIn* nodesOut +nodeOut] = 0;
+			weights[nodeIn* nodesOut + nodeOut] = 0;
+		}
+	}
+	mutation();
+}
+Layer::Layer(int nodesIn, int nodesOut, int repeat_factor_par) : n_nodesIn(nodesIn), n_nodesOut(nodesOut), repeat_factor(repeat_factor_par)
+{
+	biases = new double[nodesOut];
+	weights = new float[int(nodesIn/ repeat_factor_par) * nodesOut];//assume this was double
+	weightedInputs = new double[n_nodesOut];
+	activations = new double[n_nodesOut];
+	for (int nodeOut = 0; nodeOut < nodesOut; nodeOut++) {
+		biases[nodeOut] = 0;
+		for (int nodeIn = 0; nodeIn < nodesIn; nodeIn++) {
+			weights[nodeIn % repeat_factor_par * nodesOut + nodeOut] = 0;
 		}
 	}
 	mutation();
@@ -35,8 +51,8 @@ Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOu
 double* Layer::CalculateOutputs(double inputs[])
 {
 	//printf("Inputs: ");
-	weightedInputs = new double[n_nodesOut];
-	activations = new double[n_nodesOut];
+
+
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
@@ -45,11 +61,10 @@ double* Layer::CalculateOutputs(double inputs[])
 				nodeIn += 6;
 				continue;
 			}
-			weightedInputs[nodeOut] += inputs[nodeIn] * weights[nodeIn * n_nodesOut + nodeOut];
+			weightedInputs[nodeOut] += inputs[nodeIn] * weights[nodeIn % repeat_factor * n_nodesOut + nodeOut];
 		}
 		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
 	}
-	delete[] weightedInputs;
 	//printf("\n");
 	return activations;
 }
@@ -57,7 +72,7 @@ void Layer::mutation()
 {
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			weights[nodeIn * n_nodesOut + nodeOut] += random_float()*0.01;
+			weights[nodeIn % repeat_factor * n_nodesOut + nodeOut] += random_float()*0.01;
 		}
 		biases[nodeOut] += random_float()*0.01;
 	}

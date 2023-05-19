@@ -3,6 +3,7 @@ class Layer
 {
 public:
 	Layer(int nodes_In, int nodes_Out);
+	Layer(int nodes_In, int nodes_Out, int repeat_factor_par);
 	Layer();
 	~Layer();
 	Layer(Layer&& src) noexcept
@@ -21,12 +22,13 @@ public:
 
 		activations = src.activations;
 		src.activations = nullptr;
+		repeat_factor = src.repeat_factor;
 
 	}
 	Layer& operator=(Layer&& src) noexcept{
 		n_nodesIn = src.n_nodesIn;
 		n_nodesOut = src.n_nodesOut;
-
+		repeat_factor = src.repeat_factor;
 		weights = src.weights;
 		src.weights = nullptr;
 
@@ -57,6 +59,7 @@ public:
 	double* biases;
 	double* weightedInputs;
 	double* activations;
+	int repeat_factor;
 private:
 
 };

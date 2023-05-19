@@ -39,6 +39,7 @@ Window* window;
 HANDLE hprocess;
 int global_int; //idk lol
 NeuralNetwork* preseau;
+int actual_output;
 void update();
 void init();
 void render_frame();
@@ -144,7 +145,7 @@ void update()
         previous_time = global_ptr->time_in_stage;
         if (player_ptr != NULL)
         {
-            generation->update();
+            actual_output = generation->update();
             if (GetKeyState(VK_BACK) & 0x00000001)
             {
                 speedUpGame(10);
@@ -197,8 +198,10 @@ void render_frame()
     }
     for (int i = 0; i < preseau->m_layerSizes[preseau->layers_length]; i++)
     {
-        
-        color = 0.5;
+        if (preseau->layers[global_int].activations && actual_output == i)
+            color = 1;
+        else
+            color = 0.5;
         window->draw_circle(Pos{ -700.0 + 75 * i,  200.0 + 105.0 * (preseau->layers_length) }, 30, Color{ 0.0, 0.0, color });
     }
     
@@ -216,7 +219,13 @@ void render_frameSub()
         {
             window->draw_line(Pos{ -700.0 + 75.0 * j, 200.0 + global_int * 105.0 }, Pos{ -700.0 + 75.0 * k, 200.0 + (global_int + 1) * 105.0 }, Color{ color, color, color });
         }
-        color = 1;
+        if (preseau->layers[global_int].activations && global_int != 0 && preseau->layers[global_int].activations[j] >= 0.5) {
+            color = 1;
+        }
+        else
+        {
+            color = 0.5;
+        }
         window->draw_circle(Pos{ -700.0 + 75.0 * j, 200.0 + (global_int * 105.0) }, 30, Color{ color, color, color });
 
     }

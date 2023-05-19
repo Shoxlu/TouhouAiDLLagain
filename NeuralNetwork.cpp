@@ -10,7 +10,8 @@ NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
 	m_layerSizes = new int[layerSizes_length];
 	copy_array(layerSizes_length, m_layerSizes, layerSizes);
 	layers = new Layer[layerSizes_length - 1];
-	for (int i = 0; i < layerSizes_length - 1; i++) { 
+	layers[0] = std::move(Layer(layerSizes[0], layerSizes[1], 6));
+	for (int i = 1; i < layerSizes_length - 1; i++) { 
 		layers[i] = std::move(Layer(layerSizes[i], layerSizes[i + 1]));
 	}
 	layers_length = layerSizes_length-1;
@@ -28,16 +29,10 @@ NeuralNetwork::~NeuralNetwork()
 double* NeuralNetwork::CalculateOutputs(double inputs[])
 {
 	//layers[0].n_nodesIn = n_inputs;
-	double* inputs_temp = new double[layers[0].n_nodesIn];
-	copy_array(layers[0].n_nodesIn, inputs_temp, inputs);
 	for (int i = 0; i < layers_length; i++) {
-		inputs = layers[i].CalculateOutputs(inputs_temp);
-		delete[] inputs_temp;
-		inputs_temp = new double[layers[i].n_nodesOut];
-		copy_array(layers[i].n_nodesOut, inputs_temp, inputs);
-		delete[] inputs;
+		inputs = layers[i].CalculateOutputs(inputs);
 	}
-	return inputs_temp;
+	return inputs;
 }
 
 int NeuralNetwork::Classify(double inputs[]) {
@@ -59,7 +54,7 @@ void NeuralNetwork::mutation()
 void NeuralNetwork::mutationHiddenLayer()
 {
 	if (randint(0, 100) < 2) {//change that to duplicate 1st layer weights from one set of input (one bullet)
-		int random_number = randint(1, layers_length-2);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
+		int random_number = randint(0, layers_length-2);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
 		m_layerSizes[random_number] += 1;
 		AddNeurone_weights(random_number);
 		AddNeurone_biases(random_number);
@@ -93,13 +88,13 @@ void NeuralNetwork::AddNeurone_weights(int random_number)
 	float* new_weights1 = new float[n_nodesOut * n_nodesOut1];
 	float* actual_weights = layers[random_number].weights;
 	float* actual_weights1 = layers[random_number + 1].weights;
-	
+	int repeat_factor = layers[random_number].repeat_factor;
 	for (int nodeIn = 0; nodeIn < layers[random_number].n_nodesIn; nodeIn++) {
 		for (int nodeOut = 0; nodeOut < n_nodesOut - 1; nodeOut++)
 		{
-			new_weights[nodeIn* n_nodesOut +nodeOut] = actual_weights[nodeIn * n_nodesOut + nodeOut];
+			new_weights[nodeIn % repeat_factor * n_nodesOut +nodeOut] = actual_weights[nodeIn * n_nodesOut + nodeOut];
 		}
-		new_weights[nodeIn * n_nodesOut + n_nodesOut - 1] = random_float();//ajoute un nodeOut pour chaque nodeIn
+		new_weights[nodeIn % repeat_factor * n_nodesOut + n_nodesOut - 1] = random_float();//ajoute un nodeOut pour chaque nodeIn
 	}
 	
 	for (int nodeIn = 0; nodeIn < n_nodesOut - 1; nodeIn++) {
@@ -129,6 +124,7 @@ void NeuralNetwork::DeleteNeurone_weights(int random_number)
 	
 	layers[random_number].n_nodesOut = m_layerSizes[random_number];
 	layers[random_number + 1].n_nodesIn = m_layerSizes[random_number];
+	int repeat_factor = layers[random_number].repeat_factor;
 	int n_nodesOut = m_layerSizes[random_number];
 	int n_nodesOut1 = layers[random_number + 1].n_nodesOut;
 	float* new_weights = new float[layers[random_number].n_nodesIn * n_nodesOut];
@@ -144,8 +140,7 @@ void NeuralNetwork::DeleteNeurone_weights(int random_number)
 			if (random_number2 == nodeOut) {
 				n = 1;
 			}
-			new_weights[nodeIn * n_nodesOut + nodeOut] = actual_weights[nodeIn * n_nodesOut + nodeOut + n];
-			printf("new_weights[%d][%d] = %f\n", nodeIn, nodeOut, actual_weights[nodeIn * n_nodesOut + nodeOut + n]);
+			new_weights[nodeIn % repeat_factor * n_nodesOut + nodeOut] = actual_weights[nodeIn * n_nodesOut + nodeOut + n];
 		}
 	}
 	n = 0;
@@ -156,7 +151,6 @@ void NeuralNetwork::DeleteNeurone_weights(int random_number)
 		for (int j = 0; j < n_nodesOut1; j++)
 		{
 			new_weights1[nodeIn * n_nodesOut1 + j] = actual_weights1[(nodeIn + n) * n_nodesOut1 + j];
-			printf("new_weights1[%d][%d] = %f\n", nodeIn, j, actual_weights1[(nodeIn + n) * n_nodesOut1 + j]);
 		}
 	}
 	if (actual_weights)

@@ -6,7 +6,7 @@ public:
 	GenerationJoueur(int n_systemes);
 	~GenerationJoueur();
 	void newGeneration();
-	void update();
+	int update();
 	void update_();
 	void kill_joueur(int j);
 	void delete_generation();

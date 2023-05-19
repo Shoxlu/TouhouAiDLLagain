@@ -10,7 +10,7 @@ public:
 	Joueur();
 	~Joueur();
 	void Reset(NeuralNetwork* reseau);
-	void update();
+	int update();
 	void update_();
 	void move(int output);
 	Pos m_pos;

@@ -84,7 +84,7 @@ void GenerationJoueur::kill_joueur(int j)
     //delete m_joueurs[j];
 }
 
-void GenerationJoueur::update() {
+int GenerationJoueur::update() {
     if (joueurMort())
     {   
         m_rewards[joueur_actuel] = m_joueurs[joueur_actuel].m_reward;
@@ -107,12 +107,13 @@ void GenerationJoueur::update() {
         
     }
     else if (isPlaying == true) {
-        m_joueurs[joueur_actuel].update();
+        return m_joueurs[joueur_actuel].update();
     }
     if (isPlaying == false && global_ptr->time_in_stage == 1) {
         printf("New actual player id: %d \n", joueur_actuel);
         isPlaying = true;
     }
+    return 0;
 }
 
 

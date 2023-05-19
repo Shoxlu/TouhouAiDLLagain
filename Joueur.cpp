@@ -58,7 +58,7 @@ void Joueur::move(int output)
 	//press(VK_W, 0);
 }
 
-void Joueur::update()
+int Joueur::update()
 {
 	m_reward = m_previous_reward + global_ptr->time_in_stage;
 	if (global_ptr->stage_num > m_previous_stage)
@@ -77,7 +77,7 @@ void Joueur::update()
 	//	}
 	int output = m_reseau->Classify(input);
 	move(output);
-	//}
+	return output;
 }
 double normalize(double angle) {
 	while (angle > 2 * 3.141592653) {
