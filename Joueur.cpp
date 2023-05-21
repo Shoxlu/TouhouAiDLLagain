@@ -20,8 +20,8 @@ extern InputHelper* pinputHelper;
 Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previous_stage(0)
 {
 	inputHelper = pinputHelper;
-	int layerSizes[4] = { 2+2000*6, 10, 10, 9};
-	m_reseau = new NeuralNetwork(layerSizes, 4);
+	int layerSizes[4] = { 2+2000*6, 9};
+	m_reseau = new NeuralNetwork(layerSizes, 2);
 	moves[0] = Dir{ {VK_UP}, 1, 1 };
 	moves[1] = Dir{ {VK_DOWN}, 1, 1 };
 	moves[2] = Dir{ {VK_RIGHT}, 1, 1};
@@ -83,11 +83,9 @@ double normalize(double angle) {
 double rad(double x) {
 	return  normalize(x * 3.141592653 / 180.0);
 }
-
 double angleToplayer(double x, double y,double y2) {
 	return acos(abs(y2)/hypot(x, y));
 }
-
 void Joueur::update_()
 {
 	ReleaseAllInputs();

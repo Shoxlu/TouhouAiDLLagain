@@ -38,21 +38,21 @@ double* InputHelper::getInputs(){
 			a += 6;
 			continue;
 		}
-		inputs[i-a] = bullet.pos.x;//todo: add proportionnality
-		inputs[i + 1 - a] = bullet.pos.y ;
+		inputs[i-a] = bullet.pos.x/1000.0 / 192.0;//todo: add proportionnality
+		inputs[i + 1 - a] = bullet.pos.y / 1000.0 /192.0 ;
 		/*printf("x=%f ", bullets[i / 6].pos.x);
 		printf("y=%f ", bullets[i / 6].pos.y);
 		printf("z=%f ", bullets[i / 6].pos.z);
 		printf("x_test=%f ", bullets[(i-2) / 6].pos.x);
 		printf("y_test=%f ", bullets[(i-2) / 6].pos.y);
 		printf("z_test=%f ", bullets[(i-2) / 6].pos.z);*/
-		inputs[i+2-a] = bullet.angle;
+		inputs[i+2-a] = bullet.angle / 1000.0 / (2*3.141592);
 		//printf("angle=%f ", bullets[i / 6].angle);
-		inputs[i+3-a] = bullet.speed;
+		inputs[i+3-a] = bullet.speed / 1000.0 / 10.0;
 		//printf("speed=%f ", bullets[i / 6].speed);
-		inputs[i+4-a] = bullet.hitbox_radius ;
+		inputs[i+4-a] = bullet.hitbox_radius / 1000.0 / 10.0;
 		//printf("hitbox=%f ", bullets[i / 6].hitbox_radius);
-		inputs[i+5-a] = sqrt(pow(inputs[i-a], 2) + pow(inputs[i+1-a], 2));
+		inputs[i+5-a] = sqrt(pow(inputs[i-a], 2) + pow(inputs[i+1-a], 2)) / 1000/ 590.050845;
 		//printf("distance = %f ", inputs[i + 5 - a]);
 		//printf("\n");
 		numInputs += 6;

@@ -84,7 +84,6 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
 
 void init()
 {
-
     LoadLibraryW(L"opengl32.dll");
     srand(time(0));
     pinputHelper = new InputHelper();

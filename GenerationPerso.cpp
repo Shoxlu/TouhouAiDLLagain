@@ -65,11 +65,6 @@ void GenerationJoueur::newGeneration()
     printf("N generation: %d \n", m_n_generation);
 }
 
-void GenerationJoueur::delete_generation()
-{
-    delete[] m_joueurs;
-}
-
 bool GenerationJoueur::joueurMort()
 {
     if (global_ptr->miss_count > previous_miss_count)
@@ -79,12 +74,6 @@ bool GenerationJoueur::joueurMort()
     }
     previous_miss_count = global_ptr->miss_count;
     return false;
-}
-
-
-void GenerationJoueur::kill_joueur(int j)
-{
-    //delete m_joueurs[j];
 }
 
 int GenerationJoueur::update() {

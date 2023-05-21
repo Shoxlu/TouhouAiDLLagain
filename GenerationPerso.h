@@ -10,8 +10,6 @@ public:
 	void newGeneration();
 	int update();
 	void update_();
-	void kill_joueur(int j);
-	void delete_generation();
 	bool joueurMort();
 	int* getBestJoueurs();
 	int* getBestRewards();
