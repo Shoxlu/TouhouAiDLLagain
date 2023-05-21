@@ -1,6 +1,8 @@
 using namespace std;
 #include <Windows.h>
 class Joueur;
+
+void ResetGame();
 class GenerationJoueur {
 public:
 	GenerationJoueur(int n_systemes);
@@ -16,7 +18,6 @@ public:
 	int m_n_systemes;
 	const int m_n_all_systemes;
 	int m_n_generation;
-	
 
 	int* m_rewards;//array
 	int* best_joueur_ids; //array
@@ -24,8 +25,6 @@ public:
 	int joueur_actuel;
 	Joueur* m_joueurs;
 	bool isPlaying;
-	HANDLE ResetThread;
 private:
 	int previous_miss_count;
 };
-void ResetGame();

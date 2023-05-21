@@ -134,7 +134,7 @@ bool random_bool()
     return false;
 }
 
-void Release_All_Inputs()
+void ReleaseAllInputs()
 {
     //press(VK_W, 1);
     press(VK_R, 1);
@@ -160,11 +160,13 @@ double ActivationFunction(double weightedInput) {
     printf("%f \n", 1.0 / (1.0 + exp(-weightedInput)));*/
     return 1.0 / (1.0 + exp(-weightedInput));
 }
+
+// ???
 double ActivationFunctionDerivative(double x) {
     x = ActivationFunction(x);
     return x;
 }
-
+//returns the index of the maximum value of an array;
 int GetMaximumIndex(double outputs[], int length) {
     int maximum_index = 0;
     double maximum = outputs[0];

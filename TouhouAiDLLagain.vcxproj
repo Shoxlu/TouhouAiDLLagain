@@ -171,6 +171,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="dllmain.h" />
+    <ClInclude Include="Drawer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GenerationPerso.h" />
     <ClInclude Include="List.h" />
@@ -185,6 +186,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="GenerationPerso.cpp" />
     <ClCompile Include="InputHelper.cpp" />
     <ClCompile Include="Layer.cpp" />

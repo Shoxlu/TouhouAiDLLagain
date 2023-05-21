@@ -12,7 +12,8 @@ Layer::~Layer()
 		delete[] biases;
 	if(activations)
 		delete[] activations;
-
+	if (weightedInputs)
+		delete[] weightedInputs;
 }
 
 Layer::Layer() : repeat_factor(0), n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr), activations(nullptr),weightedInputs(nullptr)
@@ -50,9 +51,6 @@ Layer::Layer(int nodesIn, int nodesOut, int repeat_factor_par) : n_nodesIn(nodes
 
 double* Layer::CalculateOutputs(double inputs[])
 {
-	//printf("Inputs: ");
-
-
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {

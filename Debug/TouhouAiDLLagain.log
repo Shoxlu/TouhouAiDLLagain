@@ -1,8 +1,7 @@
-﻿  GenerationPerso.cpp
-  Joueur.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(103,45): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(103,36): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+﻿  Joueur.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(104,45): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(104,36): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
   dllmain.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(114,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(89,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
   Génération de code en cours...
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

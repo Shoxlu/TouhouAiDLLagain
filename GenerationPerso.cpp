@@ -16,11 +16,14 @@ extern int previous_time;
 extern BYTE frame_skip;
 extern HANDLE hprocess;
 extern bool isRendering;
+extern NeuralNetwork* preseau;
+
 GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(1), m_n_all_systemes(n_systemes), joueur_actuel(0), best_joueur_ids(nullptr), n_best_joueurs(n_systemes /2)
 {
     isPlaying = true;
     m_rewards = new int[n_systemes];
     m_joueurs = new Joueur[n_systemes];
+    preseau = m_joueurs[0].m_reseau;
     printf("Joueurs créés\n");
     printf("N generation: %d \n", m_n_generation);
 }
@@ -94,7 +97,7 @@ int GenerationJoueur::update() {
             printf("Fin_generation\n");
             newGeneration();
         }
-        ResetThread = CreateRemoteThread(
+        HANDLE ResetThread = CreateRemoteThread(
             hprocess,
             NULL,
             NULL,
@@ -104,6 +107,7 @@ int GenerationJoueur::update() {
             NULL
         );
         isPlaying = false;
+        preseau = NULL;
         
     }
     else if (isPlaying == true) {
@@ -112,6 +116,7 @@ int GenerationJoueur::update() {
     if (isPlaying == false && global_ptr->time_in_stage == 1) {
         printf("New actual player id: %d \n", joueur_actuel);
         isPlaying = true;
+        preseau = m_joueurs[joueur_actuel].m_reseau;
     }
     return 0;
 }
@@ -124,7 +129,7 @@ void GenerationJoueur::update_() {
 void ResetGame()
 {
     printf("Reset game.\n");
-    Release_All_Inputs();
+    ReleaseAllInputs();
     press(VK_W, 1);
     press(VK_ESCAPE, 0);
     Sleep((500 / (frame_skip + 1))*isRendering+100*!isRendering);

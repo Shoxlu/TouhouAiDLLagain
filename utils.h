@@ -260,7 +260,7 @@ int randint(int min, int max);
 bool random_bool();
 Pos get_player_pos();
 zBullet* bulletNear(float x, float y);
-void Release_All_Inputs();
+void ReleaseAllInputs();
 void copy_array(int n, double* dest, double* source);
 void copy_array(int n, float* dest, float* source);
 void copy_array(int n, int* dest, int* source);

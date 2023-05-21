@@ -50,7 +50,7 @@ void Joueur::Reset(NeuralNetwork* reseau)
 
 void Joueur::move(int output)
 {
-	Release_All_Inputs();
+	ReleaseAllInputs();
 	for (int i = 0; i < moves[output].n_dir; i++)
 	{
 		press(moves[output].dir[i], 0);
@@ -67,14 +67,6 @@ int Joueur::update()
 		m_previous_stage = global_ptr->stage_num;
 	}
 	double* input = inputHelper->getInputs();
-	//double input2[8] = {};
-	//input2[0] = input[0];
-	//input2[1] = input[1];
-	//for (int i = 0; i < inputHelper->numCurBullets; i++)//
-	//{
-	//	for (int j = 2; j < 6; j++) {
-	//		input2[j] = input[i * 6 + j - 2];
-	//	}
 	int output = m_reseau->Classify(input);
 	move(output);
 	return output;
@@ -98,7 +90,7 @@ double angleToplayer(double x, double y,double y2) {
 
 void Joueur::update_()
 {
-	Release_All_Inputs();
+	ReleaseAllInputs();
 	m_pos = get_player_pos();
 	zBullet* bullet = bulletNear(m_pos.x, m_pos.y);
 	if (!bullet)
