@@ -11,6 +11,7 @@ public:
 	double* CalculateOutputs(double inputs[]);
 	int Classify(double inputs[]);
 	void mutationHiddenLayer();
+	bool newWeightsCreation(float** newWeights, int LayerToMutate);
 	void AddNeurone_weights(int random_number);
 	void DeleteNeurone_weights(int random_number);
 	void AddNeurone_biases(int random_number);

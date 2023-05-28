@@ -34,7 +34,7 @@ extern zGlobals* global_ptr;
 GenerationJoueur* generation;
 InputHelper* pinputHelper;
 bool isRendering;
-const int NbrePerso_generation = 100;
+const int NbrePerso_generation = 4;
 int previous_time;
 Window* window;
 HANDLE hprocess;
@@ -74,7 +74,7 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         if(pinputHelper)
             delete pinputHelper;
         if(generation)
-            delete generation;
+            //delete generation;
         speedUpGame(0);
         ReleaseAllInputs();
         press(VK_W, 1);

@@ -37,7 +37,7 @@ Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOu
 Layer::Layer(int nodesIn, int nodesOut, int repeat_factor_par) : n_nodesIn(nodesIn), n_nodesOut(nodesOut), repeat_factor(repeat_factor_par)
 {
 	biases = new double[nodesOut];
-	weights = new float[int(nodesIn/ repeat_factor_par) * nodesOut];//assume this was double
+	weights = new float[int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * nodesOut];//assume this was double
 	weightedInputs = new double[n_nodesOut];
 	activations = new double[n_nodesOut];
 	for (int nodeOut = 0; nodeOut < nodesOut; nodeOut++) {
@@ -70,9 +70,9 @@ void Layer::mutation()
 {
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			weights[nodeIn % repeat_factor * n_nodesOut + nodeOut] += random_float()*0.01;
+			weights[nodeIn % repeat_factor * n_nodesOut + nodeOut] += random_float()*0.005;
 		}
-		biases[nodeOut] += random_float()*0.01;
+		biases[nodeOut] += random_float()*0.005;
 	}
 }
 
