@@ -53,16 +53,16 @@ void NeuralNetwork::mutation()
 
 void NeuralNetwork::mutationHiddenLayer()
 {
-	if (randint(0, 100) < 10) {//change that to duplicate 1st layer weights from one set of input (one bullet)
+	if (randint(0, 100) < 1000) {//change that to duplicate 1st layer weights from one set of input (one bullet)
 		int LayerToMutate = randint(1, layers_length-1);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
 		m_layerSizes[LayerToMutate] += 1;
 		AddNode_weights(LayerToMutate-1);
 		AddNode_biases(LayerToMutate-1);
 		
 	}
-	if (randint(0, 100) < 10) {
+	if (randint(0, 100) < 1000) {
 		
-		for (int i = 0; i < layers_length + 2; i++) {
+		for (int i = 1; i < layers_length + 1; i++) {
 			if (m_layerSizes[i] > 1)
 				continue;
 			if(i == layers_length + 1)
@@ -75,18 +75,18 @@ void NeuralNetwork::mutationHiddenLayer()
 			LayerToMutate = randint(1, layers_length - 1);
 		}
 		m_layerSizes[LayerToMutate] -= 1;
-		DeleteNode_weights(LayerToMutate-1);
-		DeleteNode_biases(LayerToMutate-1);
+		int NodeOutToDelete = randint(0, m_layerSizes[LayerToMutate] - 1);
+		DeleteNode_weights(LayerToMutate-1, NodeOutToDelete);
+		DeleteNode_biases(LayerToMutate-1, NodeOutToDelete);
 	}
 
 }
-bool NeuralNetwork::getLayerNodesIn(int LayerToMutate) {
-	int repeat_factor = layers[LayerToMutate].repeat_factor;
-	int n_nodesOut = layers[LayerToMutate].n_nodesOut;
+int NeuralNetwork::getLayerNodesIn(int LayerToMutate) {
+	auto& layer = layers[LayerToMutate];
 	if (LayerToMutate == 0) {
-		return ((layers[LayerToMutate].n_nodesIn - 2) * repeat_factor) / (layers[LayerToMutate].n_nodesIn - 2) + 2;
+		return ((layer.n_nodesIn - 2) * layer.repeat_factor) / (layer.n_nodesIn - 2) + 2;
 	}
-	return layers[LayerToMutate].n_nodesIn;
+	return layer.n_nodesIn;
 }
 void NeuralNetwork::AddNode_weights(int LayerToMutate)
 {
@@ -95,21 +95,19 @@ void NeuralNetwork::AddNode_weights(int LayerToMutate)
 	
 	++layer.n_nodesOut;
 	int n_nodesOut = layer.n_nodesOut;
-	int n_nodesOut1 = nextLayer.n_nodesOut;
-	size_t n_nodesIn = getLayerNodesIn(LayerToMutate);
-
+	int n_NextNodesOut = nextLayer.n_nodesOut;
 	auto begin = layer.weights.begin();
-	for (size_t nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-		layer.weights.insert(begin + nodeIn * n_nodesOut + n_nodesOut - 1, 0);
+	int n_nodesIn = getLayerNodesIn(LayerToMutate);
+	layer.weights.resize(n_nodesIn * n_nodesOut);
+	for (size_t i = 0; i < n_nodesIn; i++) {
+		begin = layer.weights.begin();
+		layer.weights.insert(begin+i*n_nodesOut+n_nodesOut-1, 0);
 	}
 
 	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
 		++nextLayer.n_nodesIn;
-		size_t new_weight_count = nextLayer.n_nodesIn * n_nodesOut1;
-		size_t prev_weight_count = (nextLayer.n_nodesIn - 1) * n_nodesOut1;
-		begin = nextLayer.weights.begin();
-		for (size_t i = prev_weight_count; i < new_weight_count; ++i) {
-			nextLayer.weights.insert(begin+i, random_float());
+		for (size_t i = 0; i < n_NextNodesOut; ++i) {
+			nextLayer.weights.emplace_back(random_float());
 		}
 		nextLayer.weightedInputs.emplace_back(0);
 		nextLayer.activations.emplace_back(0);
@@ -118,28 +116,24 @@ void NeuralNetwork::AddNode_weights(int LayerToMutate)
 	layer.activations.emplace_back(0);
 }
 
-void NeuralNetwork::DeleteNode_weights(int LayerToMutate)
+void NeuralNetwork::DeleteNode_weights(int LayerToMutate, int NodeOutToDelete)
 {
 	auto& layer = layers[LayerToMutate];
 	auto& nextLayer = layers[LayerToMutate + 1];
 
 	--layer.n_nodesOut;
 	int n_nodesOut = layer.n_nodesOut;
-	int n_nodesOut1 = nextLayer.n_nodesOut;
 	size_t n_nodesIn = getLayerNodesIn(LayerToMutate);
-
 	auto begin = layer.weights.begin();
-	int NodeOutToDelete = randint(0, m_layerSizes[LayerToMutate+1]-1);
-	for (size_t nodeIn = 0; nodeIn < layers[LayerToMutate].n_nodesIn; nodeIn++) {
-		layer.weights.erase(begin + nodeIn * n_nodesOut + NodeOutToDelete);
+	for (size_t i = 0; i < n_nodesIn; i++) {
+		begin = layer.weights.begin();
+		layer.weights.erase(begin + i * (n_nodesOut-1) + NodeOutToDelete);
 	}
-
 	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
 		--nextLayer.n_nodesIn;
-		for (size_t nodeOut = 0; nodeOut < n_nodesOut1; nodeOut++)
-		{
-			layer.weights.erase(begin + NodeOutToDelete * n_nodesOut1 + nodeOut);
-		}
+		auto next_pos = nextLayer.weights.begin() + NodeOutToDelete * n_nodesOut;
+		nextLayer.weights.erase(next_pos, next_pos + n_nodesOut);
+
 		nextLayer.weightedInputs.pop_back();
 		nextLayer.activations.pop_back();
 	}
@@ -149,14 +143,12 @@ void NeuralNetwork::DeleteNode_weights(int LayerToMutate)
 
 void NeuralNetwork::AddNode_biases(int LayerToMutate) {
 	auto& layer = layers[LayerToMutate];
-	auto begin = layer.biases.begin();
-	layers[LayerToMutate].biases.insert(begin+layers[LayerToMutate].n_nodesOut-1, random_float());
+	layers[LayerToMutate].biases.emplace_back(random_float());
 }
 
-void NeuralNetwork::DeleteNode_biases(int LayerToMutate) {
+void NeuralNetwork::DeleteNode_biases(int LayerToMutate, int NodeOutToDelete) {
 	auto& layer = layers[LayerToMutate];
-	auto begin = layer.biases.begin();
-	layers[LayerToMutate].biases.erase(begin + layers[LayerToMutate].n_nodesOut - 1);
+	layers[LayerToMutate].biases.erase(layer.biases.begin()+ NodeOutToDelete);
 }
 
 //double NeuralNetwork::Cost(DataPoint dataPoint) {

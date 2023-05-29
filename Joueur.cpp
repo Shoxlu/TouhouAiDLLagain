@@ -20,7 +20,7 @@ extern InputHelper* pinputHelper;
 Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previous_stage(0)
 {
 	inputHelper = pinputHelper;
-	int layerSizes[3] = { 2+2000*6,10, 10};
+	int layerSizes[3] = { 2+2000*6,1, 10};
 	m_reseau = new NeuralNetwork(layerSizes, 3);
 	moves[0] = Dir{ {VK_UP}, 1, 1 };
 	moves[1] = Dir{ {VK_DOWN}, 1, 1 };

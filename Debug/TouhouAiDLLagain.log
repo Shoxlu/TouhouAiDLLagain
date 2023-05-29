@@ -1,42 +1,68 @@
-﻿  Joueur.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(93,45): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(93,36): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
-  utils.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(129,16): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-  Window.cpp
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY' : redéfinition de macro
-C:\Users\Timothée\source\repos\Touhou Projects\packages\glfw.3.3.8\build\native\include\GLFW\glfw3.h(123,1): message : voir la définition précédente de 'APIENTRY'
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(10,48): warning C4244: 'argument' : conversion de 'double' en 'int', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(10,37): warning C4244: 'argument' : conversion de 'double' en 'int', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(34,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(34,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(34,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(35,42): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(35,25): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(38,21): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(39,17): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(40,17): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(50,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(50,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(50,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(51,43): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(51,25): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(52,37): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(52,22): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(59,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(59,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(59,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(60,54): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(60,30): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(61,55): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(61,31): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(62,55): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(62,31): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(63,55): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(63,31): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(70,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(70,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(70,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
-  Génération de code en cours...
-LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'LIBCMT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
+﻿  NeuralNetwork.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\NeuralNetwork.cpp(102,23): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\NeuralNetwork.cpp(109,24): warning C4018: '<' : incompatibilité signed/unsigned
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xutility(275,56): warning C4244: 'initialisation' : conversion de '_Ty' en 'float', perte possible de données
+          with
+          [
+              _Ty=double
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(852): message : voir la référence à l'instanciation de la fonction modèle 'void std::_Construct_in_place<float,_Ty>(float &,_Ty &&) noexcept' en cours de compilation
+          with
+          [
+              _Ty=double
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(839): message : voir la référence à l'instanciation de la fonction modèle '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<double>(double &&)' en cours de compilation
+          with
+          [
+              _Ty=float
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(845,13): message : voir la référence à l'instanciation de la fonction modèle '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_back_with_unused_capacity<double>(double &&)' en cours de compilation
+          with
+          [
+              _Ty=float
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(925): message : voir la référence à l'instanciation de la fonction modèle '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<double>(double &&)' en cours de compilation
+          with
+          [
+              _Ty=float
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(927,14): message : voir la référence à l'instanciation de la fonction modèle '_Ty &std::vector<_Ty,std::allocator<_Ty>>::_Emplace_one_at_back<double>(double &&)' en cours de compilation
+          with
+          [
+              _Ty=float
+          ]
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\NeuralNetwork.cpp(146,58): message : voir la référence à l'instanciation de la fonction modèle 'void std::vector<float,std::allocator<float>>::emplace_back<double>(double &&)' en cours de compilation
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\xmemory(680,47): warning C4244: 'initialisation' : conversion de '_Ty' en '_Objty', perte possible de données
+          with
+          [
+              _Ty=double
+          ]
+          and
+          [
+              _Objty=float
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(875): message : voir la référence à l'instanciation de la fonction modèle 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,double>(_Alloc &,_Objty *const ,double &&)' en cours de compilation
+          with
+          [
+              _Alloc=std::allocator<float>,
+              _Ty=float,
+              _Objty=float
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(899,32): message : voir la référence à l'instanciation de la fonction modèle 'void std::_Default_allocator_traits<_Alloc>::construct<_Ty,double>(_Alloc &,_Objty *const ,double &&)' en cours de compilation
+          with
+          [
+              _Alloc=std::allocator<float>,
+              _Ty=float,
+              _Objty=float
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(839): message : voir la référence à l'instanciation de la fonction modèle 'float *std::vector<float,std::allocator<float>>::_Emplace_reallocate<_Ty>(float *const ,_Ty &&)' en cours de compilation
+          with
+          [
+              _Ty=double
+          ]
+C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.35.32215\include\vector(848,9): message : voir la référence à l'instanciation de la fonction modèle 'float *std::vector<float,std::allocator<float>>::_Emplace_reallocate<_Ty>(float *const ,_Ty &&)' en cours de compilation
+          with
+          [
+              _Ty=double
+          ]
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

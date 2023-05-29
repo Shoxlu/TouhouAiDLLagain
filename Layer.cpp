@@ -48,9 +48,9 @@ std::vector<double> Layer::CalculateOutputs(std::vector<double> inputs)
 				continue;
 			}
 			if (nodeIn >= n_nodesIn-2) {
-				weightedInputs[nodeOut] += inputs[nodeIn] * weights[2*n_nodesIn-2-nodeIn];//non-reduced expr: n_nodesIn-2+(n_nodesIn-nodeIn)
+				weightedInputs[nodeOut] += inputs[nodeIn] * weights[repeat_factor-1+ n_nodesIn-nodeIn];//non-reduced expr: n_nodesIn-2+(n_nodesIn-nodeIn)
 			}else
-				weightedInputs[nodeOut] += inputs[nodeIn] * weights[nodeIn % repeat_factor * n_nodesOut + nodeOut];
+				weightedInputs[nodeOut] += inputs[nodeIn] * weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut];
 		}
 		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
 	}
@@ -61,7 +61,11 @@ void Layer::mutation()
 {
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			weights[nodeIn % repeat_factor * n_nodesOut + nodeOut] += random_float()*0.005;
+			if (nodeIn >= n_nodesIn - 2) {
+				weights[repeat_factor - 1 + n_nodesIn - nodeIn] += random_float() * 0.005;//non-reduced expr: n_nodesIn-2+(n_nodesIn-nodeIn)
+			}
+			else
+				weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut] += random_float()*0.005;
 		}
 		biases[nodeOut] += random_float()*0.005;
 	}

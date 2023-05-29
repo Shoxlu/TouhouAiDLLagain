@@ -50,28 +50,33 @@ float Drawer::getWeightColor(int layers_n, int j, int k) {
     return 0.5;
 }
 
-void Drawer::DrawLayer(int n) { // n is the id of the layer to be drawn
+void Drawer::DrawLayer(int layers_n) { // n is the id of the layer to be drawn
     NeuralNetwork* preseau = m_preseau;
     Window* window = m_window;
-
-    for (int j = 0; j < preseau->m_layerSizes[n]; j++)
+    int n_nodesIn = layers_n == 0 ? 8 :  preseau->m_layerSizes[layers_n];
+    for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++)
     {
         //color = 0.2 + 0.8 * preseau->layers[i]->weights[j, preseau->m_layerSizes[i+1]];
         float color = 0.5;
-        for (int k = 0; k < preseau->m_layerSizes[n + 1]; k++)
+        for (int nodeOut = 0; nodeOut < preseau->m_layerSizes[layers_n + 1]; nodeOut++)
         {
-            color = getWeightColor(n, j, k);
-            window->draw_line(Pos{ -700.0 + 25.0 * j, -400.0 + (n * (915 / preseau->layers_length)) },
-                Pos{ -700.0 + 25.0 * k * (n == preseau->layers_length - 1 ? 3 : 1),
-                -400.0 + ((n + 1) * (915 / preseau->layers_length)) }, Color{ color, color, color });
+            color = getWeightColor(layers_n, nodeIn, nodeOut);
+            if (layers_n == 0 && nodeIn > 6) {
+                color = getWeightColor(layers_n, 6 + preseau->m_layerSizes[layers_n] - nodeIn, nodeOut);
+            }
+            
+            window->draw_line(Pos{ -700.0 + 25.0 * nodeIn, -400.0 + (layers_n * (915 / preseau->layers_length)) },
+                Pos{ -700.0 + 25.0 * nodeOut * (layers_n == preseau->layers_length - 1 ? 3 : 1),
+                -400.0 + ((layers_n + 1) * (915 / preseau->layers_length)) }, Color{ color, color, color });
         }
         color = 0.5;
-        if (n != 0 && preseau->layers[n].activations[j] >= 0.5) {
+        if (layers_n != 0 && preseau->layers[layers_n].activations[nodeIn] >= 0.5) {
             color = 1;
         }
-        window->draw_circle(Pos{ -700.0 + 25.0 * j, -400.0 + (n * (915 / preseau->layers_length)) }, 10, Color{ color, color, color });
+        window->draw_circle(Pos{ -700.0 + 25.0 * nodeIn, -400.0 + (layers_n * (915 / preseau->layers_length)) }, 10, Color{ color, color, color });
 
     }
+    
 }
 
 void Drawer::DrawNetwork(NeuralNetwork* preseau) {

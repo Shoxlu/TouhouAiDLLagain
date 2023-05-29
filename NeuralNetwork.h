@@ -11,11 +11,11 @@ public:
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);
 	int Classify(std::vector<double> inputs);
 	void mutationHiddenLayer();
-	bool getLayerNodesIn(int LayerToMutate);
-	void AddNeurone_weights(int random_number);
-	void DeleteNeurone_weights(int random_number);
-	void AddNeurone_biases(int random_number);
-	void DeleteNeurone_biases(int random_number);
+	int getLayerNodesIn(int LayerToMutate);
+	void AddNode_weights(int random_number);
+	void DeleteNode_weights(int random_number, int NodeOutToDelete);
+	void AddNode_biases(int random_number);
+	void DeleteNode_biases(int random_number, int NodeOutToDelete);
 	//double Cost(DataPoint dataPoint);
 	//double CostAverage(DataPoint data[], int n_data_points);
 	//void UpdateAllGradients(DataPoint dataPoint, int n_datapoints);
