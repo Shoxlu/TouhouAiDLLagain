@@ -109,7 +109,7 @@ void NeuralNetwork::AddNode_weights(int LayerToMutate)
 		size_t prev_weight_count = (nextLayer.n_nodesIn - 1) * n_nodesOut1;
 		begin = nextLayer.weights.begin();
 		for (size_t i = prev_weight_count; i < new_weight_count; ++i) {
-			nextLayer.weights.insert(begin, random_float());
+			nextLayer.weights.insert(begin+i, random_float());
 		}
 		nextLayer.weightedInputs.emplace_back(0);
 		nextLayer.activations.emplace_back(0);
