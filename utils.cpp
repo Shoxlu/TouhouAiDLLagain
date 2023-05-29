@@ -180,6 +180,21 @@ int GetMaximumIndex(double outputs[], int length) {
     }
     return maximum_index;
 }
+
+int GetMaximumIndex(std::vector<double> outputs, int length) {
+    int maximum_index = 0;
+    double maximum = outputs[0];
+    for (int i = 1; i < length; i++) {
+        double output = outputs[i];
+        if (maximum <= outputs[i])
+        {
+            maximum_index = i;
+            maximum = outputs[i];
+        }
+    }
+    return maximum_index;
+}
+
 void copy_array(int n, double* dest, double* source)
 {
     for (int i = 0; i < n; i++) {

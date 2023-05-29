@@ -1,4 +1,5 @@
 #pragma once
+#include <vector>
 class Layer
 {
 public:
@@ -12,16 +13,16 @@ public:
 		n_nodesOut = src.n_nodesOut;
 
 		weights = src.weights;
-		src.weights = nullptr;
+		//src.weights = nullptr;
 
 		biases = src.biases;
-		src.biases = nullptr;
+		//src.biases = nullptr;
 
 		weightedInputs = src.weightedInputs;
-		src.weightedInputs = nullptr;
+		//src.weightedInputs = nullptr;
 
 		activations = src.activations;
-		src.activations = nullptr;
+		//src.activations = nullptr;
 		repeat_factor = src.repeat_factor;
 
 	}
@@ -30,20 +31,20 @@ public:
 		n_nodesOut = src.n_nodesOut;
 		repeat_factor = src.repeat_factor;
 		weights = src.weights;
-		src.weights = nullptr;
+		//src.weights = nullptr;
 
 		biases = src.biases;
-		src.biases = nullptr;
+		//src.biases = nullptr;
 
 		weightedInputs = src.weightedInputs;
-		src.weightedInputs = nullptr;
+		//src.weightedInputs = nullptr;
 
 		activations = src.activations;
-		src.activations = nullptr;
+		//src.activations = nullptr;
 
 		return *this;
 	}
-	double* CalculateOutputs(double inputs[]);
+	std::vector<double> CalculateOutputs(std::vector<double> inputs);
 	void recreateWeights();
 	void mutation();
 	/*void UpdateGradients(double nodeValues[]);
@@ -55,10 +56,10 @@ public:
 	double* CalculateHiddenLayerNodeValues(Layer oldlayer, double oldNodeValues[], int n_oldNodeValues_length);*/
 	int n_nodesIn;
 	int n_nodesOut;
-	float* weights;
-	double* biases;
-	double* weightedInputs;
-	double* activations;
+	std::vector<double> weights;
+	std::vector<float> biases;
+	std::vector<double> weightedInputs;
+	std::vector<double> activations;
 	int repeat_factor;
 private:
 

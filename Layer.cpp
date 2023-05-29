@@ -6,50 +6,38 @@
 
 Layer::~Layer()
 {
-	if(weights)
+	/*if(weights)
 		delete[] weights;
 	if(biases)
 		delete[] biases;
 	if(activations)
 		delete[] activations;
 	if (weightedInputs)
-		delete[] weightedInputs;
+		delete[] weightedInputs;*/
 }
 
-Layer::Layer() : repeat_factor(0), n_nodesIn(0), n_nodesOut(0), weights(nullptr), biases(nullptr), activations(nullptr),weightedInputs(nullptr)
+Layer::Layer() : repeat_factor(0), n_nodesIn(0), n_nodesOut(0)
 {
 	
 }
 Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOut), repeat_factor(nodesIn+1)
 {
-	biases = new double[nodesOut];
-	weights = new float[nodesIn*nodesOut];//assume this was double
-	weightedInputs = new double[n_nodesOut];
-	activations = new double[n_nodesOut];
-	for (int nodeOut = 0; nodeOut < nodesOut; nodeOut++) {
-		biases[nodeOut] = 0;
-		for (int nodeIn = 0; nodeIn < nodesIn; nodeIn++) {
-			weights[nodeIn* nodesOut + nodeOut] = 0;
-		}
-	}
+	biases.assign(nodesOut, 0);
+	weights.assign(nodesIn*nodesOut, 0);//assume this was double
+	weightedInputs.assign(n_nodesOut, 0);
+	activations.assign(n_nodesOut, 0);
 	mutation();
 }
 Layer::Layer(int nodesIn, int nodesOut, int repeat_factor_par) : n_nodesIn(nodesIn), n_nodesOut(nodesOut), repeat_factor(repeat_factor_par)
 {
-	biases = new double[nodesOut];
-	weights = new float[int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * nodesOut];//assume this was double
-	weightedInputs = new double[n_nodesOut];
-	activations = new double[n_nodesOut];
-	for (int nodeOut = 0; nodeOut < nodesOut; nodeOut++) {
-		biases[nodeOut] = 0;
-		for (int nodeIn = 0; nodeIn < nodesIn; nodeIn++) {
-			weights[nodeIn % repeat_factor_par * nodesOut + nodeOut] = 0;
-		}
-	}
+	biases.assign(nodesOut, 0);
+	weights.assign(int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * nodesOut, 0);//assume this was double
+	weightedInputs.assign(n_nodesOut, 0);
+	activations.assign(n_nodesOut, 0);
 	mutation();
 }
 
-double* Layer::CalculateOutputs(double inputs[])
+std::vector<double> Layer::CalculateOutputs(std::vector<double> inputs)
 {
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
@@ -59,7 +47,10 @@ double* Layer::CalculateOutputs(double inputs[])
 				nodeIn += 6;
 				continue;
 			}
-			weightedInputs[nodeOut] += inputs[nodeIn] * weights[nodeIn % repeat_factor * n_nodesOut + nodeOut];
+			if (nodeIn >= n_nodesIn-2) {
+				weightedInputs[nodeOut] += inputs[nodeIn] * weights[2*n_nodesIn-2-nodeIn];//non-reduced expr: n_nodesIn-2+(n_nodesIn-nodeIn)
+			}else
+				weightedInputs[nodeOut] += inputs[nodeIn] * weights[nodeIn % repeat_factor * n_nodesOut + nodeOut];
 		}
 		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
 	}

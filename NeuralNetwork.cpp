@@ -26,7 +26,7 @@ NeuralNetwork::~NeuralNetwork()
 }
 
 
-double* NeuralNetwork::CalculateOutputs(double inputs[])
+std::vector<double> NeuralNetwork::CalculateOutputs(std::vector<double> inputs)
 {
 	//layers[0].n_nodesIn = n_inputs;
 	for (int i = 0; i < layers_length; i++) {
@@ -35,8 +35,8 @@ double* NeuralNetwork::CalculateOutputs(double inputs[])
 	return inputs;
 }
 
-int NeuralNetwork::Classify(double inputs[]) {
-	double* outputs = CalculateOutputs(inputs);
+int NeuralNetwork::Classify(std::vector<double> inputs) {
+	std::vector<double> outputs = CalculateOutputs(inputs);
 	int max_i = GetMaximumIndex(outputs, m_layerSizes[layers_length]);
 	return max_i;
 }
@@ -56,8 +56,9 @@ void NeuralNetwork::mutationHiddenLayer()
 	if (randint(0, 100) < 10) {//change that to duplicate 1st layer weights from one set of input (one bullet)
 		int LayerToMutate = randint(1, layers_length-1);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
 		m_layerSizes[LayerToMutate] += 1;
-		AddNeurone_weights(LayerToMutate-1);
-		AddNeurone_biases(LayerToMutate-1);
+		AddNode_weights(LayerToMutate-1);
+		AddNode_biases(LayerToMutate-1);
+		
 	}
 	if (randint(0, 100) < 10) {
 		
@@ -74,166 +75,88 @@ void NeuralNetwork::mutationHiddenLayer()
 			LayerToMutate = randint(1, layers_length - 1);
 		}
 		m_layerSizes[LayerToMutate] -= 1;
-		DeleteNeurone_weights(LayerToMutate-1);
-		DeleteNeurone_biases(LayerToMutate-1);
+		DeleteNode_weights(LayerToMutate-1);
+		DeleteNode_biases(LayerToMutate-1);
 	}
 
 }
-bool NeuralNetwork::newWeightsCreation(float** newWeights, int LayerToMutate) {
+bool NeuralNetwork::getLayerNodesIn(int LayerToMutate) {
 	int repeat_factor = layers[LayerToMutate].repeat_factor;
 	int n_nodesOut = layers[LayerToMutate].n_nodesOut;
 	if (LayerToMutate == 0) {
-		*newWeights = new float[int(((layers[LayerToMutate].n_nodesIn - 2) * repeat_factor) / (layers[LayerToMutate].n_nodesIn - 2) + 2) * n_nodesOut];
-		
+		return ((layers[LayerToMutate].n_nodesIn - 2) * repeat_factor) / (layers[LayerToMutate].n_nodesIn - 2) + 2;
 	}
-	else
-		*newWeights = new float[layers[LayerToMutate].n_nodesIn * n_nodesOut];
-	if (!newWeights) {
-		printf("bad array allocation");
-		return 0;
-	}
-	else {
-		return 1;
-	}
+	return layers[LayerToMutate].n_nodesIn;
 }
-void NeuralNetwork::AddNeurone_weights(int LayerToMutate)
+void NeuralNetwork::AddNode_weights(int LayerToMutate)
 {
-	layers[LayerToMutate].n_nodesOut +=1;
+	auto& layer = layers[LayerToMutate];
+	auto& nextLayer = layers[LayerToMutate + 1];
 	
-	int n_nodesOut = layers[LayerToMutate].n_nodesOut;
-	int n_nodesOut1 = layers[LayerToMutate + 1].n_nodesOut;
-	int repeat_factor = layers[LayerToMutate].repeat_factor;
-	float* newWeights;
-	if (newWeightsCreation(&newWeights, LayerToMutate) == 0) {
-		return;
-	}
-	
-	float* actualWeights = layers[LayerToMutate].weights;
-	
-	for (int nodeIn = 0; nodeIn < layers[LayerToMutate].n_nodesIn; nodeIn++) {
-		for (int nodeOut = 0; nodeOut < n_nodesOut - 1; nodeOut++)
-		{
-			newWeights[nodeIn % repeat_factor * n_nodesOut +nodeOut] = actualWeights[nodeIn%repeat_factor * n_nodesOut + nodeOut];
-		}
-		newWeights[nodeIn % repeat_factor * n_nodesOut + n_nodesOut - 1] = random_float();//ajoute un nodeOut pour chaque nodeIn
-	}
-	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
-		layers[LayerToMutate + 1].n_nodesIn -= 1;
-		float* newWeights1 = new float[n_nodesOut * n_nodesOut1];
-		float* actualWeights1 = layers[LayerToMutate + 1].weights;
-		for (int nodeIn = 0; nodeIn < n_nodesOut - 1; nodeIn++) {
-			for (int nodeOut = 0; nodeOut < n_nodesOut1; nodeOut++)
-			{
-				newWeights1[nodeIn * n_nodesOut1 + nodeOut] = actualWeights1[nodeIn * n_nodesOut1 + nodeOut];
-			}
-		}
-			for (int nodeOut = 0; nodeOut < n_nodesOut1; nodeOut++)
-			{
-				newWeights1[(n_nodesOut - 1) * n_nodesOut1 + nodeOut] = random_float();//créé un weight dans chaque nodeOut pour ce nodeIn
-			}
+	++layer.n_nodesOut;
+	int n_nodesOut = layer.n_nodesOut;
+	int n_nodesOut1 = nextLayer.n_nodesOut;
+	size_t n_nodesIn = getLayerNodesIn(LayerToMutate);
 
-		if (actualWeights1 != nullptr)
-			delete[] actualWeights1;
-		else
-			printf("There was an error on delete[] actual_weights1 ? Not initialised? check potential bad allocations.(DeleteNeurone) \n");
-		layers[LayerToMutate + 1].weights = newWeights1;
+	auto begin = layer.weights.begin();
+	for (size_t nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
+		layer.weights.insert(begin + nodeIn * n_nodesOut + n_nodesOut - 1, 0);
 	}
-	if (actualWeights)
-		delete[] actualWeights;
-	else
-		printf("There was an error on delete[] actual_weights ? Not initialised? check potential bad allocations.(DeleteNeurone) \n");
-	layers[LayerToMutate].weights = newWeights;
+
+	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
+		++nextLayer.n_nodesIn;
+		size_t new_weight_count = nextLayer.n_nodesIn * n_nodesOut1;
+		size_t prev_weight_count = (nextLayer.n_nodesIn - 1) * n_nodesOut1;
+		begin = nextLayer.weights.begin();
+		for (size_t i = prev_weight_count; i < new_weight_count; ++i) {
+			nextLayer.weights.insert(begin, random_float());
+		}
+		nextLayer.weightedInputs.emplace_back(0);
+		nextLayer.activations.emplace_back(0);
+	}
+	layer.weightedInputs.emplace_back(0);
+	layer.activations.emplace_back(0);
 }
 
-void NeuralNetwork::DeleteNeurone_weights(int LayerToMutate)
+void NeuralNetwork::DeleteNode_weights(int LayerToMutate)
 {
-	
-	layers[LayerToMutate].n_nodesOut -= 1;
-	int repeat_factor = layers[LayerToMutate].repeat_factor;
+	auto& layer = layers[LayerToMutate];
+	auto& nextLayer = layers[LayerToMutate + 1];
 
-	int n_nodesOut = layers[LayerToMutate].n_nodesOut;
-	int n_nodesOut1 = layers[LayerToMutate + 1].n_nodesOut;
-	float* newWeights;
-	if (newWeightsCreation(&newWeights, LayerToMutate) == 0) {
-		return;
-	}
+	--layer.n_nodesOut;
+	int n_nodesOut = layer.n_nodesOut;
+	int n_nodesOut1 = nextLayer.n_nodesOut;
+	size_t n_nodesIn = getLayerNodesIn(LayerToMutate);
 
-	float* actualWeights = layers[LayerToMutate].weights;
+	auto begin = layer.weights.begin();
 	int NodeOutToDelete = randint(0, m_layerSizes[LayerToMutate+1]-1);
-	
-	int n = 0;
-	for (int nodeIn = 0; nodeIn < layers[LayerToMutate].n_nodesIn; nodeIn++) {
-		for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++)
-		{
-			if (NodeOutToDelete == nodeOut) {
-				n = 1;
-			}
-			newWeights[nodeIn % repeat_factor * n_nodesOut + nodeOut] = actualWeights[nodeIn % repeat_factor * n_nodesOut + nodeOut + n];
-		}
+	for (size_t nodeIn = 0; nodeIn < layers[LayerToMutate].n_nodesIn; nodeIn++) {
+		layer.weights.erase(begin + nodeIn * n_nodesOut + NodeOutToDelete);
 	}
+
 	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
-		layers[LayerToMutate + 1].n_nodesIn -= 1;
-		float* newWeights1 = new float[n_nodesOut * n_nodesOut1];
-		float* actualWeights1 = layers[LayerToMutate + 1].weights;
-		n = 0;
-		for (int nodeIn = 0; nodeIn < n_nodesOut; nodeIn++) {
-			if (NodeOutToDelete == nodeIn) {
-				n = 1;
-			}
-			for (int j = 0; j < n_nodesOut1; j++)
-			{
-				newWeights1[nodeIn * n_nodesOut1 + j] = actualWeights1[(nodeIn + n) * n_nodesOut1 + j];
-			}	
-		}
-		if (actualWeights1 != nullptr)
-			delete[] actualWeights1;
-		else
-			printf("There was an error on delete[] actual_weights1 ? Not initialised? check potential bad allocations.(DeleteNeurone) \n");
-		layers[LayerToMutate + 1].weights = newWeights1;
-	}
-	if (actualWeights)
-		delete[] actualWeights;
-	else
-		printf("There was an error on delete[] actual_weights ? Not initialised? check potential bad allocations.(DeleteNeurone) \n");
-	layers[LayerToMutate].weights = newWeights;
-}
-
-void NeuralNetwork::AddNeurone_biases(int LayerToMutate) {
-	layers[LayerToMutate].n_nodesOut +=1;
-	double* newBiases = new double[layers[LayerToMutate].n_nodesOut];
-	double* actualBiases = layers[LayerToMutate].biases;
-
-	for (int i = 0; i < layers[LayerToMutate].n_nodesOut-1; i++) {
-		newBiases[i] = actualBiases[i];
-	}
-	newBiases[layers[LayerToMutate].n_nodesOut-1] = random_float();
-
-	if (actualBiases) {
-		delete[] actualBiases;
-	}
-	else
-		printf("There was an error on delete[] actual_biases ? Not initialised? check potential bad allocations. (AddNeurone)\n");
-	layers[LayerToMutate].biases = newBiases;
-}
-
-void NeuralNetwork::DeleteNeurone_biases(int LayerToMutate) {
-	layers[LayerToMutate].n_nodesOut -= 1;
-	double* newBiases = new double[layers[LayerToMutate].n_nodesOut];
-	double* actualBiases = layers[LayerToMutate].biases;
-	int n = 0;
-	int NodeOutToDelete = randint(0, m_layerSizes[LayerToMutate+1]-1);
-	for (int i = 0; i < layers[LayerToMutate].n_nodesOut; i++) {
-		if (NodeOutToDelete == i)
+		--nextLayer.n_nodesIn;
+		for (size_t nodeOut = 0; nodeOut < n_nodesOut1; nodeOut++)
 		{
-			n = 1;
+			layer.weights.erase(begin + NodeOutToDelete * n_nodesOut1 + nodeOut);
 		}
-		newBiases[i] = actualBiases[i+n];
+		nextLayer.weightedInputs.pop_back();
+		nextLayer.activations.pop_back();
 	}
-	if (actualBiases)
-		delete[] actualBiases;
-	else
-		printf("There was an error on delete[] actual_biases ? Not initialised? check potential bad allocations. (DeleteNeurone)\n");
-	layers[LayerToMutate].biases = newBiases;
+	layer.weightedInputs.pop_back();
+	layer.activations.pop_back();
+}
+
+void NeuralNetwork::AddNode_biases(int LayerToMutate) {
+	auto& layer = layers[LayerToMutate];
+	auto begin = layer.biases.begin();
+	layers[LayerToMutate].biases.insert(begin+layers[LayerToMutate].n_nodesOut-1, random_float());
+}
+
+void NeuralNetwork::DeleteNode_biases(int LayerToMutate) {
+	auto& layer = layers[LayerToMutate];
+	auto begin = layer.biases.begin();
+	layers[LayerToMutate].biases.erase(begin + layers[LayerToMutate].n_nodesOut - 1);
 }
 
 //double NeuralNetwork::Cost(DataPoint dataPoint) {

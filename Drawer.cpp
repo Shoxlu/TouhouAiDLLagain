@@ -33,7 +33,7 @@ void Drawer::DrawNetwork() {
     }
     for (int i = 0; i < preseau->m_layerSizes[layers_length]; i++)
     {
-        if (preseau->layers[layers_length - 1].activations && actual_output == i)
+        if (actual_output == i)
             color = 1;
         else
             color = 0.5;
@@ -66,7 +66,7 @@ void Drawer::DrawLayer(int n) { // n is the id of the layer to be drawn
                 -400.0 + ((n + 1) * (915 / preseau->layers_length)) }, Color{ color, color, color });
         }
         color = 0.5;
-        if (preseau->layers[n].activations && n != 0 && preseau->layers[n].activations[j] >= 0.5) {
+        if (n != 0 && preseau->layers[n].activations[j] >= 0.5) {
             color = 1;
         }
         window->draw_circle(Pos{ -700.0 + 25.0 * j, -400.0 + (n * (915 / preseau->layers_length)) }, 10, Color{ color, color, color });

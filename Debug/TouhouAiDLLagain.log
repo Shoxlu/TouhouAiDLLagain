@@ -1,3 +1,42 @@
-﻿  dllmain.cpp
-C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\dllmain.cpp(88,15): warning C4244: 'argument' : conversion de 'time_t' en 'unsigned int', perte possible de données
+﻿  Joueur.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(93,45): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Joueur.cpp(93,36): warning C4244: 'argument' : conversion de 'double' en 'float', perte possible de données
+  utils.cpp
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\utils.cpp(129,16): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+  Window.cpp
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.22000.0\shared\minwindef.h(130,1): warning C4005: 'APIENTRY' : redéfinition de macro
+C:\Users\Timothée\source\repos\Touhou Projects\packages\glfw.3.3.8\build\native\include\GLFW\glfw3.h(123,1): message : voir la définition précédente de 'APIENTRY'
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(10,48): warning C4244: 'argument' : conversion de 'double' en 'int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(10,37): warning C4244: 'argument' : conversion de 'double' en 'int', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(34,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(34,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(34,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(35,42): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(35,25): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(38,21): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(39,17): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(40,17): warning C4244: 'initialisation' : conversion de 'double' en 'float', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(50,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(50,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(50,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(51,43): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(51,25): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(52,37): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(52,22): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(59,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(59,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(59,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(60,54): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(60,30): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(61,55): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(61,31): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(62,55): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(62,31): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(63,55): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(63,31): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(70,38): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(70,29): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+C:\Users\Timothée\source\repos\Touhou Projects\TouhouAiDLLagain\Window.cpp(70,20): warning C4244: 'argument' : conversion de 'double' en 'GLfloat', perte possible de données
+  Génération de code en cours...
+LINK : warning LNK4098: conflit entre la bibliothèque par défaut 'LIBCMT' et les autres bibliothèques ; utilisez /NODEFAULTLIB:library
   TouhouAiDLLagain.vcxproj -> C:\Jeux casse\TouhouAiDLLagain.dll

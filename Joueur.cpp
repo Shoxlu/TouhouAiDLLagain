@@ -67,8 +67,7 @@ int Joueur::update()
 		m_previous_reward = global_ptr->time_in_stage;
 		m_previous_stage = global_ptr->stage_num;
 	}
-	double* input = inputHelper->getInputs();
-	int output = m_reseau->Classify(input);
+	int output = m_reseau->Classify(inputHelper->getInputs());
 	move(output);
 	return output;
 }

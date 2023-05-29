@@ -8,10 +8,10 @@ class NeuralNetwork
 public:
 	~NeuralNetwork();
 	NeuralNetwork(int layerSizes[], int layerSizes_length);
-	double* CalculateOutputs(double inputs[]);
-	int Classify(double inputs[]);
+	std::vector<double> CalculateOutputs(std::vector<double> inputs);
+	int Classify(std::vector<double> inputs);
 	void mutationHiddenLayer();
-	bool newWeightsCreation(float** newWeights, int LayerToMutate);
+	bool getLayerNodesIn(int LayerToMutate);
 	void AddNeurone_weights(int random_number);
 	void DeleteNeurone_weights(int random_number);
 	void AddNeurone_biases(int random_number);

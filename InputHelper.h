@@ -1,5 +1,6 @@
 #pragma once
 #include "utils.h"
+#include <vector>
 
 
 class InputHelper {
@@ -8,13 +9,13 @@ public:
 	InputHelper();
 	~InputHelper();
 	void updateInputs();
-	double* getInputs();
+	std::vector<double> getInputs();
 	Pos getPlayerPos();
 	zBullet* getBulletsData();
 
 
 	//Member variables, public because. : 
-	double* inputs;
+	std::vector<double> inputs;
 	zBullet* bullets;
 	Pos playerPos;
 	int numInputs;//maybe it will be useful

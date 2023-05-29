@@ -1,6 +1,6 @@
 #pragma once
 #include <Windows.h>
-
+#include <vector>
 
 struct zBullet;
 struct zBulletList;
@@ -265,6 +265,7 @@ void copy_array(int n, double* dest, double* source);
 void copy_array(int n, float* dest, float* source);
 void copy_array(int n, int* dest, int* source);
 int GetMaximumIndex(double outputs[], int length);
+int GetMaximumIndex(std::vector<double> outputs, int length);
 double ActivationFunction(double weightedInput);
 double ActivationFunctionDerivative(double x);
 void speedUpGame(int speed);

@@ -4,14 +4,11 @@
 
 InputHelper::InputHelper() : bullets(), playerPos(Pos{ 0, 0 }), numInputs(2 + 2000 * 6), numCurBullets(0)
 {
-	inputs = new double[2 + 2000 * 6];
+	inputs.assign(2 + 2000 * 6, 0);
 }
 
 InputHelper::~InputHelper()
 {
-	if (inputs) {
-		delete[] inputs;
-	}
 }
 
 void InputHelper::updateInputs()
@@ -19,7 +16,7 @@ void InputHelper::updateInputs()
 	playerPos = getPlayerPos();
 	bullets = getBulletsData();
 }
-double* InputHelper::getInputs(){
+std::vector<double> InputHelper::getInputs() {
 	numInputs = 0;
 	updateInputs();
 	
