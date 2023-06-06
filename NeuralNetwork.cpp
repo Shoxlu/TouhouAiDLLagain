@@ -28,7 +28,7 @@ void NeuralNetwork::Reset(NeuralNetwork* reseau) {
 	layers = new Layer[layerSizes_length - 1];
 	layers[0] = std::move(Layer(&reseau->layers[0]));
 	for (int i = 1; i < layerSizes_length - 1; i++) {
-		layers[i] = std::move(Layer(&reseau->layers[i]));
+		layers[i] = std::move(Layer(&(reseau->layers[i])));
 	}
 	layers_length = layerSizes_length - 1;
 	//delete[] layers_temp;
