@@ -20,10 +20,26 @@ Layer::Layer() : repeat_factor(0), n_nodesIn(0), n_nodesOut(0)
 {
 	
 }
+
+Layer::Layer(Layer* layer) : repeat_factor(layer->repeat_factor), n_nodesIn(layer->n_nodesIn), n_nodesOut(layer->n_nodesOut)
+{
+	for (int i = 0; i < n_nodesOut; i++)
+	{
+		biases.emplace_back(layer->biases[i]);
+	}
+	int size = n_nodesOut * n_nodesIn;
+	if (repeat_factor < n_nodesIn + 1)
+		size = int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * n_nodesOut;
+	for (int i = 0; i < size; i++) {
+		weights.emplace_back(layer->weights[i]);
+	}
+	weightedInputs.assign(layer->n_nodesOut, 0);
+	activations.assign(layer->n_nodesOut, 0);
+}
 Layer::Layer(int nodesIn, int nodesOut) : n_nodesIn(nodesIn), n_nodesOut(nodesOut), repeat_factor(nodesIn+1)
 {
 	biases.assign(nodesOut, 0);
-	weights.assign(nodesIn*nodesOut, 0);//assume this was double
+	weights.assign(nodesIn*nodesOut, 0);
 	weightedInputs.assign(n_nodesOut, 0);
 	activations.assign(n_nodesOut, 0);
 	mutation();
@@ -39,22 +55,54 @@ Layer::Layer(int nodesIn, int nodesOut, int repeat_factor_par) : n_nodesIn(nodes
 
 std::vector<double> Layer::CalculateOutputs(std::vector<double> inputs)
 {
+	if (n_nodesIn == 12002) {
+		return CalculateOutputsLayer0(inputs);
+	}
+	else {
+		return CalculateOutputsLayerX(inputs);
+	}
+}
+
+std::vector<double> Layer::CalculateOutputsLayerX(std::vector<double> inputs)
+{
+	/*std::vector<double> weightedInputs_ = weightedInputs;
+	std::vector<double> weights_ = weights;
+	std::vector<double> biases_ = biases;*/
+	int a = 0;
+	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
+		weightedInputs[nodeOut] = biases[nodeOut];
+		for (size_t nodeIn = 0; nodeIn < weights.size(); nodeIn+=n_nodesOut) {
+			//printf("%f ", inputs[nodeIn]);
+			weightedInputs[nodeOut] += inputs[a++] * weights[nodeIn + nodeOut];
+		}
+		a = 0;
+		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
+	}
+	return activations;
+}
+
+std::vector<double> Layer::CalculateOutputsLayer0(std::vector<double> inputs)
+{
+	/*std::vector<double> weightedInputs_ = weightedInputs;
+	std::vector<double> weights_ = weights;
+	std::vector<double> biases_ = biases;*/
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
 		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			//printf("%f ", inputs[nodeIn]);
 			if (inputs[nodeIn] == -10000) {
 				nodeIn += 6;
 				continue;
 			}
-			if (nodeIn >= n_nodesIn-2) {
-				weightedInputs[nodeOut] += inputs[nodeIn] * weights[repeat_factor-1+ n_nodesIn-nodeIn];//non-reduced expr: n_nodesIn-2+(n_nodesIn-nodeIn)
-			}else
+			if (nodeIn >= n_nodesIn - 2) {
+				weightedInputs[nodeOut] += inputs[nodeIn] * weights[repeat_factor - 1 + n_nodesIn - nodeIn];
+			}
+			else {
 				weightedInputs[nodeOut] += inputs[nodeIn] * weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut];
+
+			}
 		}
 		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
 	}
-	//printf("\n");
 	return activations;
 }
 void Layer::mutation()

@@ -22,8 +22,12 @@ GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0
 {
     isPlaying = true;
     m_rewards = new int[n_systemes];
-    m_joueurs = new Joueur[n_systemes];
-    preseau = m_joueurs[0].m_reseau;
+    m_joueurs = new Joueur*[n_systemes];
+    for (int i = 0; i < n_systemes; i++)
+    {
+        m_joueurs[i] = new Joueur();
+    } 
+    preseau = m_joueurs[0]->m_reseau;
     printf("Joueurs créés\n");
     printf("N generation: %d \n", m_n_generation);
 }
@@ -45,7 +49,7 @@ void GenerationJoueur::newGeneration()
     m_n_generation += 1;
     best_joueur_ids = getBestJoueurs();
     printf("Begin Joueurs creation\n");
-    Joueur* joueurs = new Joueur [m_n_all_systemes];
+    Joueur** joueurs = new Joueur* [m_n_all_systemes];
     n_best_joueurs = m_n_all_systemes / 2;//idk if it is useful but VS was complaining about the for loop
     for (int i = 0; i < n_best_joueurs; i++) {
         joueurs[i] = m_joueurs[best_joueur_ids[i]];
@@ -53,13 +57,10 @@ void GenerationJoueur::newGeneration()
     for (int i = n_best_joueurs; i < m_n_all_systemes; i++)
     {
         joueurs[i] = m_joueurs[i];
+        joueurs[i]->Reset(m_joueurs[best_joueur_ids[i - n_best_joueurs]]->m_reseau);
     }
-    //delete[] m_joueurs;
+    
     m_joueurs = joueurs;
-    for (int i = n_best_joueurs; i < m_n_all_systemes; i++)
-    {
-        m_joueurs[i].Reset(m_joueurs[best_joueur_ids[i - n_best_joueurs]].m_reseau);
-    }
     printf("Joueurs créés\n");
     m_n_systemes = m_n_all_systemes;
     printf("N generation: %d \n", m_n_generation);
@@ -79,40 +80,32 @@ bool GenerationJoueur::joueurMort()
 int GenerationJoueur::update() {
     if (joueurMort())
     {   
-        m_rewards[joueur_actuel] = m_joueurs[joueur_actuel].m_reward;
+        m_rewards[joueur_actuel] = m_joueurs[joueur_actuel]->m_reward;
         joueur_actuel += 1;
         if (joueur_actuel >= m_n_all_systemes)
         {
             printf("Fin_generation\n");
             newGeneration();
         }
-        HANDLE ResetThread = CreateRemoteThread(
-            hprocess,
-            NULL,
-            NULL,
-            (LPTHREAD_START_ROUTINE)ResetGame,
-            NULL,
-            NULL,
-            NULL
-        );
+        HANDLE ResetThread = CreateRemoteThread(hprocess,NULL,NULL,(LPTHREAD_START_ROUTINE)ResetGame, NULL,NULL,NULL);
         isPlaying = false;
         preseau = NULL;
         
     }
     else if (isPlaying == true) {
-        return m_joueurs[joueur_actuel].update();
+        return m_joueurs[joueur_actuel]->update();
     }
     if (isPlaying == false && global_ptr->time_in_stage == 1) {
         printf("New actual player id: %d \n", joueur_actuel);
         isPlaying = true;
-        preseau = m_joueurs[joueur_actuel].m_reseau;
+        preseau = m_joueurs[joueur_actuel]->m_reseau;
     }
     return 0;
 }
 
 
 void GenerationJoueur::update_() {
-    m_joueurs[joueur_actuel].update_();
+    m_joueurs[joueur_actuel]->update_();
 }
 
 void ResetGame()

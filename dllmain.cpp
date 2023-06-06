@@ -122,21 +122,15 @@ void update()
         isRendering = true;
     }
     if (!player_ptr)
-    {
         return;
-    }
     if (global_ptr->time_in_stage > previous_time)
     {
         previous_time = global_ptr->time_in_stage;
         actual_output = generation->update();
         if (GetKeyState(VK_BACK) & 0x00000001)
-        {
             speedUpGame(10);
-        }
         else if (GetKeyState(VK_BACK) == 0)
-        {
             speedUpGame(0);
-        }
     }
 }
 
@@ -155,5 +149,11 @@ void render()
             drawer.DrawNetwork(preseau);
             drawer.Apply();
         }
+        else if(!player_ptr){
+            Sleep(1);
+            drawer.Apply();
+        }
+        
+
     }
 }

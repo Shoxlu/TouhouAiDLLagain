@@ -8,7 +8,7 @@
 NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
 {
 	m_layerSizes = new int[layerSizes_length];
-	copy_array(layerSizes_length, m_layerSizes, layerSizes);
+	memcpy(m_layerSizes, layerSizes,layerSizes_length*sizeof(int));
 	layers = new Layer[layerSizes_length - 1];
 	layers[0] = std::move(Layer(layerSizes[0], layerSizes[1], 6));
 	for (int i = 1; i < layerSizes_length - 1; i++) { 
@@ -16,6 +16,24 @@ NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
 	}
 	layers_length = layerSizes_length-1;
 }
+
+void NeuralNetwork::Reset(NeuralNetwork* reseau) {
+	int* layerSizes = reseau->m_layerSizes;
+	int layerSizes_length = (reseau->layers_length + 1);
+	delete[] m_layerSizes;
+	m_layerSizes = new int[layerSizes_length];
+	memcpy(m_layerSizes, layerSizes, layerSizes_length * sizeof(int));
+
+	Layer* layers_temp = layers;
+	layers = new Layer[layerSizes_length - 1];
+	layers[0] = std::move(Layer(&reseau->layers[0]));
+	for (int i = 1; i < layerSizes_length - 1; i++) {
+		layers[i] = std::move(Layer(&reseau->layers[i]));
+	}
+	layers_length = layerSizes_length - 1;
+	//delete[] layers_temp;
+}
+
 NeuralNetwork::~NeuralNetwork()
 {
 	if (layers) {
@@ -28,7 +46,6 @@ NeuralNetwork::~NeuralNetwork()
 
 std::vector<double> NeuralNetwork::CalculateOutputs(std::vector<double> inputs)
 {
-	//layers[0].n_nodesIn = n_inputs;
 	for (int i = 0; i < layers_length; i++) {
 		inputs = layers[i].CalculateOutputs(inputs);
 	}
@@ -53,16 +70,16 @@ void NeuralNetwork::mutation()
 
 void NeuralNetwork::mutationHiddenLayer()
 {
-	if (randint(0, 100) < 1000) {//change that to duplicate 1st layer weights from one set of input (one bullet)
+	if (randint(0, 100) < 2) {//change that to duplicate 1st layer weights from one set of input (one bullet)
 		int LayerToMutate = randint(1, layers_length-1);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
 		m_layerSizes[LayerToMutate] += 1;
 		AddNode_weights(LayerToMutate-1);
 		AddNode_biases(LayerToMutate-1);
 		
 	}
-	if (randint(0, 100) < 1000) {
+	if (randint(0, 100) < 2) {
 		
-		for (int i = 1; i < layers_length + 1; i++) {
+		for (int i = 1; i < layers_length; i++) {
 			if (m_layerSizes[i] > 1)
 				continue;
 			if(i == layers_length + 1)
@@ -98,16 +115,15 @@ void NeuralNetwork::AddNode_weights(int LayerToMutate)
 	int n_NextNodesOut = nextLayer.n_nodesOut;
 	auto begin = layer.weights.begin();
 	int n_nodesIn = getLayerNodesIn(LayerToMutate);
-	layer.weights.resize(n_nodesIn * n_nodesOut);
-	for (size_t i = 0; i < n_nodesIn; i++) {
+	for (size_t i = n_nodesOut-1; i <= layer.weights.size(); i+= n_nodesOut) {
 		begin = layer.weights.begin();
-		layer.weights.insert(begin+i*n_nodesOut+n_nodesOut-1, 0);
+		layer.weights.insert(begin+i, random_float()*0.005);
 	}
 
 	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
 		++nextLayer.n_nodesIn;
 		for (size_t i = 0; i < n_NextNodesOut; ++i) {
-			nextLayer.weights.emplace_back(random_float());
+			nextLayer.weights.emplace_back(random_float()*0.005);
 		}
 		nextLayer.weightedInputs.emplace_back(0);
 		nextLayer.activations.emplace_back(0);
@@ -125,15 +141,14 @@ void NeuralNetwork::DeleteNode_weights(int LayerToMutate, int NodeOutToDelete)
 	int n_nodesOut = layer.n_nodesOut;
 	size_t n_nodesIn = getLayerNodesIn(LayerToMutate);
 	auto begin = layer.weights.begin();
-	for (size_t i = 0; i < n_nodesIn; i++) {
+	for (size_t pos = NodeOutToDelete; pos < layer.weights.size(); pos += n_nodesOut) {
 		begin = layer.weights.begin();
-		layer.weights.erase(begin + i * (n_nodesOut-1) + NodeOutToDelete);
+		layer.weights.erase(begin+pos);
 	}
 	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
 		--nextLayer.n_nodesIn;
-		auto next_pos = nextLayer.weights.begin() + NodeOutToDelete * n_nodesOut;
-		nextLayer.weights.erase(next_pos, next_pos + n_nodesOut);
-
+		auto next_pos = nextLayer.weights.begin() + NodeOutToDelete * nextLayer.n_nodesOut;
+		nextLayer.weights.erase(next_pos, next_pos+ nextLayer.n_nodesOut);
 		nextLayer.weightedInputs.pop_back();
 		nextLayer.activations.pop_back();
 	}
@@ -143,7 +158,7 @@ void NeuralNetwork::DeleteNode_weights(int LayerToMutate, int NodeOutToDelete)
 
 void NeuralNetwork::AddNode_biases(int LayerToMutate) {
 	auto& layer = layers[LayerToMutate];
-	layers[LayerToMutate].biases.emplace_back(random_float());
+	layers[LayerToMutate].biases.emplace_back(random_float()* 0.005);
 }
 
 void NeuralNetwork::DeleteNode_biases(int LayerToMutate, int NodeOutToDelete) {
@@ -206,4 +221,4 @@ void NeuralNetwork::DeleteNode_biases(int LayerToMutate, int NodeOutToDelete) {
 //	for (int layer_index = 0; layer_index < layers_length; layer_index++) {
 //		layers[layer_index].ClearGradients();
 //	}
-//}
+//}r

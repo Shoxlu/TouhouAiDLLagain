@@ -21,7 +21,7 @@ public:
 	int* best_joueur_ids; //array
 	int n_best_joueurs;
 	int joueur_actuel;
-	Joueur* m_joueurs;
+	Joueur** m_joueurs;
 	bool isPlaying;
 private:
 	int previous_miss_count;

@@ -160,12 +160,6 @@ double ActivationFunction(double weightedInput) {
     printf("%f \n", 1.0 / (1.0 + exp(-weightedInput)));*/
     return 1.0 / (1.0 + exp(-weightedInput));
 }
-
-// ???
-double ActivationFunctionDerivative(double x) {
-    x = ActivationFunction(x);
-    return x;
-}
 //returns the index of the maximum value of an array;
 int GetMaximumIndex(double outputs[], int length) {
     int maximum_index = 0;
@@ -193,19 +187,6 @@ int GetMaximumIndex(std::vector<double> outputs, int length) {
         }
     }
     return maximum_index;
-}
-
-void copy_array(int n, double* dest, double* source)
-{
-    for (int i = 0; i < n; i++) {
-        dest[i] = source[i];
-    }
-}
-void copy_array(int n, int* dest, int* source)
-{
-    for (int i = 0; i < n; i++) {
-        dest[i] = source[i];
-    }
 }
 
 void writeMemory(void* dst, void* src, size_t len) {

@@ -4,6 +4,7 @@ class Layer
 {
 public:
 	Layer(int nodes_In, int nodes_Out);
+	Layer(Layer* Layer);
 	Layer(int nodes_In, int nodes_Out, int repeat_factor_par);
 	Layer();
 	~Layer();
@@ -41,10 +42,11 @@ public:
 
 		activations = src.activations;
 		//src.activations = nullptr;
-
 		return *this;
 	}
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);
+	std::vector<double> CalculateOutputsLayerX(std::vector<double> inputs);
+	std::vector<double> CalculateOutputsLayer0(std::vector<double> inputs);
 	void recreateWeights();
 	void mutation();
 	/*void UpdateGradients(double nodeValues[]);
@@ -57,7 +59,7 @@ public:
 	int n_nodesIn;
 	int n_nodesOut;
 	std::vector<double> weights;
-	std::vector<float> biases;
+	std::vector<double> biases;
 	std::vector<double> weightedInputs;
 	std::vector<double> activations;
 	int repeat_factor;
