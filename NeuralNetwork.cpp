@@ -24,11 +24,10 @@ void NeuralNetwork::Reset(NeuralNetwork* reseau) {
 	m_layerSizes = new int[layerSizes_length];
 	memcpy(m_layerSizes, layerSizes, layerSizes_length * sizeof(int));
 
-	Layer* layers_temp = layers;
 	layers = new Layer[layerSizes_length - 1];
-	layers[0] = std::move(Layer(&reseau->layers[0]));
+	layers[0] = Layer(&reseau->layers[0]);
 	for (int i = 1; i < layerSizes_length - 1; i++) {
-		layers[i] = std::move(Layer(&(reseau->layers[i])));
+		layers[i] = Layer(&reseau->layers[i]);
 	}
 	layers_length = layerSizes_length - 1;
 	//delete[] layers_temp;
