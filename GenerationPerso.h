@@ -12,6 +12,7 @@ public:
 	void update_();
 	bool joueurMort();
 	int* getBestJoueurs();
+	void SortBestJoueurs();
 	int* getBestRewards();
 	int m_n_systemes;
 	const int m_n_all_systemes;

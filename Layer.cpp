@@ -23,6 +23,7 @@ Layer::Layer() : repeat_factor(0), n_nodesIn(0), n_nodesOut(0)
 
 Layer::Layer(Layer* layer) : repeat_factor(layer->repeat_factor), n_nodesIn(layer->n_nodesIn), n_nodesOut(layer->n_nodesOut)
 {
+	printf("%d\n", layer->weights.size());
 	for (int i = 0; i < n_nodesOut; i++)
 	{
 		biases.emplace_back(layer->biases[i]);

@@ -1,6 +1,7 @@
 
 #include "GenerationPerso.h"
 #include "Joueur.h"
+#include "NeuralNetwork.h"
 #include <iostream>
 #include "utils.h"
 
@@ -47,20 +48,13 @@ void GenerationJoueur::newGeneration()
     printf("New generation \n");
     joueur_actuel = 0;
     m_n_generation += 1;
-    best_joueur_ids = getBestJoueurs();
     printf("Begin Joueurs creation\n");
-    Joueur** joueurs = new Joueur* [m_n_all_systemes];
+    SortBestJoueurs();
     n_best_joueurs = m_n_all_systemes / 2;//idk if it is useful but VS was complaining about the for loop
-    for (int i = 0; i < n_best_joueurs; i++) {
-        joueurs[i] = m_joueurs[best_joueur_ids[i]];
-    }
     for (int i = n_best_joueurs; i < m_n_all_systemes; i++)
     {
-        joueurs[i] = m_joueurs[i];
-        joueurs[i]->Reset(m_joueurs[best_joueur_ids[i - n_best_joueurs]]->m_reseau);
+        m_joueurs[i]->Reset(m_joueurs[i - n_best_joueurs]->m_reseau);;
     }
-    
-    m_joueurs = joueurs;
     printf("Joueurs créés\n");
     m_n_systemes = m_n_all_systemes;
     printf("N generation: %d \n", m_n_generation);
@@ -149,6 +143,23 @@ int* GenerationJoueur::getBestJoueurs() {
     }
     printf("\n");
     return bestJoueurs;
+}
+void GenerationJoueur::SortBestJoueurs() {
+    int best_id;
+    for (int i = 0; i < n_best_joueurs; i++) {
+        int best_reward = m_rewards[i];
+        best_id = i;
+        for (int j = 0; j < m_n_all_systemes; j++) {
+            if (m_rewards[j] >= best_reward) {
+                best_reward = m_rewards[j];
+                best_id = j;
+            }
+        }
+        Joueur* temp = m_joueurs[i];
+        m_joueurs[i] = m_joueurs[best_id];
+        m_joueurs[best_id] = temp;
+        m_rewards[best_id] = 0;
+    }
 }
 
 int* GenerationJoueur::getBestRewards() {

@@ -26,8 +26,10 @@ void NeuralNetwork::Reset(NeuralNetwork* reseau) {
 
 	layers = new Layer[layerSizes_length - 1];
 	layers[0] = Layer(&reseau->layers[0]);
+	printf("%d \n", reseau->layers[0].weights.size());
 	for (int i = 1; i < layerSizes_length - 1; i++) {
 		layers[i] = Layer(&reseau->layers[i]);
+		//printf("%d \n", reseau->layers[i].weights.size());
 	}
 	layers_length = layerSizes_length - 1;
 	//delete[] layers_temp;

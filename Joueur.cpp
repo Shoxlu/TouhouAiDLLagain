@@ -44,6 +44,7 @@ void Joueur::Reset(NeuralNetwork* reseau)
 	m_reward = 0;
 	m_previous_reward = 0;
 	m_previous_stage = 0;
+	printf("%d \n", reseau->layers[0].weights.size());
 	m_reseau->Reset(reseau);
 	m_reseau->mutation();
 		//new Reseau(reseau->get_n_Hidden_layer(), reseau->get_n_inputs(), reseau->get_n_Hidden_neurones(), reseau->get_Hidden_layers(), reseau->get_inputs(), reseau->get_outputs(), this);
