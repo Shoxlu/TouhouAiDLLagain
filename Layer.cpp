@@ -28,8 +28,8 @@ Layer::Layer(Layer* layer) : repeat_factor(layer->repeat_factor), n_nodesIn(laye
 	{
 		biases.emplace_back(layer->biases[i]);
 	}
-	int size = n_nodesOut * n_nodesIn;
-	if (repeat_factor < n_nodesIn + 1)
+	int size = layer->n_nodesOut * layer->n_nodesIn;
+	if (repeat_factor < n_nodesIn )
 		size = int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * n_nodesOut;
 	for (int i = 0; i < size; i++) {
 		weights.emplace_back(layer->weights[i]);

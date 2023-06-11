@@ -23,7 +23,7 @@ void NeuralNetwork::Reset(NeuralNetwork* reseau) {
 	delete[] m_layerSizes;
 	m_layerSizes = new int[layerSizes_length];
 	memcpy(m_layerSizes, layerSizes, layerSizes_length * sizeof(int));
-
+	
 	layers = new Layer[layerSizes_length - 1];
 	layers[0] = Layer(&reseau->layers[0]);
 	printf("%d \n", reseau->layers[0].weights.size());
@@ -123,9 +123,10 @@ void NeuralNetwork::AddNode_weights(int LayerToMutate)
 
 	if (layers_length > 1 && LayerToMutate + 1 < layers_length) {
 		++nextLayer.n_nodesIn;
-		for (size_t i = 0; i < n_NextNodesOut; ++i) {
+		for (int i = 0; i < n_NextNodesOut; ++i) {
 			nextLayer.weights.emplace_back(random_float()*0.005);
 		}
+		nextLayer.repeat_factor++;
 		nextLayer.weightedInputs.emplace_back(0);
 		nextLayer.activations.emplace_back(0);
 	}
@@ -150,6 +151,7 @@ void NeuralNetwork::DeleteNode_weights(int LayerToMutate, int NodeOutToDelete)
 		--nextLayer.n_nodesIn;
 		auto next_pos = nextLayer.weights.begin() + NodeOutToDelete * nextLayer.n_nodesOut;
 		nextLayer.weights.erase(next_pos, next_pos+ nextLayer.n_nodesOut);
+		nextLayer.repeat_factor--;
 		nextLayer.weightedInputs.pop_back();
 		nextLayer.activations.pop_back();
 	}
