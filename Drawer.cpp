@@ -60,19 +60,21 @@ void Drawer::DrawLayer(int layers_n) { // n is the id of the layer to be drawn
         float color = 0.5;
         for (int nodeOut = 0; nodeOut < preseau->m_layerSizes[layers_n + 1]; nodeOut++)
         {
-            color = getWeightColor(layers_n, nodeIn, nodeOut);
-            if (layers_n == 0 && nodeIn > 6) {
+            
+            if (layers_n == 0 && nodeIn > 6)
                 color = getWeightColor(layers_n, 6 + preseau->m_layerSizes[layers_n] - nodeIn, nodeOut);
-            }
+            else
+                color = getWeightColor(layers_n, nodeIn, nodeOut);
             
             window->draw_line(Pos{ -700.0 + 25.0 * nodeIn, -400.0 + (layers_n * (915 / preseau->layers_length)) },
                 Pos{ -700.0 + 25.0 * nodeOut * (layers_n == preseau->layers_length - 1 ? 3 : 1),
                 -400.0 + ((layers_n + 1) * (915 / preseau->layers_length)) }, Color{ color, color, color });
         }
-        color = 0.5;
-        if (layers_n != 0 && preseau->layers[layers_n].activations[nodeIn] >= 0.5) {
+       
+        if (layers_n != 0 && preseau->layers[layers_n].activations[nodeIn] >= 0.5)
             color = 1;
-        }
+        else
+            color = 0.5;
         window->draw_circle(Pos{ -700.0 + 25.0 * nodeIn, -400.0 + (layers_n * (915 / preseau->layers_length)) }, 10, Color{ color, color, color });
 
     }
