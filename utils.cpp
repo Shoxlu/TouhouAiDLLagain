@@ -39,7 +39,7 @@ void speedUpGame(int speed)
     frame_skip = *frameskip;
 }
 
-zBullet* bulletNear(float x, float y) {
+zBullet* bulletNear(double x, double y) {
     Bullet_PTR = *(zBulletManager**)0x4CF2BC;
     if (!Bullet_PTR)
     {
@@ -126,8 +126,8 @@ int randint(int min, int max) {
 }
 bool random_bool()
 {
-    float temp = random_float_positive() * 99;
-    if (temp > 50)
+    double temp = random_float_positive() * 99;
+    if (temp > 50.0)
     {
         return true;
     }

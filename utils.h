@@ -259,7 +259,7 @@ double random_float_positive();
 int randint(int min, int max);
 bool random_bool();
 Pos get_player_pos();
-zBullet* bulletNear(float x, float y);
+zBullet* bulletNear(double x, double y);
 void ReleaseAllInputs();
 int GetMaximumIndex(double outputs[], int length);
 int GetMaximumIndex(std::vector<double> outputs, int length);

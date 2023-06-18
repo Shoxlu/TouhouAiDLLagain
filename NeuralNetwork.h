@@ -7,6 +7,7 @@ class NeuralNetwork
 {
 public:
 	~NeuralNetwork();
+	NeuralNetwork();
 	NeuralNetwork(int layerSizes[], int layerSizes_length);
 	void Reset(NeuralNetwork* reseau);
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);

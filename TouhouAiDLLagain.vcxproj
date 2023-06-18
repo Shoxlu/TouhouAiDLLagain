@@ -174,9 +174,11 @@
     <ClInclude Include="Drawer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GenerationPerso.h" />
+    <ClInclude Include="CSVSaver.h" />
     <ClInclude Include="List.h" />
     <ClInclude Include="InputHelper.h" />
     <ClInclude Include="Layer.h" />
+    <ClInclude Include="NetworkSaver.h" />
     <ClInclude Include="NeuralNetwork.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Joueur.h" />
@@ -185,12 +187,14 @@
     <ClInclude Include="Window.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CSVSaver.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="Drawer.cpp" />
     <ClCompile Include="GenerationPerso.cpp" />
     <ClCompile Include="InputHelper.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="List.cpp" />
+    <ClCompile Include="NetworkSaver.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

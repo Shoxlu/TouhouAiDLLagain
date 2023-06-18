@@ -5,6 +5,10 @@
 #include <algorithm>
 
 
+NeuralNetwork::NeuralNetwork(): m_layerSizes(nullptr), layers(nullptr), layers_length(0) {
+
+}
+
 NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
 {
 	m_layerSizes = new int[layerSizes_length];
@@ -29,10 +33,8 @@ void NeuralNetwork::Reset(NeuralNetwork* reseau) {
 	printf("%d \n", reseau->layers[0].weights.size());
 	for (int i = 1; i < layerSizes_length - 1; i++) {
 		layers[i] = Layer(&reseau->layers[i]);
-		//printf("%d \n", reseau->layers[i].weights.size());
 	}
 	layers_length = layerSizes_length - 1;
-	//delete[] layers_temp;
 }
 
 NeuralNetwork::~NeuralNetwork()

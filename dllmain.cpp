@@ -27,11 +27,11 @@ using namespace std;
 #define VK_C 0x43
 #define VK_X 0x58
 
-extern GenerationJoueur* generation;
+extern GenerationHandler* generation;
 extern zPlayer* player_ptr;
 extern zBulletManager* Bullet_PTR;
 extern zGlobals* global_ptr;
-GenerationJoueur* generation;
+GenerationHandler* generation;
 InputHelper* pinputHelper;
 bool isRendering;
 const int NbrePerso_generation = 4;
@@ -87,7 +87,7 @@ void init()
     LoadLibraryW(L"opengl32.dll");
     srand(time(0));
     pinputHelper = new InputHelper();
-    generation = new GenerationJoueur(NbrePerso_generation);
+    generation = new GenerationHandler(NbrePerso_generation);
     isRendering = true;
     previous_time = 0;
     auto new_thread1 = CreateRemoteThread(

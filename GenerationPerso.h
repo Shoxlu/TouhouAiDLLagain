@@ -3,10 +3,10 @@ using namespace std;
 class Joueur;
 
 void ResetGame();
-class GenerationJoueur {
+class GenerationHandler {
 public:
-	GenerationJoueur(int n_systemes);
-	~GenerationJoueur();
+	GenerationHandler(int n_systemes);
+	~GenerationHandler();
 	void newGeneration();
 	int update();
 	void update_();
@@ -14,10 +14,11 @@ public:
 	int* getBestJoueurs();
 	void SortBestJoueurs();
 	int* getBestRewards();
+	void SaveNetworks();
+
 	int m_n_systemes;
 	const int m_n_all_systemes;
 	int m_n_generation;
-
 	int* m_rewards;//array
 	int* best_joueur_ids; //array
 	int n_best_joueurs;

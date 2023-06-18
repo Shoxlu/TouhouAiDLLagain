@@ -2,7 +2,7 @@
 #include "GenerationPerso.h"
 #include "Joueur.h"
 #include "NeuralNetwork.h"
-#include <iostream>
+#include "NetworkSaver.h"
 #include "utils.h"
 
 #define VK_W 0x57
@@ -19,8 +19,9 @@ extern HANDLE hprocess;
 extern bool isRendering;
 extern NeuralNetwork* preseau;
 
-GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(1), m_n_all_systemes(n_systemes), joueur_actuel(0), best_joueur_ids(nullptr), n_best_joueurs(n_systemes /2)
+GenerationHandler::GenerationHandler(const int n_systemes) : previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(1), m_n_all_systemes(n_systemes), joueur_actuel(0), best_joueur_ids(nullptr), n_best_joueurs(n_systemes /2)
 {
+    //TO DO: add networks loading logic (CSV files)
     isPlaying = true;
     m_rewards = new int[n_systemes];
     m_joueurs = new Joueur*[n_systemes];
@@ -33,7 +34,7 @@ GenerationJoueur::GenerationJoueur(const int n_systemes) : previous_miss_count(0
     printf("N generation: %d \n", m_n_generation);
 }
 
-GenerationJoueur::~GenerationJoueur()
+GenerationHandler::~GenerationHandler()
 {
     if(m_joueurs)
         delete[] m_joueurs;
@@ -43,24 +44,32 @@ GenerationJoueur::~GenerationJoueur()
         delete[] best_joueur_ids;
 }
 
-void GenerationJoueur::newGeneration()
+void GenerationHandler::newGeneration()
 {
-    printf("New generation \n");
+    printf("New generation \nBegin Joueurs creation\n");
     joueur_actuel = 0;
     m_n_generation += 1;
-    printf("Begin Joueurs creation\n");
     SortBestJoueurs();
     n_best_joueurs = m_n_all_systemes / 2;//idk if it is useful but VS was complaining about the for loop
-    for (int i = n_best_joueurs; i < m_n_all_systemes; i++)
-    {
+    SaveNetworks();
+    for (int i = n_best_joueurs; i < m_n_all_systemes; i++) {
         m_joueurs[i]->Reset(m_joueurs[i - n_best_joueurs]->m_reseau);;
     }
-    printf("Joueurs créés\n");
     m_n_systemes = m_n_all_systemes;
-    printf("N generation: %d \n", m_n_generation);
+    printf("Joueurs créés\nN generation: %d \n", m_n_generation);
 }
 
-bool GenerationJoueur::joueurMort()
+void GenerationHandler::SaveNetworks() {
+    NetworkSaver NetworkSave;
+    char name[512];
+    for (int i = 0; i < n_best_joueurs; i++) {
+        snprintf(name, 512, "Network%d.csv", i);
+        NetworkSave.SaveNetwork(m_joueurs[i]->m_reseau, name);
+    }
+}
+
+
+bool GenerationHandler::joueurMort()
 {
     if (global_ptr->miss_count > previous_miss_count)
     {
@@ -71,7 +80,7 @@ bool GenerationJoueur::joueurMort()
     return false;
 }
 
-int GenerationJoueur::update() {
+int GenerationHandler::update() {
     if (joueurMort())
     {   
         m_rewards[joueur_actuel] = m_joueurs[joueur_actuel]->m_reward;
@@ -98,7 +107,7 @@ int GenerationJoueur::update() {
 }
 
 
-void GenerationJoueur::update_() {
+void GenerationHandler::update_() {
     m_joueurs[joueur_actuel]->update_();
 }
 
@@ -125,7 +134,7 @@ void ResetGame()
     previous_time = 0;
 }
 
-int* GenerationJoueur::getBestJoueurs() {
+int* GenerationHandler::getBestJoueurs() {
     int* bestJoueurs = new int[n_best_joueurs];
     int best_id;
     for (int i = 0; i < n_best_joueurs; i++) {
@@ -144,7 +153,7 @@ int* GenerationJoueur::getBestJoueurs() {
     printf("\n");
     return bestJoueurs;
 }
-void GenerationJoueur::SortBestJoueurs() {
+void GenerationHandler::SortBestJoueurs() {
     int best_id;
     for (int i = 0; i < n_best_joueurs; i++) {
         int best_reward = m_rewards[i];
@@ -162,7 +171,7 @@ void GenerationJoueur::SortBestJoueurs() {
     }
 }
 
-int* GenerationJoueur::getBestRewards() {
+int* GenerationHandler::getBestRewards() {
     int* best_rewards = new int[n_best_joueurs];
     int n = 0;
     for (int i = 0; i < m_n_all_systemes; i++) {

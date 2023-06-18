@@ -10,6 +10,7 @@ public:
 	~InputHelper();
 	void updateInputs();
 	std::vector<double> getInputs();
+	void AddBullet(zBullet* bulletptr, int i, int a);
 	Pos getPlayerPos();
 	zBullet* getBulletsData();
 

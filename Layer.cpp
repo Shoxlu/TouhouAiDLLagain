@@ -30,9 +30,9 @@ Layer::Layer(Layer* layer) : repeat_factor(layer->repeat_factor), n_nodesIn(laye
 	}
 	int size = 0;
 	if (repeat_factor < n_nodesIn )
-		int size = int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * n_nodesOut;
+		size = int(((n_nodesIn - 2) * repeat_factor) / (n_nodesIn - 2) + 2) * n_nodesOut;
 	else
-		int size = n_nodesOut * n_nodesIn;
+		size = n_nodesOut * n_nodesIn;
 	for (int i = 0; i < size; i++) {
 		weights.emplace_back(layer->weights[i]);
 	}
@@ -58,7 +58,7 @@ Layer::Layer(int nodesIn, int nodesOut, int repeat_factor_par) : n_nodesIn(nodes
 
 std::vector<double> Layer::CalculateOutputs(std::vector<double> inputs)
 {
-	if (n_nodesIn == 12002) {
+	if (repeat_factor < n_nodesIn) {
 		return CalculateOutputsLayer0(inputs);
 	}
 	else {
@@ -68,14 +68,10 @@ std::vector<double> Layer::CalculateOutputs(std::vector<double> inputs)
 
 std::vector<double> Layer::CalculateOutputsLayerX(std::vector<double> inputs)
 {
-	/*std::vector<double> weightedInputs_ = weightedInputs;
-	std::vector<double> weights_ = weights;
-	std::vector<double> biases_ = biases;*/
 	int a = 0;
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
 		for (size_t nodeIn = 0; nodeIn < weights.size(); nodeIn+=n_nodesOut) {
-			//printf("%f ", inputs[nodeIn]);
 			weightedInputs[nodeOut] += inputs[a++] * weights[nodeIn + nodeOut];
 		}
 		a = 0;
@@ -86,39 +82,31 @@ std::vector<double> Layer::CalculateOutputsLayerX(std::vector<double> inputs)
 
 std::vector<double> Layer::CalculateOutputsLayer0(std::vector<double> inputs)
 {
-	/*std::vector<double> weightedInputs_ = weightedInputs;
-	std::vector<double> weights_ = weights;
-	std::vector<double> biases_ = biases;*/
+	int size = weights.size();
 	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		weightedInputs[nodeOut] = biases[nodeOut];
-		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
+		for (int nodeIn = 0; nodeIn < n_nodesIn-2; nodeIn++) {
 			if (inputs[nodeIn] == -10000) {
 				nodeIn += 6;
 				continue;
 			}
-			if (nodeIn >= n_nodesIn - 2) {
-				weightedInputs[nodeOut] += inputs[nodeIn] * weights[repeat_factor - 1 + n_nodesIn - nodeIn];
-			}
-			else {
-				weightedInputs[nodeOut] += inputs[nodeIn] * weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut];
-
-			}
+			weightedInputs[nodeOut] += inputs[nodeIn] * weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut];
 		}
+		weightedInputs[nodeOut] += inputs[n_nodesIn - 1] * weights[size - n_nodesOut + nodeOut];
+		weightedInputs[nodeOut] += inputs[n_nodesIn - 2] * weights[size - 2 * n_nodesOut + nodeOut];
 		activations[nodeOut] = ActivationFunction(weightedInputs[nodeOut]);
 	}
 	return activations;
 }
 void Layer::mutation()
 {
-	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
-		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			if (nodeIn >= n_nodesIn - 2) {
-				weights[repeat_factor - 1 + n_nodesIn - nodeIn] += random_float() * 0.005;//non-reduced expr: n_nodesIn-2+(n_nodesIn-nodeIn)
-			}
-			else
-				weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut] += random_float()*0.005;
-		}
-		biases[nodeOut] += random_float()*0.005;
+	int size = weights.size();
+	for (int i = 0; i < size; i++) {
+		weights[i] += random_float()*0.005;
+	}
+	size = biases.size();
+	for (int i = 0; i < size; i++) {
+		biases[i] += random_float() * 0.005;
 	}
 }
 

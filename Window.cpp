@@ -3,13 +3,16 @@
 #include <stdio.h>
 #include <cmath>
 
+constexpr auto WIDTH = 853;
+constexpr auto HEIGHT = 613;
+
 Window::Window()
 {
 
     // Create a window
-    window = glfwCreateWindow(1280.0/1.5, 920.0/1.5, "AI Visual Tests", NULL, NULL);
-    width = int(1280 / 1.5);
-    height = int(920 / 1.5);
+    window = glfwCreateWindow(WIDTH, HEIGHT, "AI Visual Tests", NULL, NULL);
+    width = WIDTH;
+    height = HEIGHT;
     glfwMakeContextCurrent(window);
     if (window == nullptr)
     {
@@ -28,16 +31,16 @@ Window::~Window()
     glfwTerminate();
 }
 
-void Window::draw_circle(Pos center, float radius, Color color)
+void Window::draw_circle(Pos center, double radius, Color color)
 {
     glBegin(GL_TRIANGLE_FAN);
     glColor3f(color.r, color.g, color.b);
     glVertex2f(center.x / width, center.y/ height); // Center of the circle
     for (int i = 0; i <= 180; ++i)
     {
-        float angle = 6.83178 * (static_cast<float>(i) / 180);
-        float x = radius * cos(angle) + center.x;
-        float y = radius * sin(angle) + center.y;
+        double angle = 6.83178 * (static_cast<double>(i) / 180);
+        double x = radius * cos(angle) + center.x;
+        double y = radius * sin(angle) + center.y;
         glVertex2f(x/ width, y / height);
     }
     glEnd();
