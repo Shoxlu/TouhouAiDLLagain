@@ -97,7 +97,7 @@ std::vector<double> NetworkSaver::getWeights(int id, int n_nodesIn, int n_nodesO
 	for (size_t nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		for (size_t nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
 			snprintf(key, 128, "Layer%d_NodeOut%d", id, nodeOut);
-			weights.emplace_back((double)CSV.read(key, nodeIn));
+			weights.emplace_back(CSV.read(key, nodeIn));
 		}
 	}
 	return weights;
