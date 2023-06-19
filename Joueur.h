@@ -9,6 +9,7 @@ class Joueur
 public:
 	Joueur();
 	~Joueur();
+	void CreateNetwork();
 	void Reset(NeuralNetwork* reseau);
 	int update();
 	void update_();

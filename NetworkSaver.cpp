@@ -63,16 +63,22 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 	
 	//get layers sizes
 	std::vector<int> layerSizes;
-	char buffer[16];
+	string value = CSV.read("Layers_Sizes", 0);
+	string null = "NULL";
 	size_t length = 0;
-	for (size_t i = 0; buffer != "NULL" && i < file->n_lines; i++) {
-		layerSizes.emplace_back((int)buffer);
-		length = i;
+	for (size_t i = 0; value != null && i < file->n_lines; i++) {
+		layerSizes.emplace_back(stoi(value));
+		length = i+1;
+		value = CSV.read("Layers_Sizes", i+1);
 	}
-
+	if (length < 2){
+		return nullptr;
+	}
 	//get each layer with GetLayer
 	Layer* layers = new Layer[length - 1];
 	layers[0] = std::move(Layer(layerSizes[0], layerSizes[1], 6));
+	layers[0].weights = getWeights(0, 8, layerSizes[1]);
+	layers[0].biases = getBiases(0, layerSizes[1]);
 	for (size_t i = 1; i < length - 1; i++) {
 		layers[i] = std::move(Layer(layerSizes[i], layerSizes[i + 1]));	
 		layers[i].weights = getWeights(i, layerSizes[i], layerSizes[i + 1]);
@@ -87,28 +93,30 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 	for (size_t i = 0; i < length; i++) {
 		reseau->m_layerSizes[i] = layerSizes[i];
 	}
+	CSV.Close();
 	return reseau;
 }
 
-std::vector<double> NetworkSaver::getWeights(int id, int n_nodesIn, int n_nodesOut)
+vector<double> NetworkSaver::getWeights(int id, int n_nodesIn, int n_nodesOut)
 {
 	std::vector<double> weights;
-	char key[128];
-	for (size_t nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
-		for (size_t nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
-			snprintf(key, 128, "Layer%d_NodeOut%d", id, nodeOut);
-			weights.emplace_back(CSV.read(key, nodeIn));
+	char key[18];
+	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
+		for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++) {
+			snprintf(key, 18, "Layer%d_NodeOut%d", id, nodeOut);
+			weights.emplace_back(stod(CSV.read(key, nodeIn)));
 		}
 	}
 	return weights;
 }
-std::vector<double> NetworkSaver::getBiases(int id, int n_nodesOut)
+
+vector<double> NetworkSaver::getBiases(int id, int n_nodesOut)
 {
-	std::vector<double> biases;
-	char key[128];
+	vector<double> biases;
+	char key[18];
 	for (size_t nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
-		snprintf(key, 128, "Layer%d_NodeOut%d", id, nodeOut);
-		biases.emplace_back(CSV.read(key, nodeOut));
+		snprintf(key, 18, "Layer%d_Biases", id);
+		biases.emplace_back(stod(CSV.read(key, nodeOut)));
 	}
 	return biases;
 }

@@ -59,7 +59,8 @@ void CSVSaver::write(string toWrite, string key, size_t index)
 	}
 	size_t pos = currentfile->lines_begin[index];
 	pos = goToColumn(pos, column);
-	string search = getSlice(currentfile->rawContent, pos, currentfile->rawContent.find(',', pos)+1);
+	size_t finalPos = currentfile->rawContent.find(',', pos) + 1;
+	string search =currentfile->rawContent.substr(pos, finalPos-pos);
 	currentfile->rawContent.replace(pos, search.length(), "");
 	currentfile->rawContent.insert(pos, toWrite+',');
 	getLines(currentfile);
@@ -164,7 +165,9 @@ string CSVSaver::getSlice(string buffer, int begin, int end)
 CSVFile* CSVSaver::read(string name)
 {
 	FILE* file;
-	if (fopen_s(&file, name.c_str(), "r+") == 0) {
+	errno_t err = fopen_s(&file, name.c_str(), "r+");
+	printf("%d", err);
+	if ( err == 0) {
 		currentfile = new CSVFile();
 		return read(file);
 	}
@@ -196,7 +199,8 @@ string CSVSaver::read(string key, size_t index, CSVFile* file)
 	if (currentfile->rawContent[pos] == '\n') {
 		return "";
 	}
-	string search = getSlice(currentfile->rawContent, pos, currentfile->rawContent.find(',', pos));
+	size_t finalpos = currentfile->rawContent.find(',', pos);
+	string search = currentfile->rawContent.substr(pos, finalpos - pos);
 	return search;
 }
 //string CSVSaver::read(string key, CSVFile* file)

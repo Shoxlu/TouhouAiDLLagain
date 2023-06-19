@@ -87,6 +87,7 @@ void init()
     LoadLibraryW(L"opengl32.dll");
     srand(time(0));
     pinputHelper = new InputHelper();
+    Sleep(5000);
     generation = new GenerationHandler(NbrePerso_generation);
     isRendering = true;
     previous_time = 0;
@@ -99,6 +100,7 @@ void init()
         NULL,
         NULL
     );
+
 }
 
 void update()

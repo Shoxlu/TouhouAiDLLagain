@@ -17,11 +17,9 @@ extern int NbreEnemy;
 extern zGlobals* global_ptr;
 extern InputHelper* pinputHelper;
 
-Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previous_stage(0)
+Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previous_stage(0), m_reseau(nullptr)
 {
 	inputHelper = pinputHelper;
-	int layerSizes[3] = { 2+2000*6,1, 10};
-	m_reseau = new NeuralNetwork(layerSizes, 3);
 	moves[0] = Dir{ {VK_UP}, 1, 1 };
 	moves[1] = Dir{ {VK_DOWN}, 1, 1 };
 	moves[2] = Dir{ {VK_RIGHT}, 1, 1};
@@ -37,6 +35,11 @@ Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(0), m_previous_reward(0), m_previ
 Joueur::~Joueur() {
 	if (m_reseau)
 		delete m_reseau;
+}
+
+void Joueur::CreateNetwork() {
+	int layerSizes[3] = { 2 + 2000 * 6,1, 10 };
+	m_reseau = new NeuralNetwork(layerSizes, 3);
 }
 
 void Joueur::Reset(NeuralNetwork* reseau)

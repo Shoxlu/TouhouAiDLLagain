@@ -21,14 +21,20 @@ extern NeuralNetwork* preseau;
 
 GenerationHandler::GenerationHandler(const int n_systemes) : previous_miss_count(0), m_n_systemes(n_systemes), m_n_generation(1), m_n_all_systemes(n_systemes), joueur_actuel(0), best_joueur_ids(nullptr), n_best_joueurs(n_systemes /2)
 {
-    //TO DO: add networks loading logic (CSV files)
+    NetworkSaver NetworkSave;
     isPlaying = true;
     m_rewards = new int[n_systemes];
-    m_joueurs = new Joueur*[n_systemes];
+    m_joueurs = new Joueur * [n_systemes];
     for (int i = 0; i < n_systemes; i++)
     {
         m_joueurs[i] = new Joueur();
-    } 
+    }
+    if (!LoadNetworks(n_systemes)){
+        for (int i = 0; i < n_systemes; i++)
+        {
+            m_joueurs[i]->CreateNetwork();
+        }
+    }
     preseau = m_joueurs[0]->m_reseau;
     printf("Joueurs créés\n");
     printf("N generation: %d \n", m_n_generation);
@@ -42,6 +48,22 @@ GenerationHandler::~GenerationHandler()
         delete[] m_rewards;
     if (best_joueur_ids)
         delete[] best_joueur_ids;
+}
+
+bool GenerationHandler::LoadNetworks(int n_systemes) {
+    char filename[512];
+    NetworkSaver NetworkSave;
+    for (int i = 0; i < n_systemes/2; i++) {
+        snprintf(filename, sizeof(filename), "C:/Users/Timothée/Documents/Touhou/Touhou 18 - Unconnected Marketeers/Network%d.csv", i);
+        m_joueurs[i]->m_reseau = NetworkSave.GetNetwork(filename);
+        if (m_joueurs[i]->m_reseau == nullptr) {
+            return false;
+        }
+    }
+    for (int i = n_systemes / 2; i < n_systemes; i++) {
+        m_joueurs[i]->CreateNetwork();
+    }
+    return true;
 }
 
 void GenerationHandler::newGeneration()
