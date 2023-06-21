@@ -25,11 +25,12 @@ GenerationHandler::GenerationHandler(const int n_systemes) : previous_miss_count
     isPlaying = true;
     m_rewards = new int[n_systemes];
     m_joueurs = new Joueur * [n_systemes];
+    n_best_joueurs = 50;//idk if it is useful but VS was complaining about the for loop
     for (int i = 0; i < n_systemes; i++)
     {
         m_joueurs[i] = new Joueur();
     }
-    if (!LoadNetworks(n_systemes)){
+    if (!LoadNetworks()){
         for (int i = 0; i < n_systemes; i++)
         {
             m_joueurs[i]->CreateNetwork();
@@ -50,33 +51,39 @@ GenerationHandler::~GenerationHandler()
         delete[] best_joueur_ids;
 }
 
-bool GenerationHandler::LoadNetworks(int n_systemes) {
+bool GenerationHandler::LoadNetworks() {
     char filename[512];
     NetworkSaver NetworkSave;
-    for (int i = 0; i < n_systemes/2; i++) {
+    for (int i = 0; i < n_best_joueurs; i++) {
         snprintf(filename, sizeof(filename), "C:/Users/Timothée/Documents/Touhou/Touhou 18 - Unconnected Marketeers/Network%d.csv", i);
         m_joueurs[i]->m_reseau = NetworkSave.GetNetwork(filename);
         if (m_joueurs[i]->m_reseau == nullptr) {
             return false;
         }
     }
-    for (int i = n_systemes / 2; i < n_systemes; i++) {
+    for (int i = n_best_joueurs; i < m_n_all_systemes; i++) {
         m_joueurs[i]->CreateNetwork();
     }
+    MutateFromBestJoueurs();
     return true;
 }
+
+void GenerationHandler::MutateFromBestJoueurs() {
+    for (int i = n_best_joueurs; i < m_n_all_systemes; i++) {
+        m_joueurs[i]->Reset(m_joueurs[(i - n_best_joueurs) % n_best_joueurs]->m_reseau);;
+    }
+}
+
 
 void GenerationHandler::newGeneration()
 {
     printf("New generation \nBegin Joueurs creation\n");
     joueur_actuel = 0;
     m_n_generation += 1;
+    n_best_joueurs = 50;//idk if it is useful but VS was complaining about the for loop
     SortBestJoueurs();
-    n_best_joueurs = m_n_all_systemes / 2;//idk if it is useful but VS was complaining about the for loop
     SaveNetworks();
-    for (int i = n_best_joueurs; i < m_n_all_systemes; i++) {
-        m_joueurs[i]->Reset(m_joueurs[i - n_best_joueurs]->m_reseau);;
-    }
+    MutateFromBestJoueurs();
     m_n_systemes = m_n_all_systemes;
     printf("Joueurs créés\nN generation: %d \n", m_n_generation);
 }

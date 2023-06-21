@@ -114,7 +114,7 @@ vector<double> NetworkSaver::getBiases(int id, int n_nodesOut)
 {
 	vector<double> biases;
 	char key[18];
-	for (size_t nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
+	for (int nodeOut = 0; nodeOut < n_nodesOut; nodeOut++) {
 		snprintf(key, 18, "Layer%d_Biases", id);
 		biases.emplace_back(stod(CSV.read(key, nodeOut)));
 	}

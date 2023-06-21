@@ -15,7 +15,8 @@ public:
 	void SortBestJoueurs();
 	int* getBestRewards();
 	void SaveNetworks();
-	bool LoadNetworks(int n_systemes);
+	bool LoadNetworks();
+	void MutateFromBestJoueurs();
 	int m_n_systemes;
 	const int m_n_all_systemes;
 	int m_n_generation;

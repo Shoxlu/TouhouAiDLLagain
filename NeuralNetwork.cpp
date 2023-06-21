@@ -30,7 +30,7 @@ void NeuralNetwork::Reset(NeuralNetwork* reseau) {
 	
 	layers = new Layer[layerSizes_length - 1];
 	layers[0] = Layer(&reseau->layers[0]);
-	printf("%d \n", reseau->layers[0].weights.size());
+	//printf("%d \n", reseau->layers[0].weights.size());
 	for (int i = 1; i < layerSizes_length - 1; i++) {
 		layers[i] = Layer(&reseau->layers[i]);
 	}
@@ -85,7 +85,7 @@ void NeuralNetwork::mutationHiddenLayer()
 		for (int i = 1; i < layers_length; i++) {
 			if (m_layerSizes[i] > 1)
 				continue;
-			if(i == layers_length + 1)
+			if(i == layers_length - 1)
 			{
 				return;
 			}

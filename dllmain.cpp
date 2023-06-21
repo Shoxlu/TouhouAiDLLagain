@@ -34,7 +34,7 @@ extern zGlobals* global_ptr;
 GenerationHandler* generation;
 InputHelper* pinputHelper;
 bool isRendering;
-const int NbrePerso_generation = 4;
+const int NbrePerso_generation = 400;
 int previous_time;
 Window* window;
 HANDLE hprocess;
@@ -63,10 +63,12 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         hprocess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, id);
         patch_call(0x004712D9, init);
         patch_call(0x00471C2A, update);
+        //patch remaining BYTES;
         BYTE patch[] = { 0x90 };
         BYTE patch1[] = { 0x90, 0x90, 0x90 };
         writeMemory(0x4712DE, patch, sizeof(patch));
         writeMemory(0x00471C2A + 0x5, patch1, sizeof(patch1));
+
         printf("End on init \n");
         
     }
@@ -86,8 +88,8 @@ void init()
 {
     LoadLibraryW(L"opengl32.dll");
     srand(time(0));
-    pinputHelper = new InputHelper();
     Sleep(5000);
+    pinputHelper = new InputHelper();
     generation = new GenerationHandler(NbrePerso_generation);
     isRendering = true;
     previous_time = 0;
@@ -98,19 +100,11 @@ void init()
         (LPTHREAD_START_ROUTINE)render,
         NULL,
         NULL,
-        NULL
-    );
+        NULL);
 
 }
 
-void update()
-{
-    if (!generation) {
-        init();
-    }
-    player_ptr = *(zPlayer**)0x4CF410;
-    Bullet_PTR = *(zBulletManager**)0x4CF2BC;
-    global_ptr = (zGlobals*)0x4cccc0;
+void HandleNoGameRender() {
     if (GetKeyState(VK_F1) & 0x00000001 && isRendering == true)
     {
         BYTE patch[] = { 0x90, 0x90, 0x90, 0x90, 0x90 };
@@ -123,16 +117,30 @@ void update()
         writeMemory(0x00471C07, patch, sizeof(patch));
         isRendering = true;
     }
+}
+void HandleSpeedUp() {
+    if (GetKeyState(VK_BACK) & 0x00000001)
+        speedUpGame(10);
+    else if (GetKeyState(VK_BACK) == 0)
+        speedUpGame(0);
+}
+
+void update()
+{
+    if (!generation) {
+        init();
+    }
+    player_ptr = *(zPlayer**)0x4CF410;
+    Bullet_PTR = *(zBulletManager**)0x4CF2BC;
+    global_ptr = (zGlobals*)0x4cccc0;
+    HandleNoGameRender();
     if (!player_ptr)
         return;
     if (global_ptr->time_in_stage > previous_time)
     {
         previous_time = global_ptr->time_in_stage;
         actual_output = generation->update();
-        if (GetKeyState(VK_BACK) & 0x00000001)
-            speedUpGame(10);
-        else if (GetKeyState(VK_BACK) == 0)
-            speedUpGame(0);
+        HandleSpeedUp();
     }
 }
 
@@ -155,7 +163,5 @@ void render()
             Sleep(1);
             drawer.Apply();
         }
-        
-
     }
 }
