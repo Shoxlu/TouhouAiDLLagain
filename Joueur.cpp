@@ -37,8 +37,8 @@ Joueur::~Joueur() {
 }
 
 void Joueur::CreateNetwork() {
-	int layerSizes[3] = { 2 + 2000 * 6,1, 9 };
-	m_reseau = new NeuralNetwork(layerSizes, 3);
+	std::vector<int> layerSizes = { 2 + 2000 * 6, 9 };
+	m_reseau = new NeuralNetwork(layerSizes);
 }
 
 void Joueur::Reset(NeuralNetwork* reseau)

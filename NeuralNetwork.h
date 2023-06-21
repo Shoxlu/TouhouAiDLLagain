@@ -8,7 +8,7 @@ class NeuralNetwork
 public:
 	~NeuralNetwork();
 	NeuralNetwork();
-	NeuralNetwork(int layerSizes[], int layerSizes_length);
+	NeuralNetwork(std::vector<int> layerSizes);
 	void Reset(NeuralNetwork* reseau);
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);
 	int Classify(std::vector<double> inputs);
@@ -25,8 +25,11 @@ public:
 	//void ApplyAllGradients(double learnRate, int n_datapoints);
 	//void ClearAllGradients();
 	void mutation();
+	void AddLayer();
+	void RemoveLayer();
+	void mutationLayers();
 	int layers_length;
-	int* m_layerSizes;
+	std::vector<int> m_layerSizes;
 	Layer* layers;
 private:
 };

@@ -5,14 +5,14 @@
 #include <algorithm>
 
 
-NeuralNetwork::NeuralNetwork(): m_layerSizes(nullptr), layers(nullptr), layers_length(0) {
+NeuralNetwork::NeuralNetwork(): m_layerSizes(), layers(nullptr), layers_length(0) {
 
 }
 
-NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
+NeuralNetwork::NeuralNetwork(std::vector<int> layerSizes)
 {
-	m_layerSizes = new int[layerSizes_length];
-	memcpy(m_layerSizes, layerSizes,layerSizes_length*sizeof(int));
+	m_layerSizes = layerSizes;
+	size_t layerSizes_length = layerSizes.size();
 	layers = new Layer[layerSizes_length - 1];
 	layers[0] = std::move(Layer(layerSizes[0], layerSizes[1], 6));
 	for (int i = 1; i < layerSizes_length - 1; i++) { 
@@ -22,16 +22,11 @@ NeuralNetwork::NeuralNetwork(int layerSizes[], int layerSizes_length)
 }
 
 void NeuralNetwork::Reset(NeuralNetwork* reseau) {
-	int* layerSizes = reseau->m_layerSizes;
+	std::vector<int> layerSizes = reseau->m_layerSizes;
 	int layerSizes_length = (reseau->layers_length + 1);
-	delete[] m_layerSizes;
-	m_layerSizes = new int[layerSizes_length];
-	memcpy(m_layerSizes, layerSizes, layerSizes_length * sizeof(int));
-	
+	m_layerSizes = layerSizes;
 	layers = new Layer[layerSizes_length - 1];
-	layers[0] = Layer(&reseau->layers[0]);
-	//printf("%d \n", reseau->layers[0].weights.size());
-	for (int i = 1; i < layerSizes_length - 1; i++) {
+	for (int i = 0; i < layerSizes_length - 1; i++) {
 		layers[i] = Layer(&reseau->layers[i]);
 	}
 	layers_length = layerSizes_length - 1;
@@ -42,8 +37,6 @@ NeuralNetwork::~NeuralNetwork()
 	if (layers) {
 		delete[] layers;
 	}
-	if (m_layerSizes)
-		delete[] m_layerSizes;
 }
 
 
@@ -65,11 +58,71 @@ int NeuralNetwork::Classify(std::vector<double> inputs) {
 void NeuralNetwork::mutation()
 {
 	mutationHiddenLayer();
+	mutationLayers();
 	for (int i = 0; i < layers_length; i++) {
 
 		layers[i].mutation();
 	}
 }
+
+
+void NeuralNetwork::AddLayer() {
+	//Add a layer:
+	//Resize m_layersizes
+	int layersToAdd = randint(1, layers_length);
+	auto begin = m_layerSizes.begin();
+	m_layerSizes.insert(begin + layersToAdd, 1);
+	//Increment layers length
+	++layers_length;
+	//Reorganize "layers" to implement a new Layer
+	Layer* newLayers = new Layer[layers_length];
+	for (int i = 0; i < layers_length; i++) {
+		newLayers[i] = Layer(&layers[i]);
+	}
+	delete[] layers;
+	layers = newLayers;
+	layers[layersToAdd - 1] = std::move(Layer(m_layerSizes[layersToAdd - 1], m_layerSizes[layersToAdd]));
+	layers[layersToAdd] = std::move(Layer(m_layerSizes[layersToAdd], m_layerSizes[layersToAdd + 1]));
+}
+
+void NeuralNetwork::RemoveLayer() {
+	//Remove a layer:
+	//if layers length > 1:
+	if (layers_length > 1)
+	{
+		int layersToDelete = randint(1, layers_length);
+		//Resize m_layersizes
+		auto begin = m_layerSizes.begin();
+		m_layerSizes.erase(begin + layersToDelete);
+
+		//Decrement layers length
+		--layers_length;
+		//Reorganize "layers" to delete a Layer
+		Layer* newLayers = new Layer[layers_length];
+		for (int i = 0; i < layers_length; i++) {
+			if (i == layersToDelete) {
+				continue;
+			}
+			else {
+				newLayers[i] = Layer(&layers[i]);
+			}
+
+		}
+		delete[] layers;
+		layers = newLayers;
+		layers[layersToDelete - 1] = std::move(Layer(m_layerSizes[layersToDelete - 1], m_layerSizes[layersToDelete]));
+	}
+}
+
+void NeuralNetwork::mutationLayers() {
+	if (randint(0, 100) < 1) {
+		AddLayer();
+	}
+	if (randint(0, 100) < 1) {
+		RemoveLayer();
+	}
+}
+
 
 void NeuralNetwork::mutationHiddenLayer()
 {

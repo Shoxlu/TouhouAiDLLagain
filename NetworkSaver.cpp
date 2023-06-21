@@ -71,7 +71,7 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 		length = i+1;
 		value = CSV.read("Layers_Sizes", i+1);
 	}
-	if (length < 2){
+	if (length < 1){
 		return nullptr;
 	}
 	//get each layer with GetLayer
@@ -89,9 +89,9 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 	NeuralNetwork* reseau = new NeuralNetwork();
 	reseau->layers = layers;
 	reseau->layers_length = length - 1;
-	reseau->m_layerSizes = new int[length];
+	reseau->m_layerSizes.clear();
 	for (size_t i = 0; i < length; i++) {
-		reseau->m_layerSizes[i] = layerSizes[i];
+		reseau->m_layerSizes.emplace_back(layerSizes[i]);
 	}
 	CSV.Close();
 	return reseau;
