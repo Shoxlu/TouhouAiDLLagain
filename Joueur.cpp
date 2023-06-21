@@ -4,7 +4,7 @@
 #include <random>
 #include "utils.h"
 #include <iostream>
-
+extern int NINPUTSPBULLET;
 #define VK_W 0x57
 #define VK_R 0x52
 #define VK_D 0x44
@@ -37,7 +37,7 @@ Joueur::~Joueur() {
 }
 
 void Joueur::CreateNetwork() {
-	std::vector<int> layerSizes = { 2 + 2000 * 6, 9 };
+	std::vector<int> layerSizes = { 2 + 2000 * NINPUTSPBULLET, 9 };
 	m_reseau = new NeuralNetwork(layerSizes);
 }
 

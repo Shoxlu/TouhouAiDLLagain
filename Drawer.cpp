@@ -2,7 +2,7 @@
 #include "NeuralNetwork.h"
 #include "Window.h"
 #include <stdio.h>
-
+extern int NINPUTSPBULLET;
 extern int actual_output;
 Drawer::Drawer(): m_preseau(nullptr), m_window(nullptr) {
 	//Default constructor
@@ -54,8 +54,8 @@ void Drawer::DrawLayer(int layers_n) { // layers_n is the id of the layer to be 
         for (int nodeOut = 0; nodeOut < preseau->m_layerSizes[layers_n + 1]; nodeOut++)
         {
             
-            if (layers_n == 0 && nodeIn > 6)
-                color = getWeightColor(layers_n, 6 + preseau->m_layerSizes[layers_n] - nodeIn, nodeOut);
+            if (layers_n == 0 && nodeIn > NINPUTSPBULLET)
+                color = getWeightColor(layers_n, NINPUTSPBULLET + preseau->m_layerSizes[layers_n] - nodeIn, nodeOut);
             else
                 color = getWeightColor(layers_n, nodeIn, nodeOut);
             

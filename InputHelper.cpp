@@ -1,8 +1,9 @@
 #include "InputHelper.h"
 #include <corecrt_math.h>
 #include <stdio.h>
+int NINPUTSPBULLET = 5;
 constexpr auto N_BULLETS = 2000;
-constexpr auto INPUTS_MAX = 12002;
+auto INPUTS_MAX = 2000 * NINPUTSPBULLET + 2;
 
 InputHelper::InputHelper() : bullets(), playerPos(Pos{ 0, 0 }), numInputs(2 + 2000 * 6), numCurBullets(0)
 {
@@ -26,11 +27,11 @@ std::vector<double> InputHelper::getInputs() {
 	
 	int a = 0;
 	numCurBullets = 0;
-	for (int i = 0; i < INPUTS_MAX; i+=6) {
-		zBullet bullet = bullets[i / 6];
+	for (int i = 0; i < INPUTS_MAX; i+= NINPUTSPBULLET) {
+		zBullet bullet = bullets[i / NINPUTSPBULLET];
 		if (bullet.state != 1) {
 			inputs[i - a] = -10000;
-			a += 6;
+			a += NINPUTSPBULLET;
 			continue;
 		}
 		AddBullet(&bullet, i, a);
@@ -48,11 +49,10 @@ void InputHelper::AddBullet(zBullet* bulletptr, int i, int a) {
 	inputs[i - a] = bullet.pos.x / 192000.0;//todo: add proportionnality
 	inputs[i + 1 - a] = bullet.pos.y / 192000.0;
 	inputs[i + 2 - a] = bullet.angle / 6283.184;
-	inputs[i + 3 - a] = bullet.speed / 10000.0;
-	inputs[i + 4 - a] = bullet.hitbox_radius / 10000.0;
-	inputs[i + 5 - a] = pow(inputs[i - a], 2) + pow(inputs[i + 1 - a], 2) / 590050.845;
+	inputs[i + 3 - a] = bullet.hitbox_radius / 10000.0;
+	inputs[i + 4 - a] = pow(inputs[i - a], 2) + pow(inputs[i + 1 - a], 2) / 590050.845;
 	numCurBullets += 1;
-	numInputs += 6;
+	numInputs += NINPUTSPBULLET;
 }
 
 

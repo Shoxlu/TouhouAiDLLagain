@@ -80,7 +80,7 @@ void GenerationHandler::newGeneration()
     printf("New generation \nBegin Joueurs creation\n");
     joueur_actuel = 0;
     m_n_generation += 1;
-    n_best_joueurs = 50;//idk if it is useful but VS was complaining about the for loop
+    n_best_joueurs = 50;
     SortBestJoueurs();
     SaveNetworks();
     MutateFromBestJoueurs();

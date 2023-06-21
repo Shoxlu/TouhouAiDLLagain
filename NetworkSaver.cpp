@@ -24,6 +24,7 @@ void NetworkSaver::SaveNetwork(NeuralNetwork* reseau, string filename)
 		snprintf(layerSize, 16, "%d", reseau->m_layerSizes[i]);
 		CSV.write(layerSize, "Layers_Sizes", i);
 	}
+	CSV.Apply();
 	CSV.Close();
 }
 

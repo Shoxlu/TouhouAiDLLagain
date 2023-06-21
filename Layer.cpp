@@ -3,7 +3,7 @@
 #include "List.h"
 #include <stdio.h>
 
-
+extern int NINPUTSPBULLET;
 Layer::~Layer()
 {
 	/*if(weights)
@@ -86,7 +86,7 @@ std::vector<double> Layer::CalculateOutputsLayer0(std::vector<double> inputs)
 		weightedInputs[nodeOut] = biases[nodeOut];
 		for (int nodeIn = 0; nodeIn < n_nodesIn-2; nodeIn++) {
 			if (inputs[nodeIn] == -10000) {
-				nodeIn += 6;
+				nodeIn += NINPUTSPBULLET;
 				continue;
 			}
 			weightedInputs[nodeOut] += inputs[nodeIn] * weights[(nodeIn % repeat_factor) * n_nodesOut + nodeOut];
@@ -102,7 +102,7 @@ void Layer::mutation()
 	int size = weights.size();
 	for (int i = 0; i < size; i++) {
 		if(randint(0, 100) < 20)
-			weights[i] += random_float()*0.0005;
+			weights[i] += random_float() * 0.0005;
 	}
 	size = biases.size();
 	for (int i = 0; i < size; i++) {

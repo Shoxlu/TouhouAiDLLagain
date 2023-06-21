@@ -95,7 +95,6 @@ void CSVSaver::Close(CSVFile* file) {
 	if (file == nullptr) {
 		file = currentfile;
 	}
-	Apply(file);
 	fclose(file->pFile);
 	delete file;
 }

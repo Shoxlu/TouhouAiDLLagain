@@ -76,8 +76,13 @@ void NeuralNetwork::AddLayer() {
 	++layers_length;
 	//Reorganize "layers" to implement a new Layer
 	Layer* newLayers = new Layer[layers_length];
+	int a = 0;
 	for (int i = 0; i < layers_length; i++) {
-		newLayers[i] = Layer(&layers[i]);
+		if (i == layersToAdd) {
+			a = 1;
+			continue;
+		}
+		newLayers[i] = Layer(&layers[i-a]);
 	}
 	delete[] layers;
 	layers = newLayers;
@@ -99,12 +104,14 @@ void NeuralNetwork::RemoveLayer() {
 		--layers_length;
 		//Reorganize "layers" to delete a Layer
 		Layer* newLayers = new Layer[layers_length];
-		for (int i = 0; i < layers_length; i++) {
+		int a = 0;
+		for (int i = 0; i < layers_length+1; i++) {
 			if (i == layersToDelete) {
+				a = 1;
 				continue;
 			}
 			else {
-				newLayers[i] = Layer(&layers[i]);
+				newLayers[i-a] = Layer(&layers[i]);
 			}
 
 		}
@@ -115,10 +122,10 @@ void NeuralNetwork::RemoveLayer() {
 }
 
 void NeuralNetwork::mutationLayers() {
-	if (randint(0, 100) < 1) {
+	if (randint(0, 100) < 10) {
 		AddLayer();
 	}
-	if (randint(0, 100) < 1) {
+	if (randint(0, 100) < 4) {
 		RemoveLayer();
 	}
 }
@@ -126,14 +133,14 @@ void NeuralNetwork::mutationLayers() {
 
 void NeuralNetwork::mutationHiddenLayer()
 {
-	if (randint(0, 100) < 2) {//change that to duplicate 1st layer weights from one set of input (one bullet)
+	if (randint(0, 100) < 10 && layers_length > 1) {//change that to duplicate 1st layer weights from one set of input (one bullet)
 		int LayerToMutate = randint(1, layers_length-1);//layers_length -> out of range(layers), layers_length-1 -> output layer , 0->inputs
 		m_layerSizes[LayerToMutate] += 1;
 		AddNode_weights(LayerToMutate-1);
 		AddNode_biases(LayerToMutate-1);
 		
 	}
-	if (randint(0, 100) < 2) {
+	if (randint(0, 100) < 10 && layers_length > 1) {
 		
 		for (int i = 1; i < layers_length; i++) {
 			if (m_layerSizes[i] > 1)
