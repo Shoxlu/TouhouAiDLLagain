@@ -17,7 +17,7 @@ zPlayer* player_ptr = *(zPlayer**)0x4CF410;
 zBulletManager* Bullet_PTR = *(zBulletManager**)0x4CF2BC;
 zGlobals* global_ptr = (zGlobals*)0x4cccc0;
 BYTE frame_skip = 0;
-
+extern int32_t* Inputs;
 
 Pos get_player_pos()
 {
@@ -37,70 +37,6 @@ void speedUpGame(int speed)
     BYTE* frameskip = (BYTE*)0x4CD00C;
     *frameskip = speed;
     frame_skip = *frameskip;
-}
-
-zBullet* bulletNear(double x, double y) {
-    Bullet_PTR = *(zBulletManager**)0x4CF2BC;
-    if (!Bullet_PTR)
-    {
-        return 0;
-    }
-
-    auto first_bullet = (zBulletList*)Bullet_PTR->tick_list_head.next;
-    Bullet_PTR->iter_current = (int)first_bullet;
-    if (!first_bullet)
-    {
-        Bullet_PTR->iter_next = 0;
-        return 0;
-    }
-
-    Bullet_PTR->iter_next = first_bullet->next;
-    zBullet* bullet = (zBullet*)first_bullet->entry;
-
-
-    while (bullet) {
-        double bullet_hitbox = bullet->hitbox_radius;
-        double plHitbox_radius = 10;
-        double distance = sqrt(pow(x - bullet->pos.x, 2) + pow(y - bullet->pos.y, 2));
-        if (distance >= sqrt(((plHitbox_radius * plHitbox_radius) + bullet_hitbox * bullet_hitbox))) {
-            double v12 = bullet_hitbox;
-            if (v12 < 20.0) {
-                v12 = 20.0;
-            }
-            if (distance <= (sqrt(pow((plHitbox_radius),2) + bullet_hitbox * bullet_hitbox))+ v12 ) {
-                return bullet;
-            }
-            
-        }
-        else {
-            press(VK_X, 0);
-            Sleep(1);
-            press(VK_X, 1);
-        }
-        zBulletList* iter_next = (zBulletList*)Bullet_PTR->iter_next;
-        Bullet_PTR->iter_current = (int)iter_next;
-        if (!iter_next) {
-            break;
-        }
-        Bullet_PTR->iter_next = iter_next->next;
-        bullet = (zBullet*)iter_next->entry;
-    }
-    return 0;
-}
-
-void press(Dir input, bool release)
-{
-    INPUT* inputs = new INPUT[input.n_dir];
-    ZeroMemory(inputs, sizeof(inputs));
-    for (int i = 0; i < input.n_dir; i++)
-    {
-        inputs[i].type = INPUT_KEYBOARD;
-        inputs[i].ki.wVk = input.dir[i];
-        if (release) {
-            inputs[i].ki.dwFlags = KEYEVENTF_KEYUP;
-        }
-    }
-    SendInput(input.n_dir, inputs, sizeof(INPUT));
 }
 void press(int input, bool release)
 {

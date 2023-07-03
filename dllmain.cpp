@@ -34,13 +34,21 @@ extern zGlobals* global_ptr;
 GenerationHandler* generation;
 InputHelper* pinputHelper;
 bool isRendering;
-const int NbrePerso_generation = 400;
+constexpr int NbrePerso_generation =1000;
 int previous_time;
 Window* window;
 HANDLE hprocess;
 HANDLE gameWindow;
 NeuralNetwork* preseau;
 int actual_output;
+Window_struct* WINDOW = (Window_struct*) 0x568c30;
+
+
+
+extern int32_t* Inputs;
+extern int32_t* Inputs_prev;
+
+
 void update();
 void init();
 void render();
@@ -66,6 +74,9 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         //patch remaining BYTES;
         BYTE patch[] = { 0x90 };
         BYTE patch1[] = { 0x90, 0x90, 0x90 };
+        BYTE patchInputs[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};// 0x89, 0x35, 0x10, 0xA2, 0x4C, 0x00 
+        writeMemory(0x401E19, patchInputs, sizeof(patchInputs));
+        writeMemory(0x401E0E, patchInputs, sizeof(patchInputs));
         writeMemory(0x4712DE, patch, sizeof(patch));
         writeMemory(0x00471C2A + 0x5, patch1, sizeof(patch1));
 
@@ -76,10 +87,9 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         if(pinputHelper)
             delete pinputHelper;
         if(generation)
-            //delete generation;
+            delete generation;
         speedUpGame(0);
         ReleaseAllInputs();
-        press(VK_W, 1);
     }
     return TRUE;
 }
@@ -105,13 +115,15 @@ void init()
 }
 
 void HandleNoGameRender() {
-    if (GetKeyState(VK_F1) & 0x00000001 && isRendering == true)
+    if (WINDOW->Window_active == 0)
+        return;
+    if (GetKeyState(VK_F1) & 1 && isRendering)
     {
         BYTE patch[] = { 0x90, 0x90, 0x90, 0x90, 0x90 };
         writeMemory(0x00471C07, patch, sizeof(patch));
         isRendering = false;
     }
-    else if (isRendering == false && !(GetKeyState(VK_F1) & 0x00000001)) {
+    else if (!isRendering && !(GetKeyState(VK_F1) & 1)) {
         //printf("Player is playing, WARNING !\n");
         BYTE patch[] = { 0xE8, 0x44, 0x0F, 0x00, 0x00 };
         writeMemory(0x00471C07, patch, sizeof(patch));
@@ -119,11 +131,42 @@ void HandleNoGameRender() {
     }
 }
 void HandleSpeedUp() {
-    if (GetKeyState(VK_BACK) & 0x00000001)
-        speedUpGame(10);
+    if (WINDOW->Window_active == 0)
+        return;
+    if (GetKeyState(VK_BACK) & 1)
+        speedUpGame(20);
     else if (GetKeyState(VK_BACK) == 0)
         speedUpGame(0);
 }
+
+void HandleHumanInputs() {
+
+    if (WINDOW->Window_active == 0)
+        return;
+    //if (GetKeyState(VK_SPACE) & 1)
+    //    *Inputs = 0;
+    if (GetKeyState(VK_W) & 0x10000000)
+        *Inputs |= Shoot;
+    if (GetKeyState(VK_X) & 0x10000000)
+        *Inputs |= Bomb;
+    if (GetKeyState(VK_SHIFT) & 0x10000000)
+        *Inputs |= Focus;
+    if (GetKeyState(VK_ESCAPE) & 0x10000000)
+        *Inputs |= Esc;
+    if (GetKeyState(VK_R) & 0x10000000)
+        *Inputs |= R;
+    if (GetKeyState(VK_UP) & 0x10000000)
+        *Inputs |= Up;
+    if (GetKeyState(VK_DOWN) & 0x10000000)
+        *Inputs |= Down;
+    if (GetKeyState(VK_LEFT) & 0x10000000)
+        *Inputs |= Left;
+    if (GetKeyState(VK_RIGHT) & 0x10000000)
+        *Inputs |= Right;
+    if (GetKeyState(VK_EXECUTE) & 0x10000000)
+        *Inputs |= Enter;
+}
+
 
 void update()
 {
@@ -134,14 +177,20 @@ void update()
     Bullet_PTR = *(zBulletManager**)0x4CF2BC;
     global_ptr = (zGlobals*)0x4cccc0;
     HandleNoGameRender();
-    if (!player_ptr)
-        return;
-    if (global_ptr->time_in_stage > previous_time)
+
+    if(*Inputs_prev != *Inputs)
+        *Inputs_prev = *Inputs;
+    *Inputs = 0;
+    if (player_ptr)
     {
-        previous_time = global_ptr->time_in_stage;
-        actual_output = generation->update();
-        HandleSpeedUp();
+        if (global_ptr->time_in_stage > previous_time)
+        {
+            previous_time = global_ptr->time_in_stage;
+            generation->update();
+            HandleSpeedUp();
+        }
     }
+    HandleHumanInputs();
 }
 
 
@@ -154,7 +203,7 @@ void render()
     }
     Drawer drawer(nullptr, window);
     while (1) {
-        if (global_ptr->time_in_stage > previous_time)
+        if (global_ptr->time_in_stage > previous_time && preseau != nullptr)
         {
             drawer.DrawNetwork(preseau);
             drawer.Apply();

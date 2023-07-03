@@ -16,8 +16,6 @@ public:
 	//void DrawEnemies();
 	//void DrawAll(List* funcs); // actually for later usage (maybe);
 private:
-	void DrawLayer(int n);
-	float getWeightColor(int n, int i, int j);
 	NeuralNetwork* m_preseau;
 	Window* m_window;
 };

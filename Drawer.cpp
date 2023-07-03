@@ -4,6 +4,8 @@
 #include <stdio.h>
 extern int NINPUTSPBULLET;
 extern int actual_output;
+extern int INPUTS_MAX;
+
 Drawer::Drawer(): m_preseau(nullptr), m_window(nullptr) {
 	//Default constructor
 }
@@ -24,50 +26,58 @@ void Drawer::DrawNetwork() {
         //printf("Missing window or network \n");
         return;
     }
-    float color = 1;
-    int layers_length = preseau->layers_length;
-    for (int i = 0; i < layers_length; i++)
-    {
-        DrawLayer(i);
-    }
-    for (int i = 0; i < preseau->m_layerSizes[layers_length]; i++)
-    {
-        color = actual_output == i ? 1 : 0.5;
-        m_window->draw_circle(Pos{ -700.0 + 75 * i,  515 }, 30, Color{ 0.0, 0.0, color });
-    }
-}
-
-
-float Drawer::getWeightColor(int layers_n, int j, int k) {
-    Layer* layer = &m_preseau->layers[layers_n];
-    return layer->weights[j % layer->repeat_factor * m_preseau->m_layerSizes[layers_n + 1] + k] > 0 ? 1.0 : 0.5;
-}
-
-void Drawer::DrawLayer(int layers_n) { // layers_n is the id of the layer to be drawn
-    NeuralNetwork* preseau = m_preseau;
+    std::vector<Connection> connections = preseau->connections;
+    std::vector<Node> nodes = preseau->nodes;
+    size_t NbNodes = preseau->NbNodes;
+    size_t NbOutputs = preseau->NbOutputs;
+    double x = -600;
+    double y = 200;
+    Color color = { 0, 0, 0 };
     Window* window = m_window;
-    int n_nodesIn = layers_n == 0 ? 8 :  preseau->m_layerSizes[layers_n]; // the 8 here is just for inputs layers
-    for (int nodeIn = 0; nodeIn < n_nodesIn; nodeIn++)
-    {
-        //color = 0.2 + 0.8 * preseau->layers[i]->weights[j, preseau->m_layerSizes[i+1]];
-        float color = 0.5;
-        for (int nodeOut = 0; nodeOut < preseau->m_layerSizes[layers_n + 1]; nodeOut++)
-        {
-            
-            if (layers_n == 0 && nodeIn > NINPUTSPBULLET)
-                color = getWeightColor(layers_n, NINPUTSPBULLET + preseau->m_layerSizes[layers_n] - nodeIn, nodeOut);
-            else
-                color = getWeightColor(layers_n, nodeIn, nodeOut);
-            
-            window->draw_line(Pos{ -700.0 + 25.0 * nodeIn, -400.0 + (layers_n * 915 / preseau->layers_length) },
-                Pos{ -700.0 + 25.0 * nodeOut * (layers_n == preseau->layers_length - 1 ? 3 : 1),
-                -400.0 + ((layers_n + 1) * 915 / preseau->layers_length)}, Color{ color, color, color });
-        }
-        color = layers_n != 0 && preseau->layers[layers_n].activations[nodeIn] >= 0.5 ? 1 : 0.5;
-        window->draw_circle(Pos{ -700.0 + 25.0 * nodeIn, -400.0 + (layers_n * 915 / preseau->layers_length) }, 10, Color{ color, color, color });
-
+    for (int i = 0; i < INPUTS_MAX; i++) {
+        color = { 1, 1, 1 };
+        window->draw_circle(Pos{ x, y }, 12.5, color);
+        y += 25;
     }
-    
+    y = 200;
+    for (size_t i = INPUTS_MAX; i < INPUTS_MAX+NbOutputs; i++) {
+        color = { 0, 0.5+(nodes[i].value > 0.5 ? 0.5: 0), 0};
+        window->draw_circle(Pos{ 0, y }, 12.5, color);
+        y += 25;
+    }
+    y = 200;
+    for(size_t i = 0; i < connections.size(); i++){
+
+        size_t in = connections[i].Inid;
+        size_t out = connections[i].OutId;
+        Pos finalPos = Pos{0, 0};
+        Pos pos = Pos{0, 0};
+        if (nodes[out].type == OUTPUT) {
+            finalPos = Pos{ 0, y + (out-INPUTS_MAX) * 25 };
+        }else {
+            finalPos = Pos{ x +50+  50 * int((out - INPUTS_MAX - NbOutputs+1) / 2) , y };
+            color = { 0.5, 0.5,0.5 };
+            window->draw_circle(finalPos, 12.5, color);
+        }
+        if (nodes[in].type == HIDDEN) {
+            pos = Pos{ x + 50 +50 * int((in- INPUTS_MAX - NbOutputs+1) /2) , y};
+        }
+        else {
+            pos = Pos{ x, y + in * 25 };
+        }
+
+        if (connections[i].state == false) {
+            color = { 0.1, 0.1, 0.1 };
+        }
+        else if (connections[i].weight > 0) {
+            color = { 1, 0, 0 };
+        }
+        else {
+            color = { 0, 0, 1 };
+        }
+        window->draw_line(pos, finalPos, color);
+    }
+
 }
 
 void Drawer::DrawNetwork(NeuralNetwork* preseau) {

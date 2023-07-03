@@ -10,18 +10,20 @@ public:
 	~InputHelper();
 	void updateInputs();
 	std::vector<double> getInputs();
-	void AddBullet(zBullet* bulletptr, int i, int a);
+	void AddBullet();
+	void AddEnemy();
 	Pos getPlayerPos();
 	zBullet* getBulletsData();
+
+	zEnemyList* getEnemiesData();
 
 
 	//Member variables, public because. : 
 	std::vector<double> inputs;
 	zBullet* bullets;
+	zEnemyList* enemy_list;
 	Pos playerPos;
-	int numInputs;//maybe it will be useful
 	const int numBullets = 2000;
-	int numCurBullets;
 	//const int numEnemies = 200; idk the number actually
 	//zEnemy enemies; i will implement that later
 private:

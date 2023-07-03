@@ -3,6 +3,7 @@
 #include <vector>
 
 struct zBullet;
+struct zEnemy;
 struct zBulletList;
 struct zPlayer;
 struct zBulletManager;
@@ -214,6 +215,162 @@ struct zBulletManager
     int __unknown_counter__something_happens_every_6;
 };
 
+struct Window_struct
+{
+    HWND WINDOW;
+    HWND hDlg;
+    int field_8;
+    HINSTANCE hinst;
+    int Window_active;
+    int field_14;
+    int field_18;
+    char field_1C;
+    char field_1D[3];
+    LARGE_INTEGER Frequency;
+    LARGE_INTEGER PerformanceCount;
+    char field_30;
+    char APPDAT_Path[4096];
+    char EXE_PATH[4099];
+    UINT screen_saver_active;
+    UINT screen_saver_low_power_active;
+    UINT screen_saver_power_off_active;
+    char field_2040;
+    __declspec(align(4)) uint32_t __counter_2044;
+    char field_2048[8];
+    int field_2050;
+    int cy;
+    int window_width;
+    int window_height;
+    int field_2060;
+    int field_2064;
+    int field_2068;
+    int field_206C;
+    int field_2070;
+    int field_2074;
+    int field_2078;
+    int playable_height;
+    int playable_width;
+    int field_2084;
+    int field_2088;
+    int field_208C;
+    int field_2090;
+    char field_2094[4];
+    double current_time;
+    double last_time;
+    double previous_global_time;
+    double actual_time_second__;
+    double actual_time;
+    double actual_time__;
+    int field_20C8;
+    int field_20CC;
+    int game_state;
+    int field_20D4[12];
+};
+struct zEnemyList {
+    zEnemy* entry;
+    zEnemyList* next;
+    zEnemyList* prev;
+    int __seldom_used;
+};
+
+struct zEnemyManager {
+    int vtable;
+    int on_tick;
+    int on_draw;
+    int ecl_global_int_vars[4];
+    BYTE gap1C[32];
+    int miss_count;
+    int bomb_count;
+    int can_still_capture_spell;
+    int boss_ids[4];
+    char __unknown_88;
+    BYTE gap59[51];
+    int enemy_limit;
+    int next_enemy_id;
+    int last_enemy_id;
+    char __unknown_152;
+    BYTE gap99[243];
+    zEnemyList* active_enemy_list_head;
+    zEnemyList* active_enemy_list_tail;
+    char __unknown_404;
+    int enemy_count_real;
+    char __unknown_412;
+};
+struct zEclStack {
+    int data[1024];
+    int stack_offset;
+    int base_offset;
+};
+
+struct zEclLocation {
+    int subroutine_index;
+    int offset_from_first_instruction;
+};
+
+struct zEclRunContext {
+    float time;
+    zEclLocation cur_location;
+    zEclStack stack;
+    int async_id;
+    int enemy;
+    char __set_by_ins_20;
+    char __unknown_4125;
+    __declspec(align(4)) char difficulty_mask;
+    char __unknown_4129;
+    zInterpFloat float_i[8];
+    int float_i_locals_offsets_from_stack[8];
+    zEclLocation float_i_locs[8];
+    int __set_by_ins_18_19;
+};
+struct zEclRunContextHolder {
+    int current_context;
+    zEclRunContext primary_context;
+};
+
+struct zEclVm {
+    int vtable; 
+    int __next_in_some_list; 
+    int __prev_in_some_list; 
+    zEclRunContextHolder context; 
+    int file_manager;
+    int enemy;
+    int async_list_head; 
+    int __unused__prev_ptr_of_list_head; 
+    int __unused__field_c_ptr_of_list_head;
+};
+struct zPosVel {
+    zFloat3 pos;
+    zFloat3 __another_pos;
+    float vel_norm__or__circle_angular_velocity;
+    float angle; float circle_radius;
+    float circle_radial_speed;
+    float __some_angle;
+    char __unknown_44;
+    BYTE gap2D[7];
+    zFloat3 __field_34__maybe_velocity__idfk;
+    int flags;
+};
+struct zEnemyData {
+    zPosVel prev_final_pos;
+    zPosVel final_pos;
+    zPosVel abs_pos;
+    zPosVel rel_pos;
+    //i deleted fields from here
+};
+
+struct zEnemy {
+    zEclVm ecl; 
+    zEnemyData data; 
+    int on_death_callback;
+    int enemy_id;
+    int parent_enemy_id; 
+    int __only_used_in_ddc;
+};
+
+
+
+
+
 struct Pos {
     double x;
     double y;
@@ -223,9 +380,7 @@ struct Output {
     double angle;
 };
 struct Dir {
-    int dir[2];
-    int n_dir;
-    bool released;
+    int key;
 };
 struct zGlobalsInner {
     int stage_num;
@@ -234,12 +389,14 @@ struct zGlobalsInner {
 };
 struct zGlobals {
 
-    BYTE gap[32];
-    int stage_num;
-    BYTE gap2[4];
-    int time_in_stage;
-    BYTE gap1[44];
-    int miss_count;
+    BYTE gap[32];//0x0
+    int stage_num;//32
+    BYTE gap2[4];//36
+    int time_in_stage;//42
+    BYTE gap1[44];//46
+    int miss_count;//90
+    BYTE gap3[42];//94
+    int current_lives;//136
     //offset 0x88 : Global life count
 };
 struct Color {
@@ -252,14 +409,56 @@ struct DataPoint {
     double inputs[2];
     double expectedOutputs[2];
 };
-void press(Dir input, bool release);
+
+struct zMenuSelect {
+    int selection_index;
+    int selection_on_prev_tick;
+    int selection_count;
+    int selection_stack[16];
+    int selection_count_stack[16];
+    int current_stack_index;
+    int disabled_selections[16];
+    int wrap_around;
+    int num_disabled_selections;
+};
+
+struct zPauseMenu {
+    BYTE gap0[16];
+    int time_in_menu;
+    BYTE gap14[32];
+    zMenuSelect another_menu__pause;
+    zMenuSelect char_select_menu;
+    int anmrelated;//actually AnmManger ptr i think
+    BYTE gap1E8[12];
+    int menu_type;
+    int string_pos;
+    BYTE gap1FC[216];
+    char name_to_enter[8];
+    BYTE gap2DC[12];
+    int field_0;
+};
+enum Keys {
+    Shoot = 1,
+    Bomb = 2,
+    Focus = 8,
+    Up = 0x10,
+    Down = 0x20,
+    Left = 0x40,
+    Right = 0x80,
+    Esc = 0x100,
+    R = 0x200000,
+    Enter = 0x80000
+};
+
+
+
 void press(int input, bool release);
 double random_float();
 double random_float_positive();
 int randint(int min, int max);
 bool random_bool();
 Pos get_player_pos();
-zBullet* bulletNear(double x, double y);
+void input_number(uint32_t id);
 void ReleaseAllInputs();
 int GetMaximumIndex(double outputs[], int length);
 int GetMaximumIndex(std::vector<double> outputs, int length);

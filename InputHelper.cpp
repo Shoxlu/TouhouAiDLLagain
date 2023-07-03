@@ -1,11 +1,11 @@
 #include "InputHelper.h"
-#include <corecrt_math.h>
 #include <stdio.h>
-int NINPUTSPBULLET = 5;
+constexpr int NINPUTSPBULLET = 4;
+constexpr int NINPUTSENEMY = 3;
 constexpr auto N_BULLETS = 2000;
-auto INPUTS_MAX = 2000 * NINPUTSPBULLET + 2;
+auto INPUTS_MAX = NINPUTSENEMY + NINPUTSPBULLET + 2;
 
-InputHelper::InputHelper() : bullets(), playerPos(Pos{ 0, 0 }), numInputs(2 + 2000 * 6), numCurBullets(0)
+InputHelper::InputHelper() : enemy_list(nullptr), bullets(), playerPos(Pos{ 0, 0 })
 {
 	inputs.assign(INPUTS_MAX, 0);
 }
@@ -18,43 +18,48 @@ void InputHelper::updateInputs()
 {
 	playerPos = getPlayerPos();
 	bullets = getBulletsData();
-	//enemies = getEnemiesData();
+	enemy_list = getEnemiesData();
 	//lasers = getLasersData();
 }
 std::vector<double> InputHelper::getInputs() {
-	numInputs = 0;
 	updateInputs();
-	
-	int a = 0;
-	numCurBullets = 0;
-	for (int i = 0; i < INPUTS_MAX; i+= NINPUTSPBULLET) {
-		zBullet bullet = bullets[i / NINPUTSPBULLET];
-		if (bullet.state != 1) {
-			inputs[i - a] = -10000;
-			a += NINPUTSPBULLET;
-			continue;
-		}
-		AddBullet(&bullet, i, a);
-		//AddEnemy(); -> future implementation
-		//AddLaser(); -> future implementation
-	}
-	inputs[INPUTS_MAX-2] = playerPos.x;
-	inputs[INPUTS_MAX-1] = playerPos.y;
+	AddBullet();
+	AddEnemy();
+	//AddLaser(); -> future implementation
+	inputs[INPUTS_MAX-2] = playerPos.x/384.0 * 10;
+	inputs[INPUTS_MAX-1] = playerPos.y/448.0 * 10;
 	return inputs;
 }
 
-void InputHelper::AddBullet(zBullet* bulletptr, int i, int a) {
-	zBullet bullet = *bulletptr;
-	
-	inputs[i - a] = bullet.pos.x / 192000.0;//todo: add proportionnality
-	inputs[i + 1 - a] = bullet.pos.y / 192000.0;
-	inputs[i + 2 - a] = bullet.angle / 6283.184;
-	inputs[i + 3 - a] = bullet.hitbox_radius / 10000.0;
-	inputs[i + 4 - a] = pow(inputs[i - a], 2) + pow(inputs[i + 1 - a], 2) / 590050.845;
-	numCurBullets += 1;
-	numInputs += NINPUTSPBULLET;
+void InputHelper::AddBullet() {
+	double lastDistance = 10000000;
+	for (size_t i = 0; i < 2000; i++) {
+		if (bullets[i].state != 1)
+			continue;
+		zBullet bullet = bullets[i];
+		double distance = sqrt(pow(bullet.pos.x-playerPos.x, 2) + pow(bullet.pos.y- playerPos.y, 2));
+		if (distance < lastDistance) {
+			inputs[0] = bullet.pos.x/384.0 * 10;
+			inputs[1] = bullet.pos.y/448.0 * 10;
+			inputs[2] = bullet.angle/6.28318531 * 10;
+			inputs[3] = distance/ 590.050845 * 10;
+			lastDistance = distance;
+		}
+	}
 }
-
+void InputHelper::AddEnemy() {
+	double lastDistance = 10000000;
+	for (zEnemyList* enemy_list_iterator = enemy_list; enemy_list != nullptr; enemy_list = enemy_list->next) {
+		zEnemy* enemy = enemy_list->entry;
+		double distance = sqrt(pow(enemy->data.abs_pos.pos.x- playerPos.x, 2) + pow(enemy->data.abs_pos.pos.y- playerPos.y, 2));
+		if (distance < lastDistance) {
+			inputs[4] = enemy->data.abs_pos.pos.x / 384.0 *10;
+			inputs[5] = enemy->data.abs_pos.pos.y / 448.0*10;
+			inputs[6] = distance / 590.050845*10;
+			lastDistance = distance;
+		}
+	}
+}
 
 Pos InputHelper::getPlayerPos()
 {
@@ -66,4 +71,12 @@ zBullet* InputHelper::getBulletsData()
     zBulletManager *Bullet_PTR = *(zBulletManager**)0x4CF2BC;
 	
 	return Bullet_PTR->bullets;
+}
+
+
+zEnemyList* InputHelper::getEnemiesData()
+{
+	zEnemyManager* enemyPtr = *(zEnemyManager**)0x4cf2d0;
+	
+	return enemyPtr->active_enemy_list_head;
 }
