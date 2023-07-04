@@ -1,8 +1,8 @@
+#pragma once
 #include "utils.h"
 #include "InputHelper.h"
 struct Dir;
 class NeuralNetwork;
-
 class Joueur
 {
 public:

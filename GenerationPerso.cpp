@@ -1,32 +1,12 @@
 
 #include "GenerationPerso.h"
-#include "Joueur.h"
-#include "NeuralNetwork.h"
-#include "NetworkSaver.h"
-#include "utils.h"
+
 #include <cassert>
+static constexpr double EXCES_COEF = 0.50;
+static constexpr double POIDSDIFF_COEF = 0.92;
+static constexpr double DIFF_LIMITE = 1.00;
 
-#define VK_W 0x57
-#define VK_R 0x52
-#define VK_D 0x44
-#define VK_C 0x43
-#define VK_X 0x58
-#define MAX_ITERATIONS 100000
-constexpr double EXCES_COEF = 0.50;
-constexpr double POIDSDIFF_COEF = 0.92;
-constexpr double DIFF_LIMITE = 1.00;
 
-extern int32_t* Inputs;
-extern zGlobals* global_ptr;
-extern zPlayer* player_ptr;
-extern int previous_time;
-extern BYTE frame_skip;
-extern HANDLE hprocess;
-extern bool isRendering;
-extern NeuralNetwork* preseau;
-size_t NbInnov = 0;
-extern int INPUTS_MAX;
-extern GenerationHandler* generation;
 template <class T>
 void free_ptr_array(T** ptr, size_t size) {
     for (size_t i = 0; i < size; i++) {
@@ -153,7 +133,7 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
             if (indiceNewSpecie < m_n_systemes) {
                 NeuralNetwork* newNetwork = new NeuralNetwork(INPUTS_MAX, 5);
                 
-                CrossOver(Species[i].networks[randint(0, size - 1)]->m_reseau, Species[i].networks[randint(0, size - 1)]->m_reseau, newNetwork);
+                newNetwork->CrossOver(Species[i].networks[randint(0, size - 1)]->m_reseau, Species[i].networks[randint(0, size - 1)]->m_reseau);
                 DoMutation(newNetwork);
                 
                 newNetwork->SpecieParentId = i;
@@ -205,16 +185,8 @@ void GenerationHandler::SaveNetworks(Joueur** population) {
     }
 }
 
-
-bool GenerationHandler::joueurMort()
-{
-    if (global_ptr->current_lives < 0)
-        return true;
-    return false;
-}
-
 void  GenerationHandler::update() {
-    if (joueurMort() && isPlaying)
+    if (global_ptr->current_lives < 0 && isPlaying)
     {   
         joueur_actuel += 1;
         preseau = nullptr;
@@ -245,7 +217,7 @@ typedef int(__thiscall* FunctionPtr)(void* thisPtr, int arg1);
 void GenerationHandler::ResetGame()
 {
     printf("Reset game.\n");
-    zPauseMenu* pauseMenu_ptr = *(zPauseMenu**)0x4CF40C;
+
     char name_to_enter[10] = "";
     sprintf_s(pauseMenu_ptr->name_to_enter, sizeof(pauseMenu_ptr->name_to_enter), "Gen%d", m_generationId);
     FunctionPtr MenuSelect__set_index = reinterpret_cast<FunctionPtr>(0x416BA0);
@@ -293,24 +265,23 @@ int GenerationHandler::getBestReward(Joueur** population, NeuralNetwork** bestNe
 void GenerationHandler::AddNode(NeuralNetwork* network, size_t ConnectId)
 {
     std::vector<Connection> connections = network->connections;
-    network->nodes.emplace_back(Node{ network->NbNodes, HIDDEN, 0 });
+    size_t nodes_size = network->nodes.size();
+    network->nodes.emplace_back(Node{ nodes_size, HIDDEN, 0});
     connections[ConnectId].state = false;
-    size_t InnovId = CheckForExistingConnection(connections[ConnectId].Inid, network->NbNodes);
-    connections.emplace_back(Connection{ connections[ConnectId].Inid, network->NbNodes, connections[ConnectId].weight, true, InnovId});
-    InnovId = CheckForExistingConnection(network->NbNodes, connections[ConnectId].OutId);
-    connections.emplace_back(Connection{network->NbNodes, connections[ConnectId].OutId, 1, true, InnovId });
+    size_t InnovId = CheckForExistingConnection(connections[ConnectId].Inid, nodes_size);
+    connections.emplace_back(Connection{ connections[ConnectId].Inid, nodes_size, connections[ConnectId].weight, true, InnovId});
+    InnovId = CheckForExistingConnection(nodes_size, connections[ConnectId].OutId);
+    connections.emplace_back(Connection{ nodes_size, connections[ConnectId].OutId, 1, true, InnovId });
     
 
-    for (size_t i = 0; i < network->nodes.size(); i++) {
-        if (i == network->NbNodes || network->nodes[i].type == OUTPUT || network->nodes[network->NbNodes].type == SENSOR)
+    for (size_t i = 0; i < nodes_size; i++) {
+        if (i == nodes_size || network->nodes[i].type == OUTPUT || network->nodes[nodes_size].type == SENSOR)
             continue;
-        size_t pair[2] = { network->NbNodes , i};
+        size_t pair[2] = { network->nodes.size() , i};
         network->nodesPairs.emplace_back(pair);
-        size_t pair1[2] = {i, network->NbNodes};
+        size_t pair1[2] = {i, network->nodes.size()};
         network->nodesPairs.emplace_back(pair1);
     }
-    ++network->NbNodes;
-    network->NbConnect += 2;
     network->connections = connections;
 }
 
@@ -318,14 +289,13 @@ void GenerationHandler::AddConnection(size_t in, size_t out, NeuralNetwork* rese
 {
     size_t InnovId = CheckForExistingConnection(in, out);
     reseau->connections.emplace_back(Connection{ in, out, random_float(), true, InnovId });
-    reseau->NbConnect++;
 }
 
 size_t GenerationHandler::CheckForExistingConnection(size_t in, size_t out) {
     size_t InnovId = 0;
     for (size_t i = 0; i < m_n_systemes; i++) {
         NeuralNetwork* reseau = populationActuelle[i]->m_reseau;
-        for (size_t j = 0; j < reseau->NbConnect; j++) {
+        for (size_t j = 0; j < reseau->connections.size(); j++) {
             if (reseau->connections[j].Inid == in && reseau->connections[j].OutId == out) {
                 return reseau->connections[j].InnovId;
             }
@@ -354,7 +324,7 @@ void GenerationHandler::DoMutation(NeuralNetwork* network) {
         network->nodesPairs.erase(network->nodesPairs.begin() + randomPairIndice);
     }
     if (randint(0, 100) < 85 && network->connections.size() > 0) {
-        size_t randNb = randint(0, network->NbConnect - 1);
+        size_t randNb = randint(0, network->connections.size() - 1);
         AddNode(network, randNb);
     }
     for (size_t i = 0; i < network->connections.size(); i++) {
@@ -376,70 +346,6 @@ Connection* GetConnectionById(std::vector<Connection>* connections, size_t Innov
     return nullptr;
 }*/
 
-void GenerationHandler::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, NeuralNetwork* crossSpring) {
-    /*size_t max_NbInnov = 0;
-    if (parent1->connections.size() > 0 && parent2->connections.size() > 0) {
-        max_NbInnov = max(parent1->connections.back().InnovId, parent2->connections.back().InnovId);
-    }
-    else if (parent2->connections.size() > 0)
-        max_NbInnov = parent2->connections.back().InnovId;
-    else if (parent1->connections.size() > 0)
-        max_NbInnov = parent1->connections.size();
-    Connection* connection = nullptr;
-    Connection* connection1 = nullptr;
-    for (size_t InnovId = 0; InnovId < max_NbInnov + 1; InnovId++) {
-        connection = GetConnectionById(&parent1->connections, InnovId);
-        connection1 = GetConnectionById(&parent2->connections, InnovId);
-        if (connection && connection1) {
-            //we'll assume that the crossSpring is getting parent1 connection weight in this case
-            connection->state &= connection->state;
-            newConnections.emplace_back(connection);
-        }
-        else if (connection) {
-            newConnections.emplace_back(connection);
-        }
-        else if (connection1) {
-            newConnections.emplace_back(connection1);
-        }
-    }*/
-    std::vector<Connection> newConnections;
-    newConnections = parent2->connections;
-    bool found = false;
-    for (size_t i = 0; i < parent1->NbConnect; i++) {
-        for (size_t j = 0; j < parent2->NbConnect; j++) {
-            if (parent1->connections[i].InnovId == parent2->connections[j].InnovId) {
-                newConnections[j].state &= parent1->connections[i].state;
-                found = true;
-                break;
-            }
-        }
-        if(!found)
-            newConnections.emplace_back(parent1->connections[i]);
-        found = false;
-    }
-    crossSpring->connections = newConnections;
-    crossSpring->NbConnect = newConnections.size();
-    if (parent1->NbNodes > parent2->NbNodes)
-        crossSpring->nodes = parent1->nodes;
-    else
-        crossSpring->nodes = parent2->nodes;
-    crossSpring->NbNodes = crossSpring->nodes.size();
-    std::vector<size_t*> nodesPairs;
-    for (size_t j = 0; j < crossSpring->nodes.size(); j++) {
-        for (size_t i = 0; i < crossSpring->nodes.size(); i++) {
-            if (i == j || crossSpring->nodes[i].type == OUTPUT || crossSpring->nodes[j].type == SENSOR)
-                continue;
-            size_t* pair = new size_t[2];
-            pair[0] = i;
-            pair[1] = j;
-            nodesPairs.emplace_back(pair);
-        }
-    }
-    for (size_t i = 0; i < crossSpring->nodesPairs.size(); i++) {
-        delete[] crossSpring->nodesPairs[i];
-    }
-    crossSpring->nodesPairs = nodesPairs;
-}
 
 
 //at this point i copied someone else code (changed it a bit to correspond to my architecture)
@@ -496,6 +402,6 @@ double GenerationHandler::getScore(NeuralNetwork* networkToTest, NeuralNetwork* 
     //thanks Laupok
     double diffPoids = 0;
     double networkDiff = getNetworkDiff(networkToTest, networkToCompare, &diffPoids);
-    return (EXCES_COEF * networkDiff) / (max(networkToTest->NbConnect + networkToCompare->NbConnect, 1))
+    return (EXCES_COEF * networkDiff) / (max(networkToTest->connections.size() + networkToCompare->connections.size(), 1))
         + POIDSDIFF_COEF * diffPoids;
 }

@@ -1,24 +1,6 @@
-
 #include "Joueur.h"
 #include "NeuralNetwork.h"
-#include <random>
 #include "utils.h"
-#include <iostream>
-extern int INPUTS_MAX;
-#define VK_W 0x57
-#define VK_R 0x52
-#define VK_D 0x44
-#define VK_C 0x43
-#define VK_X 0x58
-
-int32_t* Inputs = (int32_t*)0x4CA210;
-int32_t* Inputs_prev = (int32_t*)0x4CA214;
-
-
-using namespace std;
-extern int NbreEnemy;
-extern zGlobals* global_ptr;
-extern InputHelper* pinputHelper;
 
 Joueur::Joueur() :m_pos(Pos{ 0, 0 }), m_reward(1), m_previous_reward(1), m_previous_stage(1), m_reseau(nullptr)
 {

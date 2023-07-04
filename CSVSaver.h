@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <vector>
 #include <string>
+
 using namespace std;
 struct CSVFile {
 	FILE* pFile = nullptr;

@@ -1,17 +1,9 @@
 #include "InputHelper.h"
 #include <stdio.h>
-constexpr int NINPUTSPBULLET = 4;
-constexpr int NINPUTSENEMY = 3;
-constexpr auto N_BULLETS = 2000;
-auto INPUTS_MAX = NINPUTSENEMY + NINPUTSPBULLET + 2;
 
 InputHelper::InputHelper() : enemy_list(nullptr), bullets(), playerPos(Pos{ 0, 0 })
 {
 	inputs.assign(INPUTS_MAX, 0);
-}
-
-InputHelper::~InputHelper()
-{
 }
 
 void InputHelper::updateInputs()
@@ -41,7 +33,7 @@ void InputHelper::AddBullet() {
 		if (distance < lastDistance) {
 			inputs[0] = bullet.pos.x/384.0 * 10;
 			inputs[1] = bullet.pos.y/448.0 * 10;
-			inputs[2] = bullet.angle/6.28318531 * 10;
+			inputs[2] = bullet.angle/(M_PI*2) * 10;
 			inputs[3] = distance/ 590.050845 * 10;
 			lastDistance = distance;
 		}

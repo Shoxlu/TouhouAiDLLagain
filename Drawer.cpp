@@ -2,10 +2,6 @@
 #include "NeuralNetwork.h"
 #include "Window.h"
 #include <stdio.h>
-extern int NINPUTSPBULLET;
-extern int actual_output;
-extern int INPUTS_MAX;
-
 Drawer::Drawer(): m_preseau(nullptr), m_window(nullptr) {
 	//Default constructor
 }
@@ -28,7 +24,7 @@ void Drawer::DrawNetwork() {
     }
     std::vector<Connection> connections = preseau->connections;
     std::vector<Node> nodes = preseau->nodes;
-    size_t NbNodes = preseau->NbNodes;
+    size_t NbNodes = preseau->nodes.size();
     size_t NbOutputs = preseau->NbOutputs;
     double x = -600;
     double y = 200;

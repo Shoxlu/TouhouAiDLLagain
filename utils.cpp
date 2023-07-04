@@ -1,23 +1,5 @@
 
-#include <random>
 #include "utils.h"
-
-
-#define PLAYER_PTR 
-#define BULLET_MANAGER_PTR
-#define GUI_PTR (uintptr_t*)0x4CF2E0
-#define GLOBAL_PTR 
-#define VK_W 0x57
-#define VK_R 0x52
-#define VK_D 0x44
-#define VK_C 0x43
-#define VK_X 0x58
-
-zPlayer* player_ptr = *(zPlayer**)0x4CF410;
-zBulletManager* Bullet_PTR = *(zBulletManager**)0x4CF2BC;
-zGlobals* global_ptr = (zGlobals*)0x4cccc0;
-BYTE frame_skip = 0;
-extern int32_t* Inputs;
 
 Pos get_player_pos()
 {

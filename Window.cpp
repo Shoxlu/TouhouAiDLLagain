@@ -1,10 +1,7 @@
 #include "Window.h"
 #include "utils.h"
 #include <stdio.h>
-#include <cmath>
 
-constexpr auto WIDTH = 853;
-constexpr auto HEIGHT = 613;
 
 Window::Window()
 {
@@ -28,6 +25,7 @@ Window::Window()
 
 Window::~Window()
 {
+    free(window);
     glfwTerminate();
 }
 

@@ -1,8 +1,7 @@
 // dllmain.cpp : Définit le point d'entrée de l'application DLL.
 #include "pch.h"
-#include <iostream>
-
 #include "utils.h"
+#include <iostream>
 #include "GenerationPerso.h"
 #include "NeuralNetwork.h"
 #include "Joueur.h"
@@ -13,45 +12,32 @@
 
 #include <GLFW/glfw3.h>
 #include <thread>
-//#include <thread>
 
 
 #pragma warning(disable : 4996)
 
-using namespace std;
+//Touhou 18 global variables
+zGlobals* global_ptr = (zGlobals*)0x4cccc0;
+zPlayer* player_ptr = *(zPlayer**)0x4CF410;
+zBulletManager* Bullet_PTR = *(zBulletManager**)0x4CF2BC;
+int32_t* Inputs = (int32_t*)0x4CA210;
+int32_t* Inputs_prev = (int32_t*)0x4CA214;
+zPauseMenu* pauseMenu_ptr = *(zPauseMenu**)0x4CF40C;
 
-
-#define VK_W 0x57
-#define VK_R 0x52
-#define VK_D 0x44
-#define VK_C 0x43
-#define VK_X 0x58
-
-extern GenerationHandler* generation;
-extern zPlayer* player_ptr;
-extern zBulletManager* Bullet_PTR;
-extern zGlobals* global_ptr;
+BYTE frame_skip = 0;
 GenerationHandler* generation;
 InputHelper* pinputHelper;
 bool isRendering;
-constexpr int NbrePerso_generation =1000;
+constexpr int NbrePerso_generation = 1000;
 int previous_time;
 Window* window;
 HANDLE hprocess;
 HANDLE gameWindow;
 NeuralNetwork* preseau;
-int actual_output;
-Window_struct* WINDOW = (Window_struct*) 0x568c30;
+Window_struct* WINDOW = (Window_struct*)0x568c30;
 
 
 
-extern int32_t* Inputs;
-extern int32_t* Inputs_prev;
-
-
-void update();
-void init();
-void render();
 
 BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
 {

@@ -1,13 +1,6 @@
 #include "NetworkSaver.h"
 #include "NeuralNetwork.h"
-
-extern int INPUTS_MAX;
-
 NetworkSaver::NetworkSaver()
-{
-}
-
-NetworkSaver::~NetworkSaver()
 {
 }
 
@@ -53,10 +46,8 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 	
 	NeuralNetwork* reseau = new NeuralNetwork(INPUTS_MAX, 6);
 	string test = CSV.read("Other_Infos", 0);
-	reseau->NbConnect = stoi(CSV.read("Other_Infos", 0));
-	reseau->NbNodes = stoi(CSV.read("Other_Infos", 1));
-	reseau->connections = getConnections(reseau->NbConnect);
-	reseau->nodes = getNodes(reseau->NbNodes);
+	reseau->connections = getConnections(stoi(CSV.read("Other_Infos", 0)));
+	reseau->nodes = getNodes(stoi(CSV.read("Other_Infos", 1)));
 	CSV.Close();
 	return reseau;
 }

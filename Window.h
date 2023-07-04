@@ -1,8 +1,6 @@
-
+#pragma once
 #include <GLFW/glfw3.h>
 #include "utils.h"
-struct Pos;
-
 
 class Window {
 public:

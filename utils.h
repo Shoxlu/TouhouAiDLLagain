@@ -1,7 +1,17 @@
 #pragma once
+#define _USE_MATH_DEFINES 
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_RAND_S  
 #include <Windows.h>
 #include <vector>
+#include <math.h>
 
+class GenerationHandler;
+class InputHelper;
+class NeuralNetwork;
+class Joueur;
+class Window;
 struct zBullet;
 struct zEnemy;
 struct zBulletList;
@@ -366,15 +376,6 @@ struct zEnemy {
     int parent_enemy_id; 
     int __only_used_in_ddc;
 };
-
-
-
-
-
-struct Pos {
-    double x;
-    double y;
-};
 struct Output {
     double speed;
     double angle;
@@ -450,6 +451,75 @@ enum Keys {
     Enter = 0x80000
 };
 
+struct Node {
+    size_t id;
+    size_t type;
+    double value;
+};
+
+struct Connection {
+    size_t Inid;
+    size_t OutId;
+    double weight;
+    bool state;//To tell if the connection has to be used (because overlapping connection are disabled)
+    size_t InnovId; //actually i don't know how it's used;
+};
+
+
+struct Specie {
+    std::vector<Joueur*> networks;
+    int avgReward = 0;
+    int maxReward = 0;
+    int totalReward = 0;
+    size_t nbChildren = 0;
+};
+
+struct Pos {
+    double x;
+    double y;
+};
+
+
+
+#define VK_W 0x57
+#define VK_R 0x52
+#define VK_D 0x44
+#define VK_C 0x43
+#define VK_X 0x58
+
+
+//Game's data related
+static constexpr int NINPUTSPBULLET = 4;
+static constexpr int NINPUTSENEMY = 3;
+static constexpr auto N_BULLETS = 2000;
+static constexpr auto INPUTS_MAX = NINPUTSENEMY + NINPUTSPBULLET + 2;
+
+//Nodes types
+static constexpr size_t SENSOR = 0;
+static constexpr size_t HIDDEN = 1;
+static constexpr size_t OUTPUT = 2;
+
+//Window things
+static constexpr auto WIDTH = 853;
+static constexpr auto HEIGHT = 613;
+
+extern zGlobals* global_ptr;
+extern zPlayer* player_ptr;
+extern zBulletManager* Bullet_PTR;
+extern int32_t* Inputs;
+extern int32_t* Inputs_prev;
+extern zPauseMenu* pauseMenu_ptr;
+
+extern BYTE frame_skip;
+extern GenerationHandler* generation;
+extern InputHelper* pinputHelper;
+extern bool isRendering;
+extern int previous_time;
+extern Window* window;
+extern HANDLE hprocess;
+extern HANDLE gameWindow;
+extern NeuralNetwork* preseau;
+extern Window_struct* WINDOW;
 
 
 void press(int input, bool release);

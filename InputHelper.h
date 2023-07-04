@@ -2,12 +2,10 @@
 #include "utils.h"
 #include <vector>
 
-
 class InputHelper {
 public:
 	//Methods:
 	InputHelper();
-	~InputHelper();
 	void updateInputs();
 	std::vector<double> getInputs();
 	void AddBullet();
