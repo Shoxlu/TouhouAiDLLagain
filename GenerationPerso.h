@@ -9,13 +9,13 @@
 void ResetGame_wrap();
 class GenerationHandler {
 public:
-	GenerationHandler(int n_systemes);
+	GenerationHandler(int32_t n_systemes);
 	~GenerationHandler();
 	Joueur** newGeneration(Joueur** newPopulation);
 	void update();
 
 	std::vector<Specie> SortSpeciesByReward(std::vector<Specie> Species);
-	int getBestReward(Joueur** population, NeuralNetwork** bestNetwork);
+	int32_t getBestReward(Joueur** population, NeuralNetwork** bestNetwork);
 	void AddNode(NeuralNetwork* reseau, size_t ConnectId);
 	void AddConnection(size_t in, size_t out, NeuralNetwork* reseau);
 	void DoMutation(NeuralNetwork* reseau);
@@ -29,7 +29,7 @@ public:
 	void ResetGame();
 
 	size_t m_n_systemes;
-	int m_generationId;
+	int32_t m_generationId;
 	size_t joueur_actuel;
 	Joueur** populationActuelle;
 	bool isPlaying;

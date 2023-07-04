@@ -64,11 +64,11 @@ vector<Node> NetworkSaver::getNodes(size_t NbNodes)
 	return nodes;
 }
 
-vector<Connection> NetworkSaver::getConnections(int NBConnect)
+vector<Connection> NetworkSaver::getConnections(size_t NBConnect)
 {
 	vector<Connection> connections;
 	char buffer[512];
-	for (int i = 0; i < NBConnect; i++) {
+	for (size_t i = 0; i < NBConnect; i++) {
 		Connection connection = Connection();
 		sprintf_s(buffer,sizeof(buffer), "Connection%d", i);
 		connection.weight = stod(CSV.read(buffer, 0));

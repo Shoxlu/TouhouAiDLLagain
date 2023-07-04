@@ -30,7 +30,7 @@ void Drawer::DrawNetwork() {
     double y = 200;
     Color color = { 0, 0, 0 };
     Window* window = m_window;
-    for (int i = 0; i < INPUTS_MAX; i++) {
+    for (int32_t i = 0; i < INPUTS_MAX; i++) {
         color = { 1, 1, 1 };
         window->draw_circle(Pos{ x, y }, 12.5, color);
         y += 25;

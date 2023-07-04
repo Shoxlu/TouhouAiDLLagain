@@ -13,9 +13,9 @@ public:
 	void update();
 	void move(std::vector<double> outputs);
 	Pos m_pos;
-	int m_reward;
-	int m_previous_reward;
-	int m_previous_stage;
+	int32_t m_reward;
+	int32_t m_previous_reward;
+	int32_t m_previous_stage;
 	NeuralNetwork* m_reseau;
 	InputHelper* inputHelper;
 	Dir moves[6];

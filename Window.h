@@ -13,8 +13,8 @@ public:
 	//void drawSequence(List* vertices);
 	void update();
 	GLFWwindow* window;
-	int width;
-	int height;
+	int32_t width;
+	int32_t height;
 private:
 	
 };

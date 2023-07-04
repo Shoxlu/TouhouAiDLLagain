@@ -23,7 +23,7 @@ public:
 	CSVFile* create(string name);
 	void write(string toWrite, FILE* file);
 	void write(string toWrite, string key, size_t index);
-	int getColumn(CSVFile* file, string key);
+	size_t getColumn(CSVFile* file, string key);
 	CSVFile* read(FILE* file);
 	CSVFile* read(string name);
 	string read(size_t indexbegin, size_t indexEnd, CSVFile* file = nullptr);
@@ -35,12 +35,12 @@ public:
 	std::vector<string> getKeys(CSVFile* file);
 	std::vector<size_t> getLines(CSVFile* file);
 	size_t getSize(FILE* file);
-	string getSlice(string buffer, int begin, int end);
+	string getSlice(string buffer, size_t begin, size_t end);
 	void AddKey(string key);
 	void Apply(CSVFile* file);
 	void Apply();
 	void Close(CSVFile* file = nullptr);
-	int goToColumn(int pos, int column);
+	size_t goToColumn(size_t pos, size_t column);
 
 	CSVFile* currentfile;
 private:

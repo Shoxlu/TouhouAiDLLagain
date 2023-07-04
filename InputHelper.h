@@ -21,7 +21,7 @@ public:
 	zBullet* bullets;
 	zEnemyList* enemy_list;
 	Pos playerPos;
-	const int numBullets = 2000;
+	const size_t numBullets = 2000;
 	//const int numEnemies = 200; idk the number actually
 	//zEnemy enemies; i will implement that later
 private:

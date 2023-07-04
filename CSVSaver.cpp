@@ -1,4 +1,3 @@
-
 #include "CSVSaver.h"
 #include <fstream>
 #include <iostream>
@@ -68,7 +67,7 @@ void CSVSaver::write(string toWrite, string key, size_t index)
 }
 
 
-int CSVSaver::getColumn(CSVFile* file, string key) {
+size_t CSVSaver::getColumn(CSVFile* file, string key) {
 	size_t column = 0;
 	for (size_t i = 0; i < file->keys.size(); i++) {
 		if (file->keys[i] == key) {
@@ -81,8 +80,6 @@ int CSVSaver::getColumn(CSVFile* file, string key) {
 	}
 	return column;
 }
-
-
 
 
 void CSVSaver::Apply(CSVFile* file) {
@@ -101,9 +98,9 @@ void CSVSaver::Close(CSVFile* file) {
 }
 
 
-int CSVSaver::goToColumn(int pos, int column)
+size_t CSVSaver::goToColumn(size_t pos, size_t column)
 {
-	for (int i = 0; i < column; i++) {
+	for (size_t i = 0; i < column; i++) {
 		pos = currentfile->rawContent.find(',', pos)  + 1;
 	}
 	return pos;
@@ -152,10 +149,10 @@ size_t CSVSaver::getSize(FILE* file) {
 	return n;
 }
 
-string CSVSaver::getSlice(string buffer, int begin, int end)
+string CSVSaver::getSlice(string buffer, size_t begin, size_t end)
 {
 	string newBuffer;
-	for (int i = 0; i < end - begin; i++) {
+	for (size_t i = 0; i < end - begin; i++) {
 		newBuffer += buffer[begin+i];
 	}
 	return newBuffer;

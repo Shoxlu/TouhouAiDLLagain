@@ -1,4 +1,3 @@
-
 #include "utils.h"
 
 Pos get_player_pos()
@@ -14,13 +13,13 @@ Pos get_player_pos()
     return playerPos;
 }
 
-void speedUpGame(int speed)
+void speedUpGame(int32_t speed)
 {
     BYTE* frameskip = (BYTE*)0x4CD00C;
     *frameskip = speed;
     frame_skip = *frameskip;
 }
-void press(int input, bool release)
+void press(int32_t input, bool release)
 {
     INPUT inputs[1] = {};
     ZeroMemory(inputs, sizeof(inputs));
@@ -31,21 +30,25 @@ void press(int input, bool release)
     }
     SendInput(ARRAYSIZE(inputs), inputs, sizeof(INPUT));
 }
-//actually double
+
 double random_float() {
-    return ((double)(rand()) / (double)(RAND_MAX)-0.5) * 2;
+    return (random_float_positive()-0.5) * 2;
 }
-//actually double
+
 double random_float_positive() {
-    return ((double)(rand()) / (double)(RAND_MAX));
+    size_t randNb;
+    rand_s(&randNb);
+    return (((double)(randNb)) / (double)(INT32_MAX))/2.0;
 }
-int randint(int min, int max) {
-    return min + rand() % ((max-min)+1);
+int32_t randint(int32_t min, int32_t max) {
+    size_t randNb;
+    rand_s(&randNb);
+    return min + randNb % ((max-min)+1);
 }
 bool random_bool()
 {
-    double temp = random_float_positive() * 99;
-    if (temp > 50.0)
+    int32_t temp = randint(0, 1);
+    if (temp)
     {
         return true;
     }
@@ -66,23 +69,16 @@ void ReleaseAllInputs()
     press(VK_SHIFT, 1);
 }
 
-void copy_weights(int n, float* dest, float* source)
-{
-    for (int i = 0; i < n; i++) {
-        dest[i] = source[i];
-    }
-}
-
 double ActivationFunction(double weightedInput) {
     /*printf("%f \n", weightedInput);
     printf("%f \n", 1.0 / (1.0 + exp(-weightedInput)));*/
     return 1.0 / (1.0 + exp(-weightedInput));
 }
 //returns the index of the maximum value of an array;
-int GetMaximumIndex(double outputs[], int length) {
-    int maximum_index = 0;
+size_t GetMaximumIndex(double outputs[], size_t length) {
+    size_t maximum_index = 0;
     double maximum = outputs[0];
-    for (int i = 1; i < length; i++) {
+    for (size_t i = 1; i < length; i++) {
         double output = outputs[i];
         if (maximum <= outputs[i])
         {
@@ -93,10 +89,10 @@ int GetMaximumIndex(double outputs[], int length) {
     return maximum_index;
 }
 
-int GetMaximumIndex(std::vector<double> outputs, int length) {
-    int maximum_index = 0;
+size_t GetMaximumIndex(std::vector<double> outputs, size_t length) {
+    size_t maximum_index = 0;
     double maximum = outputs[0];
-    for (int i = 1; i < length; i++) {
+    for (size_t i = 1; i < length; i++) {
         double output = outputs[i];
         if (maximum <= outputs[i])
         {

@@ -34,7 +34,7 @@ void Window::draw_circle(Pos center, double radius, Color color)
     glBegin(GL_TRIANGLE_FAN);
     glColor3f(color.r, color.g, color.b);
     glVertex2f(center.x / width, center.y/ height); // Center of the circle
-    for (int i = 0; i <= 180; ++i)
+    for (int32_t i = 0; i <= 180; ++i)
     {
         double angle = 6.83178 * (static_cast<double>(i) / 180);
         double x = radius * cos(angle) + center.x;

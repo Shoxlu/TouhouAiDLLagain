@@ -1,4 +1,6 @@
 // dllmain.cpp : Définit le point d'entrée de l'application DLL.
+#define _CRT_SECURE_NO_DEPRECATE
+#define _CRT_SECURE_NO_WARNINGS
 #include "pch.h"
 #include "utils.h"
 #include <iostream>
@@ -14,8 +16,6 @@
 #include <thread>
 
 
-#pragma warning(disable : 4996)
-
 //Touhou 18 global variables
 zGlobals* global_ptr = (zGlobals*)0x4cccc0;
 zPlayer* player_ptr = *(zPlayer**)0x4CF410;
@@ -28,8 +28,8 @@ BYTE frame_skip = 0;
 GenerationHandler* generation;
 InputHelper* pinputHelper;
 bool isRendering;
-constexpr int NbrePerso_generation = 1000;
-int previous_time;
+constexpr int32_t NbrePerso_generation = 1000;
+int32_t previous_time;
 Window* window;
 HANDLE hprocess;
 HANDLE gameWindow;
@@ -75,7 +75,6 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         if(generation)
             delete generation;
         speedUpGame(0);
-        ReleaseAllInputs();
     }
     return TRUE;
 }
@@ -83,7 +82,6 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
 void init()
 {
     LoadLibraryW(L"opengl32.dll");
-    srand(time(0));
     Sleep(5000);
     pinputHelper = new InputHelper();
     generation = new GenerationHandler(NbrePerso_generation);
