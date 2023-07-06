@@ -11,6 +11,7 @@ public:
 	void CreateNetwork();
 	void Reset();
 	void update();
+	bool isAtMiddleOfScreen();
 	void move(std::vector<double> outputs);
 	Pos m_pos;
 	int32_t m_reward;

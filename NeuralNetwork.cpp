@@ -23,33 +23,57 @@ std::vector<double> NeuralNetwork::CalculateOutputs(std::vector<double> inputs)
 {
 	std::vector<double> outputs;
 	for (size_t i = 0; i < nodes.size(); i++) {
-		nodes[i].value = 0;
+        sorted_nodes[i].value = 0;
 	}
-	for (size_t i = 0; i < NbInputs; i++) {
-		nodes[i].value = inputs[i];
-	}
-	for (size_t i = 0; i < connections.size(); i++) {
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (sorted_nodes[i].type == SENSOR) {
+            sorted_nodes[i].value = inputs[i];
+            nodes[i].value = inputs[i];
+        }
+        else
+        {
+            double weightedInput = 0;
+            for (size_t j = 0; j < sorted_nodes[i].incoming_connections.size(); j++) {
+                if (sorted_nodes[i].incoming_connections[j].state)
+                    weightedInput += nodes[sorted_nodes[i].incoming_connections[j].Inid].value * sorted_nodes[i].incoming_connections[j].weight;
+            }
+            sorted_nodes[i].value =ActivationFunction(weightedInput);
+            nodes[sorted_nodes[i].id].value = sorted_nodes[i].value;
+        }
+        if (sorted_nodes[i].type == OUTPUT)
+            outputs.emplace_back(sorted_nodes[i].value);
+    }
+	/*for (size_t i = 0; i < connections.size(); i++) {
 		if (connections[i].state) {
-			//double avantTraitement = nodes[connections[i].OutId].value
+			double avantTraitement = nodes[connections[i].OutId].value
 			nodes[connections[i].OutId].value += nodes[connections[i].Inid].value * connections[i].weight;
 
-			/*-- on ""allume"" le lien si la connexion a fait une modif
+			-- on ""allume"" le lien si la connexion a fait une modif
 			if avantTraitement ~= unReseau.lesNeurones[unReseau.lesConnexions[i].sortie].valeur then
 				unReseau.lesConnexions[i].allume = true
 			else
 				unReseau.lesConnexions[i].allume = false
-			end*/
+			end
 		}
-	}
-	for (size_t i = 0; i < NbOutputs; i++) {
-		outputs.emplace_back(ActivationFunction(nodes[NbInputs+i].value));
-	}
+	}*/
+
 	return outputs;
 }
 
 
+bool NeuralNetwork::checkForCompatibleNodes(Connection connection) {
+    bool flagIn = false;
+    bool flagOut = false;
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (connection.Inid == nodes[i].id)
+            flagIn = true;
+        if (connection.OutId == nodes[i].id)
+            flagOut = true;
+    }
+    return flagIn && flagOut;
+}
 
-void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2) {
+void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, size_t reward1, size_t reward2) {
     /*size_t max_NbInnov = 0;
     if (parent1->connections.size() > 0 && parent2->connections.size() > 0) {
         max_NbInnov = max(parent1->connections.back().InnovId, parent2->connections.back().InnovId);
@@ -75,27 +99,46 @@ void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2) {
             newConnections.emplace_back(connection1);
         }
     }*/
+    NeuralNetwork* bestNetwork;
+    NeuralNetwork* worseNetwork;
+    if (reward1 > reward2)
+    {
+        bestNetwork = parent1;
+        worseNetwork = parent2;
+    }
+    else {
+        worseNetwork = parent1;
+        bestNetwork = parent2;
+    }
+    nodes = bestNetwork->nodes;
     std::vector<Connection> newConnections;
-    newConnections = parent2->connections;
-    bool found = false;
-    for (size_t i = 0; i < parent1->connections.size(); i++) {
-        for (size_t j = 0; j < parent2->connections.size(); j++) {
-            if (parent1->connections[i].InnovId == parent2->connections[j].InnovId) {
-                newConnections[j].state &= parent1->connections[i].state;
-                found = true;
-                break;
+    newConnections = bestNetwork->connections;
+    size_t MaxInnovId_best = 0;
+    if(newConnections.size() > 0)
+         MaxInnovId_best = newConnections[newConnections.size()-1].InnovId;
+    for (size_t i = 0; i < worseNetwork->connections.size(); i++) {
+        size_t InnovId_worse = worseNetwork->connections[i].InnovId;
+        for (size_t j = 0; j < bestNetwork->connections.size(); j++) {
+            //if best's InnovId and worse's InnovId are equal
+            size_t InnovId_best = bestNetwork->connections[j].InnovId;
+            if (InnovId_best == InnovId_worse) {
+                if (random_bool()) {
+                    newConnections[j].weight = worseNetwork->connections[i].weight;
+                }
             }
         }
-        if (!found)
-            newConnections.emplace_back(parent1->connections[i]);
-        found = false;
+        if (InnovId_worse > MaxInnovId_best)//if not: check if worse's Innovid is bigger than max best's Innovid
+        {//--if yes:it's an excessing connection, add it to newConnections if possible
+            if (checkForCompatibleNodes(worseNetwork->connections[i]))
+                newConnections.emplace_back(worseNetwork->connections[i]);
+        }
     }
+    
     connections = newConnections;
-    if (parent1->nodes.size() > parent2->nodes.size())
-        nodes = parent1->nodes;
-    else
-        nodes = parent2->nodes;
-    std::vector<size_t*> nodesPairs;
+}
+
+void NeuralNetwork::DoNodesPairs() {
+    std::vector<size_t*> nodesPairs_temp;
     for (size_t j = 0; j < nodes.size(); j++) {
         for (size_t i = 0; i < nodes.size(); i++) {
             if (i == j || nodes[i].type == OUTPUT || nodes[j].type == SENSOR)
@@ -103,11 +146,60 @@ void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2) {
             size_t* pair = new size_t[2];
             pair[0] = i;
             pair[1] = j;
-            nodesPairs.emplace_back(pair);
+            nodesPairs_temp.emplace_back(pair);
         }
     }
     for (size_t i = 0; i < nodesPairs.size(); i++) {
         delete[] nodesPairs[i];
     }
-    nodesPairs = nodesPairs;
+    nodesPairs = nodesPairs_temp;
+}
+
+
+void NeuralNetwork::sortIncomingConnections()
+{
+    if (connections.size() == 0)
+        return;
+    for (size_t i = NbInputs; i < nodes.size(); i++)
+    {
+        nodes[i].incoming_connections.clear();
+        for (size_t j = 0; j < connections.size(); j++) {
+            if (connections[j].OutId == i) {
+                nodes[i].incoming_connections.emplace_back(connections[j]);
+            }
+        }
+    }
+}
+
+void NeuralNetwork::topologicalSortNodes() {
+    sorted_nodes.clear();  // Clear the sorted_nodes list before starting the sort
+    for (size_t i = 0; i < nodes.size(); i++) {
+        nodes[i].already_visited = false;
+    }
+    // Iterate through each node and visit it if it hasn't been already
+    for (size_t i = 0; i < nodes.size(); i++) {
+        if (!nodes[i].already_visited) {
+            visitNode(i);
+        }
+    }
+
+    sorted_nodes;  // Update the nodes list with the sorted nodes
+}
+
+void NeuralNetwork::visitNode(size_t id) {
+    // Set the already_visited flag to true for the visited node
+    nodes[id].already_visited = true;
+
+    // Check for incoming_connections size, if it's greater than 0
+    if (nodes[id].incoming_connections.size() > 0) {
+        // Iterate through the incoming connections
+        for (size_t i = 0; i < nodes[id].incoming_connections.size(); i++) {
+            size_t inId = nodes[id].incoming_connections[i].Inid;
+            if (!nodes[inId].already_visited && nodes[id].incoming_connections[i].state) {
+                visitNode(inId);  // Recursively visit the connected node if not already visited   
+            }
+        }
+    }
+    sorted_nodes.emplace_back(nodes[id]);
+      // Add the visited node to the sorted list (at the end)
 }

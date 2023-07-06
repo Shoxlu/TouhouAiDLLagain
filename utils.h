@@ -8,6 +8,7 @@
 class GenerationHandler;
 class InputHelper;
 class NeuralNetwork;
+struct Connection;
 class Joueur;
 class Window;
 struct zBullet;
@@ -392,7 +393,9 @@ struct zGlobals {
     int32_t stage_num;//32
     BYTE gap2[4];//36
     int32_t time_in_stage;//42
-    BYTE gap1[44];//46
+    BYTE gap1[30];//46
+    int32_t graze_counter;//76
+    BYTE gap4[10];//80
     int32_t miss_count;//90
     BYTE gap3[42];//94
     int32_t current_lives;//136
@@ -453,6 +456,8 @@ struct Node {
     size_t id;
     size_t type;
     double value;
+    std::vector<Connection> incoming_connections;
+    bool already_visited; //for topoligical sorting
 };
 
 struct Connection {
@@ -488,9 +493,10 @@ struct Pos {
 
 //Game's data related
 static constexpr int32_t NINPUTSPBULLET = 4;
-static constexpr int32_t NINPUTSENEMY = 3;
+static constexpr int32_t NINPUTSENEMY = 2;
 static constexpr auto N_BULLETS = 2000;
 static constexpr auto INPUTS_MAX = NINPUTSENEMY + NINPUTSPBULLET + 2;
+static constexpr auto OUTPUTS_MAX = 5;
 
 //Nodes types
 static constexpr size_t SENSOR = 0;

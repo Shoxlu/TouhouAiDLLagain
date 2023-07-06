@@ -33,7 +33,7 @@ public:
 	size_t joueur_actuel;
 	Joueur** populationActuelle;
 	bool isPlaying;
-	size_t NbInnov = 0; //still don't know but it will be helpful
+	size_t NbInnov = 0;
 	Joueur** m_previousBestGen;
 private:
 };

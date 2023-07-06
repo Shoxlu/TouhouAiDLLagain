@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "utils.h"
 
 
@@ -9,8 +8,14 @@ public:
 	NeuralNetwork(size_t inputs, size_t outputs);
 	//Function to process the inputs and give outputs, 1 arguments: inputs returns an array of double
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);
-	void CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2);
+	bool checkForCompatibleNodes(Connection connection);
+	void CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, size_t reward1, size_t reward2);
+	void DoNodesPairs();
+	void sortIncomingConnections();
+	void topologicalSortNodes();
+	void visitNode(size_t id);
 	//Variables
+	std::vector<Node> sorted_nodes;
 	std::vector<Node> nodes;
 	std::vector<double> m_inputs;
 	std::vector<Connection> connections;

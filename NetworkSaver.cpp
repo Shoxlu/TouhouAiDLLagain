@@ -44,7 +44,7 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 		return nullptr;
 	}
 	
-	NeuralNetwork* reseau = new NeuralNetwork(INPUTS_MAX, 6);
+	NeuralNetwork* reseau = new NeuralNetwork(INPUTS_MAX, OUTPUTS_MAX);
 	string test = CSV.read("Other_Infos", 0);
 	reseau->connections = getConnections(stoi(CSV.read("Other_Infos", 0)));
 	reseau->nodes = getNodes(stoi(CSV.read("Other_Infos", 1)));

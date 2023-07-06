@@ -2,9 +2,9 @@
 #include "GenerationPerso.h"
 
 #include <cassert>
-static constexpr double EXCES_COEF = 0.50;
+static constexpr double EXCES_COEF = 0.5;
 static constexpr double POIDSDIFF_COEF = 0.92;
-static constexpr double DIFF_LIMITE = 1.00;
+static constexpr double DIFF_LIMITE = 1.0;
 
 
 template <class T>
@@ -78,38 +78,39 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
     NeuralNetwork* bestOldNetwork = nullptr;
     size_t bestRewardOldPops = findBestNetworkInOldPop(&bestOldNetwork);
     //si c'est le cas : remplacer tous les réseaux de la gen actuelle par le meilleur
-    Joueur** populationToSort = nullptr;
+    std::vector<Specie> Species = sortPopulationBySpecies(populationActu);
     if (bestRewardPop < bestRewardOldPops && bestOldNetwork) {
         printf("Taking an old network as base for the next generation.\n");
-        /*for (size_t i = 0; i < Species.size(); i++) {
+        for (size_t i = 0; i < Species.size(); i++) {
             for (size_t j = 0; j < Species[i].networks.size(); j++) {
                 Species[i].networks[j]->m_reseau = bestOldNetwork;
             }
-        }*/
-        populationToSort = m_previousBestGen;
+        }
     }
     else {//not useful to save a bad generation.
-        populationToSort = populationActu;
+        //mettre la population dans les anciennes
         m_previousBestGen = populationActu;
         if(m_generationId > 1)
+            //sauvegarder cette ancienne génération
             SaveNetworks(populationActu);
     }
 
-    std::vector<Specie> Species = sortPopulationBySpecies(populationToSort);
-    //mettre la population dans les anciennes
-    
-    //sauvegarder cette ancienne génération
-    
     //Calcul de la fitness moyenne de chaque espèce et la fitness moyenne de toutes les espèces et fitness total
     size_t nbIndividuTotal = 0;
     size_t AvgRewardGlobal = 0;
+    size_t maxReward = 0;
     for (size_t i = 0; i < Species.size(); i++) {
         Species[i].totalReward = 0;
+        maxReward = 0;
         for (size_t j = 0; j < Species[i].networks.size(); j++) {
             nbIndividuTotal++;
             Species[i].totalReward += Species[i].networks[j]->m_reward;
             AvgRewardGlobal += Species[i].networks[j]->m_reward;
+            if (maxReward < Species[i].networks[j]->m_reward) {
+                maxReward = Species[i].networks[j]->m_reward;
+            }
         }
+        Species[i].maxReward = maxReward;
         Species[i].avgReward = Species[i].totalReward / Species[i].networks.size();
     }
     assert(nbIndividuTotal == m_n_systemes);
@@ -127,25 +128,34 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
             NbSpecieInd += NbToCreate;
             NbToCreate = 0;
         }
+
         Species[i].nbChildren = NbSpecieInd;
         size_t size = Species[i].networks.size();
         //-à partir ce nombre d'individu, faire des crossovers à partir de parents de cet espèce et une mutation et mettre ce crossover dans la nouvelle pop
         for (size_t j = 0; j < NbSpecieInd; j++) {
-            if (indiceNewSpecie < m_n_systemes) {
-                NeuralNetwork* newNetwork = new NeuralNetwork(INPUTS_MAX, 5);
-                
-                newNetwork->CrossOver(Species[i].networks[randint(0, size - 1)]->m_reseau, Species[i].networks[randint(0, size - 1)]->m_reseau);
-                DoMutation(newNetwork);
-                
-                newNetwork->SpecieParentId = i;
-                newPopulation[indiceNewSpecie]->m_reseau = newNetwork;
-                indiceNewSpecie++;
+            if (indiceNewSpecie >= m_n_systemes) {
+                break;
+            }
+            NeuralNetwork* newNetwork;
+            if (j == 0 && m_generationId != 1) {
+                newNetwork = Species[i].networks[0]->m_reseau;
             }
             else {
-                break;
-            }            
+                newNetwork = new NeuralNetwork(INPUTS_MAX, OUTPUTS_MAX);
+                Joueur* firstNet = Species[i].networks[randint(0, size - 1)];
+                Joueur* secondNet = Species[i].networks[randint(0, size - 1)];
+                newNetwork->CrossOver(firstNet->m_reseau, secondNet->m_reseau, firstNet->m_reward, secondNet->m_reward);
+                newNetwork->SpecieParentId = i;
+                DoMutation(newNetwork);
+            }
+            assert(newNetwork != nullptr);
+            newPopulation[indiceNewSpecie]->m_reseau = newNetwork;
+            newNetwork->sortIncomingConnections();
+            newNetwork->topologicalSortNodes();
+            newNetwork->DoNodesPairs();
+            indiceNewSpecie++;          
         }
-        if (indiceNewSpecie > m_n_systemes) {
+        if (indiceNewSpecie >= m_n_systemes) {
             break;
         }
     }
@@ -220,7 +230,7 @@ void GenerationHandler::ResetGame()
     printf("Reset game.\n");
     pauseMenu_ptr = *(zPauseMenu**)0x4CF40C;
     char name_to_enter[10] = "";
-    sprintf_s(pauseMenu_ptr->name_to_enter, sizeof(pauseMenu_ptr->name_to_enter), "Gen%d", m_generationId);
+    sprintf_s(name_to_enter, sizeof(name_to_enter), "Gen%d", m_generationId);
     FunctionPtr MenuSelect__set_index = reinterpret_cast<FunctionPtr>(0x416BA0);
     while (global_ptr->time_in_stage >= previous_time) {
         if (pauseMenu_ptr->menu_type == 15) {
@@ -273,16 +283,6 @@ void GenerationHandler::AddNode(NeuralNetwork* network, size_t ConnectId)
     connections.emplace_back(Connection{ connections[ConnectId].Inid, nodes_size, connections[ConnectId].weight, true, InnovId});
     InnovId = CheckForExistingConnection(nodes_size, connections[ConnectId].OutId);
     connections.emplace_back(Connection{ nodes_size, connections[ConnectId].OutId, 1, true, InnovId });
-    
-
-    for (size_t i = 0; i < nodes_size; i++) {
-        if (i == nodes_size || network->nodes[i].type == OUTPUT || network->nodes[nodes_size].type == SENSOR)
-            continue;
-        size_t pair[2] = { network->nodes.size() , i};
-        network->nodesPairs.emplace_back(pair);
-        size_t pair1[2] = {i, network->nodes.size()};
-        network->nodesPairs.emplace_back(pair1);
-    }
     network->connections = connections;
 }
 
@@ -318,36 +318,23 @@ bool CheckExistingConnectionInNetwork(size_t in, size_t out, std::vector<Connect
 }
 
 void GenerationHandler::DoMutation(NeuralNetwork* network) {
-    if (randint(0, 99) < 85 && network->nodesPairs.size() > 0) {
+    if (randint(1, 100) < 85 && network->nodesPairs.size() > 0) {
         size_t randomPairIndice = randint(0, network->nodesPairs.size() - 1);
         size_t* pair = network->nodesPairs[randomPairIndice];
         AddConnection(pair[0], pair[1], network);
         network->nodesPairs.erase(network->nodesPairs.begin() + randomPairIndice);
     }
-    if (randint(0, 99) < 25 && network->connections.size() > 0) {
+    if (randint(1, 100) < 31 && network->connections.size() > 0) {
         size_t randNb = randint(0, network->connections.size() - 1);
         AddNode(network, randNb);
     }
     for (size_t i = 0; i < network->connections.size(); i++) {
-        if (randint(0, 99) < 95)
-            network->connections[i].weight += random_float() * 0.2;
-        else if(randint(0, 99) < 5)
+        if (randint(1, 100) < 80)
+            network->connections[i].weight += random_bool() ? -0.02 : 0.02;
+        else if (randint(1, 100) < 15)
             network->connections[i].weight = random_float();
     }
 }
-/*Connection* test() {
-    return nullptr;
-}
-Connection* GetConnectionById(std::vector<Connection>* connections, size_t InnovId) {
-    for (size_t i = 0; i < connections->size(); i++) {
-        if ((*connections)[i].InnovId == InnovId) {
-            return &(*connections)[i];
-        }
-    }
-    return nullptr;
-}*/
-
-
 
 //at this point i copied someone else code (changed it a bit to correspond to my architecture)
 std::vector<Specie> GenerationHandler::sortPopulationBySpecies(Joueur** population)

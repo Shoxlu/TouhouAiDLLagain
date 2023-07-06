@@ -18,8 +18,8 @@ std::vector<double> InputHelper::getInputs() {
 	AddBullet();
 	AddEnemy();
 	//AddLaser(); -> future implementation
-	inputs[INPUTS_MAX-2] = playerPos.x/384.0 * 10;
-	inputs[INPUTS_MAX-1] = playerPos.y/448.0 * 10;
+	inputs[INPUTS_MAX-2] = playerPos.x/192.0;
+	inputs[INPUTS_MAX-1] = (playerPos.y-224.0)/224.0;
 	return inputs;
 }
 
@@ -31,10 +31,10 @@ void InputHelper::AddBullet() {
 		zBullet bullet = bullets[i];
 		double distance = sqrt(pow(bullet.pos.x-playerPos.x, 2) + pow(bullet.pos.y- playerPos.y, 2));
 		if (distance < lastDistance) {
-			inputs[0] = bullet.pos.x/384.0 * 10;
-			inputs[1] = bullet.pos.y/448.0 * 10;
-			inputs[2] = bullet.angle/(M_PI*2) * 10;
-			inputs[3] = distance/ 590.050845 * 10;
+			inputs[0] = atan2(bullet.pos.y- playerPos.y , bullet.pos.x - playerPos.x) / M_PI;
+			inputs[1] = (bullet.angle-M_PI)/M_PI;
+			inputs[2] = bullet.hitbox_radius;
+			inputs[3] = (distance- 295.025422633)/ 295.025422633;
 			lastDistance = distance;
 		}
 	}
@@ -44,12 +44,15 @@ void InputHelper::AddEnemy() {
 	for (zEnemyList* enemy_list_iterator = enemy_list; enemy_list != nullptr; enemy_list = enemy_list->next) {
 		zEnemy* enemy = enemy_list->entry;
 		double distance = sqrt(pow(enemy->data.abs_pos.pos.x- playerPos.x, 2) + pow(enemy->data.abs_pos.pos.y- playerPos.y, 2));
-		if (distance < lastDistance) {
-			inputs[4] = enemy->data.abs_pos.pos.x / 384.0 *10;
-			inputs[5] = enemy->data.abs_pos.pos.y / 448.0*10;
-			inputs[6] = distance / 590.050845*10;
+		if (distance < lastDistance && enemy->data.abs_pos.pos.x != 0 && enemy->data.abs_pos.pos.y != 0) {
+			inputs[4] = atan2(enemy->data.abs_pos.pos.y- playerPos.y, enemy->data.abs_pos.pos.x - playerPos.x) / M_PI;
+			inputs[5] = (distance- 295.025422633) / 295.025422633;
 			lastDistance = distance;
 		}
+	}
+	if (lastDistance == 10000000) {
+		inputs[4] = 0;
+		inputs[5] = 0;
 	}
 }
 

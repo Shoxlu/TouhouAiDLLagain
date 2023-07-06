@@ -1,6 +1,10 @@
 #pragma once
+#include <vector>
+
 class NeuralNetwork;
 class Window;
+struct Node;
+struct Pos;
 class Drawer {
 public:
 	Drawer();
@@ -10,6 +14,7 @@ public:
 	void DrawNetwork(Window* window);
 	void DrawNetwork(Window* window, NeuralNetwork* preseau);
 	void DrawNetwork();
+	void DrawConnections(std::vector<Node> nodes, Pos pos, size_t id);
 	void Apply();
 	//void DrawPlayer();
 	//void DrawBullets();
@@ -18,4 +23,5 @@ public:
 private:
 	NeuralNetwork* m_preseau;
 	Window* m_window;
+	size_t NbOutputs;
 };

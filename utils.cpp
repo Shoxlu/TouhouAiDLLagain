@@ -72,7 +72,9 @@ void ReleaseAllInputs()
 double ActivationFunction(double weightedInput) {
     /*printf("%f \n", weightedInput);
     printf("%f \n", 1.0 / (1.0 + exp(-weightedInput)));*/
-    return 1.0 / (1.0 + exp(-weightedInput));
+    double ex = exp(weightedInput);
+    double eminx = exp(-weightedInput);
+    return (ex - eminx) / (ex + eminx);
 }
 //returns the index of the maximum value of an array;
 size_t GetMaximumIndex(double outputs[], size_t length) {

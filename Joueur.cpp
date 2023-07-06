@@ -18,7 +18,7 @@ Joueur::~Joueur() {
 }
 
 void Joueur::CreateNetwork() {
-	std::vector<int> baseNodes = { INPUTS_MAX, 5 };
+	std::vector<int> baseNodes = { INPUTS_MAX, OUTPUTS_MAX };
 	m_reseau = new NeuralNetwork(baseNodes[0], baseNodes[1]);
 	//m_reseau = new NeuralNetwork(layerSizes);
 }
@@ -32,10 +32,9 @@ void Joueur::Reset()
 
 void Joueur::move(std::vector<double> outputs)
 {
-	//ReleaseAllInputs();
 	*Inputs |= Shoot;
 	for (size_t i = 0; i < outputs.size(); i++) {
-		if (outputs[i] > 0.5) {
+		if (outputs[i] > 0) {
 			*Inputs |= moves[i].key;
 		}
 	}
@@ -43,12 +42,23 @@ void Joueur::move(std::vector<double> outputs)
 
 void Joueur::update()
 {
-	m_reward = m_previous_reward + global_ptr->time_in_stage;
+	m_pos = get_player_pos();
+	std::vector<double> inputs = pinputHelper->getInputs();
+	move(m_reseau->CalculateOutputs(inputs));
+	m_reward = m_previous_reward;
+	m_previous_reward = m_reward;
+	m_reward += global_ptr->time_in_stage*3 + global_ptr->graze_counter;
 	if (global_ptr->stage_num > m_previous_stage)
 	{
 		m_previous_reward = m_reward;
 		m_previous_stage = global_ptr->stage_num;
 	}
-	std::vector<double> outputs = m_reseau->CalculateOutputs(pinputHelper->getInputs());
-	move(outputs);
+}
+
+bool Joueur::isAtMiddleOfScreen() {
+
+	if (m_pos.x < 130 && m_pos.x > -130 && m_pos.y > 224.0) {
+		return true;
+	}
+	return false;
 }

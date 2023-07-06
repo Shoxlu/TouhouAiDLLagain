@@ -2,11 +2,11 @@
 #include "NeuralNetwork.h"
 #include "Window.h"
 #include <stdio.h>
-Drawer::Drawer(): m_preseau(nullptr), m_window(nullptr) {
+Drawer::Drawer():NbOutputs(0), m_preseau(nullptr), m_window(nullptr) {
 	//Default constructor
 }
 
-Drawer::Drawer(NeuralNetwork* preseau, Window* window) : m_preseau(preseau), m_window(window) {
+Drawer::Drawer(NeuralNetwork* preseau, Window* window) : NbOutputs(0), m_preseau(preseau), m_window(window) {
 	//Set up constructor
 }
 
@@ -23,25 +23,36 @@ void Drawer::DrawNetwork() {
         return;
     }
     std::vector<Connection> connections = preseau->connections;
+    std::vector<Node> sorted_nodes = preseau->sorted_nodes;
     std::vector<Node> nodes = preseau->nodes;
     size_t NbNodes = preseau->nodes.size();
-    size_t NbOutputs = preseau->NbOutputs;
+    NbOutputs = preseau->NbOutputs;
     double x = -600;
     double y = 200;
     Color color = { 0, 0, 0 };
     Window* window = m_window;
-    for (int32_t i = 0; i < INPUTS_MAX; i++) {
-        color = { 1, 1, 1 };
-        window->draw_circle(Pos{ x, y }, 12.5, color);
-        y += 25;
+    //probably gonna make something better with some linked pair or something and list of positions
+    for (size_t i = 0; i < nodes.size(); i++) {
+        Pos pos = {};
+        color = { 0, 0.5 + (nodes[i].value > 0 ? 0.5 : 0), 0 };
+        switch (nodes[i].type)
+        {
+        case SENSOR:
+            color = { 1, 1, 1 };
+            pos = Pos{ x, y + 25 * i };
+            break;
+        case OUTPUT:
+            pos = Pos{ 0, 25.0 * i - INPUTS_MAX };
+            DrawConnections(nodes, pos, i);
+            break;
+        case HIDDEN:
+            pos = Pos{ -300, 200.0 + 200/(nodes.size()-INPUTS_MAX-NbOutputs+1)* (i-INPUTS_MAX - NbOutputs+1) };
+            DrawConnections(nodes, pos, i);
+            break;
+        }
+        window->draw_circle(pos, 12.5, color);
     }
-    y = 200;
-    for (size_t i = INPUTS_MAX; i < INPUTS_MAX+NbOutputs; i++) {
-        color = { 0, 0.5+(nodes[i].value > 0.5 ? 0.5: 0), 0};
-        window->draw_circle(Pos{ 0, y }, 12.5, color);
-        y += 25;
-    }
-    y = 200;
+   /* y = 200;
     for(size_t i = 0; i < connections.size(); i++){
 
         size_t in = connections[i].Inid;
@@ -51,7 +62,7 @@ void Drawer::DrawNetwork() {
         if (nodes[out].type == OUTPUT) {
             finalPos = Pos{ 0, y + (out-INPUTS_MAX) * 25 };
         }else {
-            finalPos = Pos{ x +50+  50 * int((out - INPUTS_MAX - NbOutputs+1) / 2) , y };
+            finalPos = Pos{ x +50+  50 * out , y };
             color = { 0.5, 0.5,0.5 };
             window->draw_circle(finalPos, 12.5, color);
         }
@@ -72,9 +83,40 @@ void Drawer::DrawNetwork() {
             color = { 0, 0, 1 };
         }
         window->draw_line(pos, finalPos, color);
-    }
+    }*/
 
 }
+
+void Drawer::DrawConnections(std::vector<Node> nodes, Pos pos, size_t id) {
+    Color color;
+    for (size_t j = 0; j < nodes[id].incoming_connections.size(); j++) {
+        if (nodes[id].incoming_connections[j].state == false) {
+            color = { 0.1, 0.1, 0.1 };
+        }
+        else if (nodes[id].incoming_connections[j].weight > 0) {
+            color = { 1, 0, 0 };
+        }
+        else {
+            color = { 0, 0, 1 };
+        }
+        Pos pos1 = { 0, 0 };
+        switch(nodes[nodes[id].incoming_connections[j].Inid].type){
+        case SENSOR:
+            pos1 = Pos{ -600, 200.0 + 25 * nodes[id].incoming_connections[j].Inid };
+            break;
+        case OUTPUT:
+            pos1 = Pos{  0, 25.0 * nodes[id].incoming_connections[j].Inid - INPUTS_MAX };
+            break;
+        case HIDDEN:
+            pos1 = Pos{ -300, 200.0 + 200 / (nodes.size() - INPUTS_MAX - NbOutputs + 1) * (nodes[id].incoming_connections[j].Inid - INPUTS_MAX - NbOutputs + 1) };
+            break;
+        }
+        //add edge case for inputs to outputs connections.
+        window->draw_line(pos1, pos, color);
+    }
+}
+
+
 
 void Drawer::DrawNetwork(NeuralNetwork* preseau) {
 	m_preseau = preseau;
