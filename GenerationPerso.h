@@ -18,6 +18,7 @@ public:
 	int32_t getBestReward(Joueur** population, NeuralNetwork** bestNetwork);
 	void AddNode(NeuralNetwork* reseau, size_t ConnectId);
 	void AddConnection(size_t in, size_t out, NeuralNetwork* reseau);
+	void DeleteConnection(size_t index, NeuralNetwork* reseau);
 	void DoMutation(NeuralNetwork* reseau);
 	size_t CheckForExistingConnection(size_t in, size_t out);
 	void SaveNetworks(Joueur** population);
@@ -25,7 +26,7 @@ public:
 	std::vector<Specie> sortPopulationBySpecies(Joueur** population);
 	size_t getNetworkDiff(NeuralNetwork* reseau1, NeuralNetwork* reseau2, double* diffPoids);
 	double getScore(NeuralNetwork* networkToTest, NeuralNetwork* networkToCompare);
-	size_t findBestNetworkInOldPop(NeuralNetwork** bestNetwork);
+	int32_t findBestNetworkInOldPop(NeuralNetwork** bestNetwork);
 	void ResetGame();
 
 	size_t m_n_systemes;

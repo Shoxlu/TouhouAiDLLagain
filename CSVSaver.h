@@ -13,6 +13,8 @@ struct CSVFile {
 	size_t n_columns = 0;
 	size_t n_lines = 0;
 	string name;
+	string last_key;
+	size_t last_column;
 };
 
 

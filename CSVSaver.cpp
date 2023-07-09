@@ -35,21 +35,25 @@ void CSVSaver::write(string toWrite, FILE* file)
 
 void CSVSaver::write(string toWrite, string key, size_t index)
 {
+	getLines(currentfile);
 	size_t column = 0;
 	if (0 == currentfile->keys.size()) {
 		currentfile->rawContent.insert(0, key+",\n");
 		currentfile->n_columns++;
-		getLines(currentfile);
 		currentfile->keys.emplace_back(key);
-	}
-	column = getColumn(currentfile, key);
-	if (column == currentfile->n_columns) {
-		AddKey(key);
 		getLines(currentfile);
 	}
+	if (currentfile->last_key == key) {
+		column = currentfile->last_column;
+	}else{
+		column = getColumn(currentfile, key);
+		if (column == currentfile->n_columns) {
+			AddKey(key);
+		}
+	}
+	
 	if (index >= currentfile->n_lines) {
-		getLines(currentfile);
-		for (size_t i = 0; i < index - currentfile->n_lines+1; i++) {
+		for (size_t i = 0; i < index - currentfile->n_lines + 1; i++) {
 			currentfile->rawContent += "\n";
 			for (size_t j = 0; j < currentfile->n_columns; j++) {
 				currentfile->rawContent += "NULL,";
@@ -57,28 +61,23 @@ void CSVSaver::write(string toWrite, string key, size_t index)
 		}
 		getLines(currentfile);
 	}
-	size_t pos = currentfile->lines_begin[index];
-	pos = goToColumn(pos, column);
+	size_t pos = goToColumn(currentfile->lines_begin[index], column);
 	size_t finalPos = currentfile->rawContent.find(',', pos) + 1;
 	string search =currentfile->rawContent.substr(pos, finalPos-pos);
 	currentfile->rawContent.replace(pos, search.length(), "");
 	currentfile->rawContent.insert(pos, toWrite+',');
-	getLines(currentfile);
+	currentfile->last_key = key;
+	currentfile->last_column = column;
 }
 
 
 size_t CSVSaver::getColumn(CSVFile* file, string key) {
-	size_t column = 0;
 	for (size_t i = 0; i < file->keys.size(); i++) {
 		if (file->keys[i] == key) {
-			column = i;
-			break;
-		}
-		else if (i == file->keys.size() - 1) {
-			column = file->n_columns;
+			return i;
 		}
 	}
-	return column;
+	return file->n_columns;
 }
 
 
@@ -111,15 +110,11 @@ void CSVSaver::AddKey(string key) {
 	currentfile->keys.emplace_back(key);
 	getLines(currentfile);//3ms
 	for (size_t i = 0; i < currentfile->n_lines; i++) {
-		if (read(key, i) == "") {//2ms
-			size_t pos = currentfile->lines_begin[i];
-			pos = goToColumn(pos, currentfile->n_columns-1);//2ms
-			currentfile->rawContent.insert(pos, "NULL,");
-			getLines(currentfile);//3ms
-		}
+		size_t pos = currentfile->lines_begin[i];
+		pos = goToColumn(pos, currentfile->n_columns-1);//2ms
+		currentfile->rawContent.insert(pos, "NULL,");
+		getLines(currentfile);//3ms
 	}
-	getLines(currentfile);
-	
 }
 
 std::vector<size_t> CSVSaver::getLines(CSVFile* file)
@@ -188,9 +183,14 @@ string CSVSaver::read(string key, size_t index, CSVFile* file)
 		//printf("Line doesn't exist.");
 		return "";
 	}
-	column = getColumn(currentfile, key);
-	if (column == currentfile->n_columns) {
-		return "";
+	if (key == currentfile->last_key) {
+		column = currentfile->last_column;
+	}
+	else {
+		column = getColumn(currentfile, key);
+		if (column == currentfile->n_columns) {
+			return "";
+		}
 	}
 	size_t pos = goToColumn(currentfile->lines_begin[index], column);
 	if (currentfile->rawContent[pos] == '\n') {
@@ -198,6 +198,8 @@ string CSVSaver::read(string key, size_t index, CSVFile* file)
 	}
 	size_t finalpos = currentfile->rawContent.find(',', pos);
 	string search = currentfile->rawContent.substr(pos, finalpos - pos);
+	currentfile->last_key = key;
+	currentfile->last_column = column;
 	return search;
 }
 //string CSVSaver::read(string key, CSVFile* file)

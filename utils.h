@@ -359,12 +359,167 @@ struct zPosVel {
     zFloat3 __field_34__maybe_velocity__idfk;
     int32_t flags;
 };
+
+struct zFloat2 {
+    float x;
+    float y;
+};
+
+struct zInterpStrange1 {
+    zFloat3 current;
+    zFloat3 initial;
+    zFloat3 goal;
+    zFloat3 bezier_1;
+    zFloat3 bezier_2;
+    zTimer time;
+    int end_time;
+    int method_for_1d;
+    int __field_58;
+    int __field_5c;
+    int method_for_3d;
+    int flags;
+};
+struct zInterpFloat2 {
+    zFloat2 initial;
+    zFloat2 goal;
+    zFloat2 bezier_1;
+    zFloat2 bezier_2;
+    zFloat2 current;
+    zTimer time;
+    int end_time;
+    int method;
+};
+
+struct zBulletEx {
+    float r;
+    float s;
+    float m;
+    float n;
+    int a;
+    int b;
+    int c;
+    int d;
+    int type;
+    int async;
+    int string;
+};
+
+struct zEnemyLife {
+    int current;
+    int maximum;
+    int remaining_for_cur_attack;
+    int current_scaled_by_seven;
+    int starting_value_for_next_attack;
+    int total_damage_including_ignored;
+    int is_spell;
+};
+
+struct zEnemyBulletShooter {
+    int type;
+    int color;
+    zFloat3 offset_final;
+    float angle_1;
+    float angle_2;
+    float speed_1;
+    float speed_2;
+    float distance;
+    zBulletEx ex[24];
+    char __unknown_1096;
+    BYTE gap449[15];
+    int laser_time_start;
+    int laser_trans_1;
+    int laser_duration;
+    int laser_trans_2;
+    int laser_time_end;
+    __int16 count_1;
+    __int16 count_2;
+    int aim_type;
+    int sound_flag;
+    int shot_sound;
+    int shot_transform_sound;
+    int start_transform;
+    int __field_484;
+};
+struct zBulletOffset {
+    zFloat2 xy;
+    float __unknown;
+};
+
+struct zEnemyDrop { int main_drop; int ex_drop[20]; int timed_ex_drop[20]; int timed_ex_drop_time; zTimer timed_ex_drop_timer; float width; float height; };
+
+struct zEnemyInterrupt { int hp_value; int time; char __sub_name_1[64]; char __sub_name_2[64]; };
+struct zEnemyFog { int fog_ptr; char __unknown_4; float fog_radius; float __fog_field_c__init_16f; int fog_color; float __fog_angle_44d0; float __fog_angle_44d4; };
+
 struct zEnemyData {
     zPosVel prev_final_pos;
     zPosVel final_pos;
     zPosVel abs_pos;
     zPosVel rel_pos;
-    //i deleted fields from here
+    zFloat2 hurtbox_size; 
+    zFloat2 hitbox_size;
+    float hurtbox_rotation; 
+    zAnmId anm_vm_ids[16];
+    zFloat3 anm_pos[16]; 
+    zAnmId __field_224_lolidfk[16];
+    int selected_anm_index; 
+    int anm_slot_0_anm_index; 
+    int anm_slot_0_script;
+    int anm_main;
+    int __probably_cur_subscript_for_anm_main;
+    int kill_id; int anm_layers;
+    zFloat3 __pos_of_last_damage_source_to_hit_me__butwhytho;
+    int ecl_int_vars[4]; float ecl_float_vars[8];
+    zTimer time_in_ecl; 
+    zTimer time_alive;
+    float slowdown; 
+    zEnemyList node_in_global_storage; 
+    zInterpStrange1 abs_pos_i; 
+    zInterpStrange1 rel_pos_i; 
+    zInterpFloat abs_angle_i; 
+    zInterpFloat abs_speed_i;
+    zInterpFloat rel_angle_i; 
+    zInterpFloat rel_speed_i; 
+    zInterpFloat2 abs_radial_dist_i; 
+    zInterpFloat2 rel_radial_dist_i;
+    zInterpFloat2 abs_ellipse_i; 
+    zInterpFloat2 rel_ellipse_i; 
+    zEnemyBulletShooter bullet_props[16]; 
+    int et_ex_index[16]; 
+    zBulletOffset bullet_mgr_offsets[16]; 
+    zBulletOffset bullet_mgr_origins[16]; 
+    zFloat2 final_sprite_size; 
+    zFloat2 move_limit_center; 
+    zFloat2 move_limit_size; 
+    int score_reward;
+    zEnemyLife life; 
+    zEnemyDrop drop; 
+    int __field_50d4__some_kind_of_extra_damage;
+    int death_sound; 
+    int death_anm_script; 
+    int death_anm_index;
+    int __frames_before_next_hurt_fx__i_think; 
+    int __i_think_this_field_is_legit_unused; 
+    int hit_sound;
+    zTimer invuln_timer;
+    zTimer no_hitbox_timer;
+    zTimer __timer_5118__counts_down; 
+    float bomb_damage_multiplier;
+    int flags_lo; 
+    int flags_hi; 
+    int bombshield_on_anm_main;
+    int bombshield_off_anm_main;
+    int own_boss_id; 
+    float et_protect_range; 
+    zEnemyInterrupt interrupts[8]; 
+    int full; 
+    zEnemyFog fog; 
+    char set_death[64]; 
+    int func_from_ecl_func_set; 
+    int is_func_set_2; 
+    int func_from_ecl_func_ext_dmg;
+    int func_from_ecl_hitbox_func; 
+    int own_chapter; 
+    int __bool_cleared_by_ecl_570;
 };
 
 struct zEnemy {
@@ -388,17 +543,18 @@ struct zGlobalsInner {
     int32_t miss_count;
 };
 struct zGlobals {
-
     BYTE gap[32];//0x0
     int32_t stage_num;//32
     BYTE gap2[4];//36
-    int32_t time_in_stage;//42
-    BYTE gap1[30];//46
-    int32_t graze_counter;//76
-    BYTE gap4[10];//80
-    int32_t miss_count;//90
-    BYTE gap3[42];//94
-    int32_t current_lives;//136
+    int32_t time_in_stage;//40
+    BYTE gap1[30];//44
+    int32_t graze_counter;//74
+    BYTE gap4[10];//78
+    int32_t miss_count;//88
+    BYTE gap3[38];//92
+    int32_t current_lives;//130 ???
+    BYTE gap10[12];
+    int32_t current_bombs;
     //offset 0x88 : Global life count
 };
 struct Color {
@@ -492,11 +648,11 @@ struct Pos {
 
 
 //Game's data related
-static constexpr int32_t NINPUTSPBULLET = 4;
-static constexpr int32_t NINPUTSENEMY = 2;
+static constexpr int32_t NINPUTSPBULLET = 7;
+static constexpr int32_t NINPUTSENEMY = 4;
 static constexpr auto N_BULLETS = 2000;
 static constexpr auto INPUTS_MAX = NINPUTSENEMY + NINPUTSPBULLET + 2;
-static constexpr auto OUTPUTS_MAX = 5;
+static constexpr auto OUTPUTS_MAX = 6;
 
 //Nodes types
 static constexpr size_t SENSOR = 0;
@@ -511,7 +667,9 @@ extern zGlobals* global_ptr;
 extern zPlayer* player_ptr;
 extern zBulletManager* Bullet_PTR;
 extern int32_t* Inputs;
+extern int32_t* MenuInputs;
 extern int32_t* Inputs_prev;
+extern int32_t* MenuInputs_prev;
 extern zPauseMenu* pauseMenu_ptr;
 
 extern BYTE frame_skip;

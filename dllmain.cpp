@@ -21,14 +21,16 @@ zGlobals* global_ptr = (zGlobals*)0x4cccc0;
 zPlayer* player_ptr = *(zPlayer**)0x4CF410;
 zBulletManager* Bullet_PTR = *(zBulletManager**)0x4CF2BC;
 int32_t* Inputs = (int32_t*)0x4CA210;
+int32_t* MenuInputs = (int32_t*)0x4ca21C;
+int32_t* MenuInputs_prev = (int32_t*)0x4ca218;
 int32_t* Inputs_prev = (int32_t*)0x4CA214;
 zPauseMenu* pauseMenu_ptr = *(zPauseMenu**)0x4CF40C;
-
+int* abilityShop_ptr = (int*)0x4CF2A4;//maybe
 BYTE frame_skip = 0;
 GenerationHandler* generation;
 InputHelper* pinputHelper;
 bool isRendering;
-constexpr int32_t NbrePerso_generation = 1000;
+constexpr int32_t NbrePerso_generation = 500;
 int32_t previous_time;
 Window* window;
 HANDLE hprocess;
@@ -59,12 +61,14 @@ BOOL APIENTRY DllMain(HMODULE module, DWORD reasonForCall, LPVOID reserved)
         patch_call(0x00471C2A, update);
         //patch remaining BYTES;
         BYTE patch[] = { 0x90 };
+        BYTE patchMenuInputs[] = { 0x90, 0x90, 0x90 };
         BYTE patch1[] = { 0x90, 0x90, 0x90 };
         BYTE patchInputs[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90};// 0x89, 0x35, 0x10, 0xA2, 0x4C, 0x00 
         writeMemory(0x401E19, patchInputs, sizeof(patchInputs));
         writeMemory(0x401E0E, patchInputs, sizeof(patchInputs));
         writeMemory(0x4712DE, patch, sizeof(patch));
         writeMemory(0x00471C2A + 0x5, patch1, sizeof(patch1));
+        writeMemory(0x0404F07, patchMenuInputs, sizeof(patchMenuInputs));
 
         printf("End on init \n");
         
@@ -129,29 +133,50 @@ void HandleHumanInputs() {
         return;
     //if (GetKeyState(VK_SPACE) & 1)
     //    *Inputs = 0;
-    if (GetKeyState(VK_W) & 0x10000000)
+    if (GetKeyState(VK_W) & 0x10000000) {
         *Inputs |= Shoot;
-    if (GetKeyState(VK_X) & 0x10000000)
+        *MenuInputs |= Shoot;
+    }
+        
+    if (GetKeyState(VK_X) & 0x10000000){
         *Inputs |= Bomb;
-    if (GetKeyState(VK_SHIFT) & 0x10000000)
+        *MenuInputs |= Bomb;
+    }
+    if (GetKeyState(VK_SHIFT) & 0x10000000){
         *Inputs |= Focus;
-    if (GetKeyState(VK_ESCAPE) & 0x10000000)
+        *MenuInputs |= Focus;
+    }
+    if (GetKeyState(VK_ESCAPE) & 0x10000000){
         *Inputs |= Esc;
-    if (GetKeyState(VK_R) & 0x10000000)
+        *MenuInputs |= Esc;
+    }
+    if (GetKeyState(VK_R) & 0x10000000){
         *Inputs |= R;
-    if (GetKeyState(VK_UP) & 0x10000000)
+        *MenuInputs |= R;
+    }
+    if (GetKeyState(VK_UP) & 0x10000000){
         *Inputs |= Up;
-    if (GetKeyState(VK_DOWN) & 0x10000000)
+        *MenuInputs |= Up;
+    }
+    if (GetKeyState(VK_DOWN) & 0x10000000){
         *Inputs |= Down;
-    if (GetKeyState(VK_LEFT) & 0x10000000)
+        *MenuInputs |= Down;
+    }
+    if (GetKeyState(VK_LEFT) & 0x10000000){
         *Inputs |= Left;
-    if (GetKeyState(VK_RIGHT) & 0x10000000)
+        *MenuInputs |= Left;
+    }
+    if (GetKeyState(VK_RIGHT) & 0x10000000){
         *Inputs |= Right;
-    if (GetKeyState(VK_EXECUTE) & 0x10000000)
+        *MenuInputs |= Right;
+    }
+    if (GetKeyState(VK_EXECUTE) & 0x10000000){
         *Inputs |= Enter;
+        *MenuInputs |= Enter;
+    }
 }
 
-
+typedef int(__thiscall* MenuSelectAddIndex)(void* thisPtr, int32_t arg1);
 void update()
 {
     if (!generation) {
@@ -164,17 +189,26 @@ void update()
 
     if(*Inputs_prev != *Inputs)
         *Inputs_prev = *Inputs;
+    if (*MenuInputs_prev != *MenuInputs)
+        *MenuInputs_prev = *MenuInputs;
     *Inputs = 0;
     if (player_ptr)
     {
         if (global_ptr->time_in_stage > previous_time)
-        {
+        {   
+            //shop skip (beta)
+            if (*abilityShop_ptr) {
+                MenuSelectAddIndex MenuSelect__addIndex = reinterpret_cast<MenuSelectAddIndex>(0x4029E0);
+                MenuSelect__addIndex((void*)(*abilityShop_ptr + 228), 5);
+            }
+            *MenuInputs = 0;
             previous_time = global_ptr->time_in_stage;
             generation->update();
             HandleSpeedUp();
         }
     }
     HandleHumanInputs();
+    *MenuInputs = *Inputs;
 }
 
 

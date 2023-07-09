@@ -1,6 +1,15 @@
 
 #include "NeuralNetwork.h"
 
+size_t getMaxInnovId(std::vector<Connection> connections) {
+    size_t max_id = 0;
+    for (size_t i = 0; i < connections.size(); i++) {
+        max_id = max(max_id, connections[i].InnovId);
+    }
+    return max_id;
+}
+
+
 NeuralNetwork::NeuralNetwork(size_t inputs, size_t outputs): SpecieParentId(0), m_inputs(), connections(), nodes(), NbInputs(inputs), NbOutputs(outputs) {
 	nodes.assign(inputs + outputs, Node());
 	for (size_t i = 0; i < nodes.size(); i++) {
@@ -19,6 +28,15 @@ NeuralNetwork::NeuralNetwork(size_t inputs, size_t outputs): SpecieParentId(0), 
 		}
 	}
 }
+
+
+NeuralNetwork::~NeuralNetwork() {
+    for (size_t i = 0; i < nodesPairs.size(); i++) {
+        delete[] nodesPairs[i];
+    }
+    nodesPairs.~vector();
+}
+
 std::vector<double> NeuralNetwork::CalculateOutputs(std::vector<double> inputs)
 {
 	std::vector<double> outputs;
@@ -115,7 +133,7 @@ void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, si
     newConnections = bestNetwork->connections;
     size_t MaxInnovId_best = 0;
     if(newConnections.size() > 0)
-         MaxInnovId_best = newConnections[newConnections.size()-1].InnovId;
+         MaxInnovId_best = getMaxInnovId(newConnections);
     for (size_t i = 0; i < worseNetwork->connections.size(); i++) {
         size_t InnovId_worse = worseNetwork->connections[i].InnovId;
         for (size_t j = 0; j < bestNetwork->connections.size(); j++) {

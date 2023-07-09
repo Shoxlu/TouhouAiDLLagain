@@ -11,12 +11,16 @@ public:
 	void CreateNetwork();
 	void Reset();
 	void update();
+	bool didDamage();
+	bool isBombing();
+	//bool isUnderEnemy();
 	bool isAtMiddleOfScreen();
 	void move(std::vector<double> outputs);
 	Pos m_pos;
 	int32_t m_reward;
 	int32_t m_previous_reward;
 	int32_t m_previous_stage;
+	int32_t prev_bombs;
 	NeuralNetwork* m_reseau;
 	InputHelper* inputHelper;
 	Dir moves[6];

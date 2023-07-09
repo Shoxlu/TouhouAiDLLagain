@@ -6,6 +6,7 @@ class NeuralNetwork
 {
 public:
 	NeuralNetwork(size_t inputs, size_t outputs);
+	~NeuralNetwork();
 	//Function to process the inputs and give outputs, 1 arguments: inputs returns an array of double
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);
 	bool checkForCompatibleNodes(Connection connection);
