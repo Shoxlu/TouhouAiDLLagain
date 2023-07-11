@@ -125,3 +125,12 @@ void patch_call(void* target, void* func) {
 void patch_call(DWORD target, void* func) {
     patch_call((void*)target, func);
 }
+
+
+size_t getMaxInnovId(std::vector<Connection> connections) {
+    size_t max_id = 0;
+    for (size_t i = 0; i < connections.size(); i++) {
+        max_id = max(max_id, connections[i].InnovId);
+    }
+    return max_id;
+}

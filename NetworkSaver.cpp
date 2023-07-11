@@ -4,7 +4,7 @@ NetworkSaver::NetworkSaver()
 {
 }
 
-void NetworkSaver::SaveNetwork(NeuralNetwork* reseau, string filename)
+void NetworkSaver::SaveNetwork(NeuralNetwork* reseau, int32_t reward, string filename)
 {
 	
 	CSVFile* newFile = CSV.create(filename);
@@ -31,12 +31,14 @@ void NetworkSaver::SaveNetwork(NeuralNetwork* reseau, string filename)
 	CSV.write(buffer1, "Other_Infos", 0);
 	sprintf_s(buffer1,sizeof(buffer1), "%d", reseau->nodes.size());
 	CSV.write(buffer1, "Other_Infos", 1);
+	sprintf_s(buffer1, sizeof(buffer1), "%d", reward);
+	CSV.write(buffer1, "Other_Infos", 2);
 	CSV.Apply();
 	CSV.Close();
 }
 
 
-NeuralNetwork* NetworkSaver::GetNetwork(string filename)
+NeuralNetwork* NetworkSaver::GetNetwork(string filename, int32_t* reward)
 {
 	CSVFile* file = CSV.read(filename);
 	if (file == nullptr) {
@@ -48,6 +50,7 @@ NeuralNetwork* NetworkSaver::GetNetwork(string filename)
 	string test = CSV.read("Other_Infos", 0);
 	reseau->connections = getConnections(stoi(CSV.read("Other_Infos", 0)));
 	reseau->nodes = getNodes(stoi(CSV.read("Other_Infos", 1)));
+	*reward = stoi(CSV.read("Other_Infos", 2));
 	CSV.Close();
 	return reseau;
 }

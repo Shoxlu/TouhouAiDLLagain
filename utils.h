@@ -543,8 +543,9 @@ struct zGlobalsInner {
     int32_t miss_count;
 };
 struct zGlobals {
-    BYTE gap[32];//0x0
-    int32_t stage_num;//32
+    BYTE gap[28];//0x0
+    int32_t stage_num;//28
+    int32_t stage_num_started_from;//?????????? //32
     BYTE gap2[4];//36
     int32_t time_in_stage;//40
     BYTE gap1[30];//44
@@ -652,7 +653,7 @@ static constexpr int32_t NINPUTSPBULLET = 7;
 static constexpr int32_t NINPUTSENEMY = 4;
 static constexpr auto N_BULLETS = 2000;
 static constexpr auto INPUTS_MAX = NINPUTSENEMY + NINPUTSPBULLET + 2;
-static constexpr auto OUTPUTS_MAX = 6;
+static constexpr auto OUTPUTS_MAX = 5;
 
 //Nodes types
 static constexpr size_t SENSOR = 0;
@@ -699,3 +700,4 @@ void writeMemory(void* dst, void* src, size_t len);
 void writeMemory(DWORD dst, void* src, size_t len);
 void patch_call(void* target, void* func);
 void patch_call(DWORD target, void* func);
+size_t getMaxInnovId(std::vector<Connection> connections);

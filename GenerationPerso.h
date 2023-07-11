@@ -13,9 +13,9 @@ public:
 	~GenerationHandler();
 	Joueur** newGeneration(Joueur** newPopulation);
 	void update();
-
-	std::vector<Specie> SortSpeciesByReward(std::vector<Specie> Species);
-	int32_t getBestReward(Joueur** population, NeuralNetwork** bestNetwork);
+	void SortNetworksInSpecies(std::vector<Joueur*>* networks);
+	std::vector<Specie> SortSpeciesByReward(std::vector<Specie>* Species);
+	int32_t getBestReward(Joueur** population, Joueur** bestNetwork);
 	void AddNode(NeuralNetwork* reseau, size_t ConnectId);
 	void AddConnection(size_t in, size_t out, NeuralNetwork* reseau);
 	void DeleteConnection(size_t index, NeuralNetwork* reseau);
@@ -26,7 +26,7 @@ public:
 	std::vector<Specie> sortPopulationBySpecies(Joueur** population);
 	size_t getNetworkDiff(NeuralNetwork* reseau1, NeuralNetwork* reseau2, double* diffPoids);
 	double getScore(NeuralNetwork* networkToTest, NeuralNetwork* networkToCompare);
-	int32_t findBestNetworkInOldPop(NeuralNetwork** bestNetwork);
+	int32_t findBestNetworkInOldPop(Joueur** bestNetwork);
 	void ResetGame();
 
 	size_t m_n_systemes;

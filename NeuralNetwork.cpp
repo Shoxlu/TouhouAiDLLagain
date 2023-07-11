@@ -1,13 +1,8 @@
 
 #include "NeuralNetwork.h"
+#include <cassert>
 
-size_t getMaxInnovId(std::vector<Connection> connections) {
-    size_t max_id = 0;
-    for (size_t i = 0; i < connections.size(); i++) {
-        max_id = max(max_id, connections[i].InnovId);
-    }
-    return max_id;
-}
+
 
 
 NeuralNetwork::NeuralNetwork(size_t inputs, size_t outputs): SpecieParentId(0), m_inputs(), connections(), nodes(), NbInputs(inputs), NbOutputs(outputs) {
@@ -18,14 +13,6 @@ NeuralNetwork::NeuralNetwork(size_t inputs, size_t outputs): SpecieParentId(0), 
 			nodes[i].type = SENSOR;
 		else
 			nodes[i].type = OUTPUT;
-	}
-	for (size_t i = 0; i < NbInputs; i++) {
-		for (size_t j = NbInputs; j < NbInputs+NbOutputs; j++) {
-			size_t* pair = new size_t[2];
-			pair[0] = i;
-			pair[1] = j;
-			nodesPairs.emplace_back(pair);
-		}
 	}
 }
 
@@ -55,7 +42,7 @@ std::vector<double> NeuralNetwork::CalculateOutputs(std::vector<double> inputs)
                 if (sorted_nodes[i].incoming_connections[j].state)
                     weightedInput += nodes[sorted_nodes[i].incoming_connections[j].Inid].value * sorted_nodes[i].incoming_connections[j].weight;
             }
-            sorted_nodes[i].value =ActivationFunction(weightedInput);
+            sorted_nodes[i].value = ActivationFunction(weightedInput);
             nodes[sorted_nodes[i].id].value = sorted_nodes[i].value;
         }
         if (sorted_nodes[i].type == OUTPUT)
@@ -90,6 +77,18 @@ bool NeuralNetwork::checkForCompatibleNodes(Connection connection) {
     }
     return flagIn && flagOut;
 }
+
+
+bool NeuralNetwork::CheckForExistingConnectionInNetwork(size_t i, size_t j) {
+    for (size_t k = 0; k < connections.size(); k++) {
+        if (connections[k].Inid == i && connections[k].OutId == j) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
 
 void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, size_t reward1, size_t reward2) {
     /*size_t max_NbInnov = 0;
@@ -143,7 +142,9 @@ void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, si
                 if (random_bool()) {
                     newConnections[j].weight = worseNetwork->connections[i].weight;
                 }
+                break;
             }
+            assert(MaxInnovId_best >= InnovId_best);
         }
         if (InnovId_worse > MaxInnovId_best)//if not: check if worse's Innovid is bigger than max best's Innovid
         {//--if yes:it's an excessing connection, add it to newConnections if possible
@@ -157,9 +158,9 @@ void NeuralNetwork::CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, si
 
 void NeuralNetwork::DoNodesPairs() {
     std::vector<size_t*> nodesPairs_temp;
-    for (size_t j = 0; j < nodes.size(); j++) {
-        for (size_t i = 0; i < nodes.size(); i++) {
-            if (i == j || nodes[i].type == OUTPUT || nodes[j].type == SENSOR)
+    for (size_t i = 0; i < nodes.size(); i++) {
+        for (size_t j = 0; j < nodes.size(); j++) {
+            if (i == j || nodes[i].type == OUTPUT || nodes[j].type == SENSOR || CheckForExistingConnectionInNetwork(i, j) || CheckForExistingConnectionInNetwork(j, i))
                 continue;
             size_t* pair = new size_t[2];
             pair[0] = i;
@@ -200,8 +201,6 @@ void NeuralNetwork::topologicalSortNodes() {
             visitNode(i);
         }
     }
-
-    sorted_nodes;  // Update the nodes list with the sorted nodes
 }
 
 void NeuralNetwork::visitNode(size_t id) {

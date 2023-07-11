@@ -24,5 +24,6 @@ public:
 	NeuralNetwork* m_reseau;
 	InputHelper* inputHelper;
 	Dir moves[6];
+	bool isElite;
 private:
 };

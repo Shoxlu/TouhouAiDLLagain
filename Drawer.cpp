@@ -28,7 +28,7 @@ void Drawer::DrawNetwork() {
     size_t NbNodes = preseau->nodes.size();
     NbOutputs = preseau->NbOutputs;
     double x = -600;
-    double y = 200;
+    double y = -400;
     Color color = { 0, 0, 0 };
     Window* window = m_window;
     //probably gonna make something better with some linked pair or something and list of positions
@@ -39,14 +39,14 @@ void Drawer::DrawNetwork() {
         {
         case SENSOR:
             color = { 1, 1, 1 };
-            pos = Pos{ x, y + 25 * i };
+            pos = Pos{ x, y + 75 * i };
             break;
         case OUTPUT:
-            pos = Pos{ 0, 25.0 * i - INPUTS_MAX };
+            pos = Pos{ 0,-1000+ 75.0 * i - INPUTS_MAX };
             DrawConnections(nodes, pos, i);
             break;
         case HIDDEN:
-            pos = Pos{ -300, 200.0 + 200/(nodes.size()-INPUTS_MAX-NbOutputs+1)* (i-INPUTS_MAX - NbOutputs+1) };
+            pos = Pos{ -300, -100.0 + 400/(nodes.size()-INPUTS_MAX-NbOutputs+1)* (i-INPUTS_MAX - NbOutputs+1) };
             DrawConnections(nodes, pos, i);
             break;
         }
@@ -102,13 +102,13 @@ void Drawer::DrawConnections(std::vector<Node> nodes, Pos pos, size_t id) {
         Pos pos1 = { 0, 0 };
         switch(nodes[nodes[id].incoming_connections[j].Inid].type){
         case SENSOR:
-            pos1 = Pos{ -600, 200.0 + 25 * nodes[id].incoming_connections[j].Inid };
+            pos1 = Pos{ -600, -400.0 + 75 * nodes[id].incoming_connections[j].Inid };
             break;
         case OUTPUT:
-            pos1 = Pos{  0, 25.0 * nodes[id].incoming_connections[j].Inid - INPUTS_MAX };
+            pos1 = Pos{  0, 75.0 * nodes[id].incoming_connections[j].Inid - INPUTS_MAX };
             break;
         case HIDDEN:
-            pos1 = Pos{ -300, 200.0 + 200 / (nodes.size() - INPUTS_MAX - NbOutputs + 1) * (nodes[id].incoming_connections[j].Inid - INPUTS_MAX - NbOutputs + 1) };
+            pos1 = Pos{ -300, -100+400.0 / (nodes.size() - INPUTS_MAX - NbOutputs + 1) * (nodes[id].incoming_connections[j].Inid - INPUTS_MAX - NbOutputs + 1) };
             break;
         }
         //add edge case for inputs to outputs connections.

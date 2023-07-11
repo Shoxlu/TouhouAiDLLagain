@@ -6,8 +6,8 @@
 class NetworkSaver {
 public:
 	NetworkSaver();
-	void SaveNetwork(NeuralNetwork* reseau, string filename);
-	NeuralNetwork* GetNetwork(string filename);
+	void SaveNetwork(NeuralNetwork* reseau, int32_t reward, string filename);
+	NeuralNetwork* GetNetwork(string filename, int32_t* reward);
 	std::vector<Node> getNodes(size_t NbNodes);
 	std::vector<Connection> getConnections(size_t n_nodesOut);
 private:

@@ -10,7 +10,8 @@ static constexpr double DIFF_LIMITE = 1.0;
 template <class T>
 void free_ptr_array(T** ptr, size_t size) {
     for (size_t i = 0; i < size; i++) {
-        delete ptr[i];
+        if(ptr[i])
+            delete ptr[i];
     }
     delete[] ptr;
 }
@@ -30,14 +31,15 @@ GenerationHandler::GenerationHandler(const int32_t n_systemes) : m_n_systemes(n_
     NetworkSaver NetworkSave;
     isPlaying = true;
     Joueur** newPopulation = init_ptr_array<Joueur>(n_systemes);
+    populationActuelle = newPopulation;
     if (!LoadNetworks(&newPopulation)){
         for (int32_t i = 0; i < n_systemes; i++)
         {
             newPopulation[i]->CreateNetwork();
         }
     }
-    populationActuelle = newPopulation;
-    populationActuelle = newGeneration(newPopulation);
+
+    newGeneration(newPopulation);
     preseau = populationActuelle[0]->m_reseau;
 }
 
@@ -52,13 +54,20 @@ bool GenerationHandler::LoadNetworks(Joueur*** pnewPopulation) {
     char filename[512];
     NetworkSaver NetworkSave;
     Joueur** newPopulation = *pnewPopulation;
+
     for (size_t i = 0; i < m_n_systemes; i++) {
         snprintf(filename, sizeof(filename), "C:/Jeux casse/IA touhou 18/Network%d.csv", i);
-        newPopulation[i]->m_reseau = NetworkSave.GetNetwork(filename);
+        int32_t reward;
+        newPopulation[i]->m_reseau = NetworkSave.GetNetwork(filename, &reward);
+        newPopulation[i]->m_reward = reward;
         if (newPopulation[i]->m_reseau == nullptr) {
             return false;
         }
+        size_t  maxInnovIdCurrent = getMaxInnovId(newPopulation[i]->m_reseau->connections);
+        if(NbInnov < maxInnovIdCurrent)
+            NbInnov = maxInnovIdCurrent;
     }
+   
     return true;
 }
 
@@ -69,24 +78,23 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
     m_generationId += 1;
     Joueur** newPopulation = init_ptr_array<Joueur>(m_n_systemes);
     //trier la population en espèces
- 
     //find max fitness de la population;
-    NeuralNetwork* placeHolderNetwork = nullptr;
-    int32_t bestRewardPop = getBestReward(populationActu, &placeHolderNetwork);
+    Joueur* bestActualNetwork = nullptr;
+    int32_t bestRewardPop = getBestReward(populationActu, &bestActualNetwork);
     std::vector<Specie> Species = sortPopulationBySpecies(populationActu);
     //s'il y a des anciennes populations, checker si y'a pas un meilleur reseau que le meilleur dans la gen actuelle
-    NeuralNetwork* bestOldNetwork = nullptr;
+    Joueur* bestOldNetwork = nullptr;
     int32_t bestRewardOldPops = findBestNetworkInOldPop(&bestOldNetwork);
     //si c'est le cas : remplacer tous les réseaux de la gen actuelle par le meilleur
-    
+    printf("bestRewardActu = %d, bestRewardOld = %d\n", bestRewardPop, bestRewardOldPops);
     if (bestRewardPop < bestRewardOldPops && bestOldNetwork) {
        printf("Taking an old network as base for the next generation.\n");
        for (size_t i = 0; i < Species.size(); i++) {
            for (size_t j = 0; j < Species[i].networks.size(); j++) {
-                Species[i].networks[j]->m_reseau = bestOldNetwork;
+                Species[i].networks[j] = bestOldNetwork;
             }
        }
-
+       Species[0].networks[0] = bestActualNetwork;
     }
     else {//not useful to save a bad generation.
     //    mettre la population dans les anciennes
@@ -117,7 +125,7 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
     assert(nbIndividuTotal == m_n_systemes);
     AvgRewardGlobal = AvgRewardGlobal / nbIndividuTotal;
     //tri des especes pour que les meilleurs placent leurs enfants avant tout
-    Species = SortSpeciesByReward(Species);
+    SortSpeciesByReward(&Species);
     //chaque espece va créer un certain nombre d'individu dans la nouvelle population en fonction de si l'espece a un bon fitness ou pas
     size_t NbToCreate = m_n_systemes;
     size_t indiceNewSpecie = 0;
@@ -138,6 +146,7 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
             }
             NeuralNetwork* newNetwork;
             if (j < ceil(double(size)*5.0/100.0) && m_generationId != 1) {
+                newPopulation[indiceNewSpecie]->isElite = true;
                 newNetwork = Species[i].networks[j]->m_reseau;
             }
             else {
@@ -146,20 +155,26 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
                 Joueur* secondNet = Species[i].networks[randint(0, size - 1)];
                 newNetwork->CrossOver(firstNet->m_reseau, secondNet->m_reseau, firstNet->m_reward, secondNet->m_reward);
                 newNetwork->SpecieParentId = i;
-                DoMutation(newNetwork);
             }
             assert(newNetwork != nullptr);
             newPopulation[indiceNewSpecie]->m_reseau = newNetwork;
-            newNetwork->sortIncomingConnections();
-            newNetwork->topologicalSortNodes();
-            newNetwork->DoNodesPairs();
+
+            
             indiceNewSpecie++;          
         }
         if (indiceNewSpecie >= m_n_systemes) {
             break;
         }
     }
-    
+    populationActuelle = newPopulation;
+    for (size_t i = 0; i < m_n_systemes; i++) {
+        newPopulation[i]->m_reseau->DoNodesPairs();
+        if(!newPopulation[i]->isElite)
+            DoMutation(newPopulation[i]->m_reseau);
+        newPopulation[i]->m_reseau->sortIncomingConnections();
+        newPopulation[i]->m_reseau->topologicalSortNodes();
+    }
+
     //si l'espèce n'a pas d'enfants, delete l'espèce
     for (size_t i = 0; i < Species.size(); i++) {
         if (Species[i].nbChildren == 0) {
@@ -171,7 +186,7 @@ Joueur** GenerationHandler::newGeneration(Joueur** populationActu)
     return newPopulation;
 }
 
-int32_t GenerationHandler::findBestNetworkInOldPop(NeuralNetwork** bestOldNetwork) {
+int32_t GenerationHandler::findBestNetworkInOldPop(Joueur** bestOldNetwork) {
     int32_t bestOldReward = INT32_MIN;
     if (!m_previousBestGen) {
         return 0;
@@ -180,7 +195,7 @@ int32_t GenerationHandler::findBestNetworkInOldPop(NeuralNetwork** bestOldNetwor
         if (m_previousBestGen[j] && m_previousBestGen[j]->m_reward > bestOldReward) {
             // -stocker la meilleure fitness et le meilleur reseau
             bestOldReward = m_previousBestGen[j]->m_reward;
-            *bestOldNetwork = m_previousBestGen[j]->m_reseau;
+            *bestOldNetwork = m_previousBestGen[j];
         }
     }
     return bestOldReward;
@@ -192,7 +207,7 @@ void GenerationHandler::SaveNetworks(Joueur** population) {
     char name[512];
     for (size_t i = 0; i < m_n_systemes; i++) {
         snprintf(name, 512, "C:/Jeux casse/IA touhou 18/Network%d.csv", i);
-        NetworkSave.SaveNetwork(population[i]->m_reseau, name);
+        NetworkSave.SaveNetwork(population[i]->m_reseau, population[i]->m_reward, name);
     }
 }
 
@@ -249,28 +264,45 @@ void GenerationHandler::ResetGame()
     previous_time = 0;
 }
 
-std::vector<Specie> GenerationHandler::SortSpeciesByReward(std::vector<Specie> Species) {
-    size_t best_id;
-    for (size_t i = 0; i < Species.size(); i++) {
+
+void GenerationHandler::SortNetworksInSpecies(std::vector<Joueur*>* networks) {
+    size_t best_id = 0;
+    for (size_t i = 0; i < (*networks).size(); i++) {
         best_id = i;
-        for (size_t j = i+1; j < Species.size(); j++) {
-            if (Species[j].maxReward > Species[best_id].maxReward) {
+        for (size_t j = i + 1; j < (*networks).size(); j++) {
+            if ((*networks)[j]->m_reward > (*networks)[best_id]->m_reward) {
                 best_id = j;
             }
         }
-        Specie temp = Species[i];
-        Species[i] = Species[best_id];
-        Species[best_id] = temp;
+        Joueur* temp = (*networks)[i];
+        (*networks)[i] = (*networks)[best_id];
+        (*networks)[best_id] = temp;
     }
-    return Species;
 }
 
-int32_t GenerationHandler::getBestReward(Joueur** population, NeuralNetwork** bestNetwork) {
+std::vector<Specie> GenerationHandler::SortSpeciesByReward(std::vector<Specie>* Species) {
+    size_t best_id;
+    for (size_t i = 0; i < (*Species).size(); i++) {
+        SortNetworksInSpecies(&(*Species)[i].networks);
+        best_id = i;
+        for (size_t j = i+1; j < (*Species).size(); j++) {
+            if ((*Species)[j].maxReward > (*Species)[best_id].maxReward) {
+                best_id = j;
+            }
+        }
+        Specie temp = (*Species)[i];
+        (*Species)[i] = (*Species)[best_id];
+        (*Species)[best_id] = temp;
+    }
+    return *Species;
+}
+
+int32_t GenerationHandler::getBestReward(Joueur** population, Joueur** bestNetwork) {
     int32_t best_reward = INT32_MIN;
     for (size_t i = 0; i < m_n_systemes; i++) {
         if (best_reward < population[i]->m_reward) {
             best_reward = population[i]->m_reward;
-            *bestNetwork = population[i]->m_reseau;
+            *bestNetwork = population[i];
         }
     }
     return best_reward;
@@ -309,19 +341,7 @@ size_t GenerationHandler::CheckForExistingConnection(size_t in, size_t out) {
             }
         }
     }
-    ++NbInnov;
-    return NbInnov - 1;
-}
-
-//just to prevent creating an already existing connection...
-bool CheckExistingConnectionInNetwork(size_t in, size_t out, std::vector<Connection> connections) {
-    for (size_t i = 0; i < connections.size(); i++)
-    {
-        if (connections[i].Inid == in && connections[i].OutId == out) {
-            return true;
-        }
-    }
-    return false;
+    return NbInnov++;
 }
 
 void GenerationHandler::DoMutation(NeuralNetwork* network) {
@@ -332,7 +352,7 @@ void GenerationHandler::DoMutation(NeuralNetwork* network) {
         delete[] network->nodesPairs[randomPairIndice];
         network->nodesPairs.erase(network->nodesPairs.begin() + randomPairIndice);
     }
-    if (randint(1, 100) < 15 && network->connections.size() > 0) {
+    if (randint(1, 100) < -1 && network->connections.size() > 0) {
         DeleteConnection(randint(0, network->connections.size() - 1), network);
     }
     if (randint(1, 100) < 39 && network->connections.size() > 0) {

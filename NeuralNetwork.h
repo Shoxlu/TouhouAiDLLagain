@@ -10,6 +10,7 @@ public:
 	//Function to process the inputs and give outputs, 1 arguments: inputs returns an array of double
 	std::vector<double> CalculateOutputs(std::vector<double> inputs);
 	bool checkForCompatibleNodes(Connection connection);
+	bool CheckForExistingConnectionInNetwork(size_t i, size_t j);
 	void CrossOver(NeuralNetwork* parent1, NeuralNetwork* parent2, size_t reward1, size_t reward2);
 	void DoNodesPairs();
 	void sortIncomingConnections();
