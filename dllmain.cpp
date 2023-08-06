@@ -176,7 +176,7 @@ void HandleHumanInputs() {
     }
 }
 
-typedef int(__thiscall* MenuSelectAddIndex)(void* thisPtr, int32_t arg1);
+typedef int(__thiscall* FunctionPtr)(void* thisPtr, int32_t arg1);;
 void update()
 {
     if (!generation) {
@@ -192,16 +192,17 @@ void update()
     if (*MenuInputs_prev != *MenuInputs)
         *MenuInputs_prev = *MenuInputs;
     *Inputs = 0;
+    *MenuInputs = 0;
     if (player_ptr)
     {
         if (global_ptr->time_in_stage > previous_time)
         {   
             //shop skip (beta)
             if (*abilityShop_ptr) {
-                MenuSelectAddIndex MenuSelect__addIndex = reinterpret_cast<MenuSelectAddIndex>(0x4029E0);
-                MenuSelect__addIndex((void*)(*abilityShop_ptr + 228), 5);
+                FunctionPtr MenuSelect__setIndex = reinterpret_cast<FunctionPtr>(0x416BA0);
+                MenuSelect__setIndex((void*)(*abilityShop_ptr + 228), 5);
             }
-            *MenuInputs = 0;
+            
             previous_time = global_ptr->time_in_stage;
             generation->update();
             HandleSpeedUp();

@@ -26,6 +26,9 @@ std::vector<double> InputHelper::getInputs() {
 
 void InputHelper::AddBullet() {
 	double lastDistance = 10000000;
+	if (!bullets) {
+		return;
+	}
 	for (size_t i = 0; i < 2000; i++) {
 		if (bullets[i].state != 1)
 			continue;
@@ -98,16 +101,19 @@ Pos InputHelper::getPlayerPos()
 zBullet* InputHelper::getBulletsData()
 {
     zBulletManager *Bullet_PTR = *(zBulletManager**)0x4CF2BC;
-	
-	return Bullet_PTR->bullets;
+	if(Bullet_PTR)
+		return Bullet_PTR->bullets;
+	return nullptr;
 }
 
 
 zEnemyList* InputHelper::getEnemiesData()
 {
 	zEnemyManager* enemyPtr = *(zEnemyManager**)0x4cf2d0;
-	
-	return enemyPtr->active_enemy_list_head;
+	if (enemyPtr) {
+		return enemyPtr->active_enemy_list_head;
+	}
+	return nullptr;
 }
 
 //zLaser InputHelper::AddClosestPointToLaser() {

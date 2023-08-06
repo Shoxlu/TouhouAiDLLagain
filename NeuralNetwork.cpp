@@ -18,9 +18,6 @@ NeuralNetwork::NeuralNetwork(size_t inputs, size_t outputs): SpecieParentId(0), 
 
 
 NeuralNetwork::~NeuralNetwork() {
-    for (size_t i = 0; i < nodesPairs.size(); i++) {
-        delete[] nodesPairs[i];
-    }
     nodesPairs.~vector();
 }
 

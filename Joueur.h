@@ -13,8 +13,9 @@ public:
 	void update();
 	bool didDamage();
 	bool isBombing();
+	bool isUnderEnemy(double enemy_x);
 	//bool isUnderEnemy();
-	bool isAtMiddleOfScreen();
+	bool isNotAway();
 	void move(std::vector<double> outputs);
 	Pos m_pos;
 	int32_t m_reward;

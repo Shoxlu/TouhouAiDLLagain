@@ -214,6 +214,7 @@ void GenerationHandler::SaveNetworks(Joueur** population) {
 void  GenerationHandler::update() {
     if (global_ptr->current_lives < 0 && isPlaying)
     {   
+        populationActuelle[joueur_actuel]->m_reward = sqrt(populationActuelle[joueur_actuel]->m_reward)*100;
         joueur_actuel += 1;
         preseau = nullptr;
         isPlaying = false;
